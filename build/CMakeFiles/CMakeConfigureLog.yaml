@@ -26,7 +26,7 @@ events:
       Microsoft (R) Build Engine version 17.2.1+52cd2da31 for .NET Framework
       Copyright (C) Microsoft Corporation. All rights reserved.
       
-      Build started 5/12/2025 12:38:11 PM.
+      Build started 5/12/2025 1:47:50 PM.
       Project "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\3.27.1\\CompilerIdC\\CompilerIdC.vcxproj" on node 1 (default targets).
       PrepareForBuild:
         Creating directory "Debug\\".
@@ -52,7 +52,7 @@ events:
           0 Warning(s)
           0 Error(s)
       
-      Time Elapsed 00:00:01.68
+      Time Elapsed 00:00:01.55
       
       
       Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CompilerIdC.exe"
@@ -80,7 +80,7 @@ events:
       Microsoft (R) Build Engine version 17.2.1+52cd2da31 for .NET Framework
       Copyright (C) Microsoft Corporation. All rights reserved.
       
-      Build started 5/12/2025 12:38:14 PM.
+      Build started 5/12/2025 1:47:51 PM.
       Project "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\3.27.1\\CompilerIdCXX\\CompilerIdCXX.vcxproj" on node 1 (default targets).
       PrepareForBuild:
         Creating directory "Debug\\".
@@ -106,7 +106,7 @@ events:
           0 Warning(s)
           0 Error(s)
       
-      Time Elapsed 00:00:01.52
+      Time Elapsed 00:00:01.41
       
       
       Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.exe"
@@ -125,8 +125,8 @@ events:
     checks:
       - "Detecting C compiler ABI info"
     directories:
-      source: "C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-xnuol5"
-      binary: "C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-xnuol5"
+      source: "C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-kv7bsu"
+      binary: "C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-kv7bsu"
     cmakeVariables:
       CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS /W3"
       CMAKE_C_FLAGS_DEBUG: "/MDd /Zi /Ob0 /Od /RTC1"
@@ -135,39 +135,39 @@ events:
       variable: "CMAKE_C_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: 'C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-xnuol5'
+        Change Dir: 'C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-kv7bsu'
         
-        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_46d00.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_b9f5a.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         Microsoft (R) Build Engine version 17.2.1+52cd2da31 for .NET Framework
         Copyright (C) Microsoft Corporation. All rights reserved.
         
-        Build started 5/12/2025 12:38:15 PM.
-        Project "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-xnuol5\\cmTC_46d00.vcxproj" on node 1 (default targets).
+        Build started 5/12/2025 1:47:53 PM.
+        Project "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-kv7bsu\\cmTC_b9f5a.vcxproj" on node 1 (default targets).
         PrepareForBuild:
-          Creating directory "cmTC_46d00.dir\\Debug\\".
-          Creating directory "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-xnuol5\\Debug\\".
-          Creating directory "cmTC_46d00.dir\\Debug\\cmTC_46d00.tlog\\".
+          Creating directory "cmTC_b9f5a.dir\\Debug\\".
+          Creating directory "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-kv7bsu\\Debug\\".
+          Creating directory "cmTC_b9f5a.dir\\Debug\\cmTC_b9f5a.tlog\\".
         InitializeBuildStatus:
-          Creating "cmTC_46d00.dir\\Debug\\cmTC_46d00.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
+          Creating "cmTC_b9f5a.dir\\Debug\\cmTC_b9f5a.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
         ClCompile:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.32.31326\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_46d00.dir\\Debug\\\\" /Fd"cmTC_46d00.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "C:\\MinGW\\share\\cmake-3.27\\Modules\\CMakeCCompilerABI.c"
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.32.31326\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_b9f5a.dir\\Debug\\\\" /Fd"cmTC_b9f5a.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "C:\\MinGW\\share\\cmake-3.27\\Modules\\CMakeCCompilerABI.c"
           Microsoft (R) C/C++ Optimizing Compiler Version 19.32.31329 for x64
           Copyright (C) Microsoft Corporation.  All rights reserved.
           CMakeCCompilerABI.c
-          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_46d00.dir\\Debug\\\\" /Fd"cmTC_46d00.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "C:\\MinGW\\share\\cmake-3.27\\Modules\\CMakeCCompilerABI.c"
+          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_b9f5a.dir\\Debug\\\\" /Fd"cmTC_b9f5a.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "C:\\MinGW\\share\\cmake-3.27\\Modules\\CMakeCCompilerABI.c"
         Link:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.32.31326\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-xnuol5\\Debug\\cmTC_46d00.exe" /INCREMENTAL /ILK:"cmTC_46d00.dir\\Debug\\cmTC_46d00.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-xnuol5/Debug/cmTC_46d00.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-xnuol5/Debug/cmTC_46d00.lib" /MACHINE:X64  /machine:x64 cmTC_46d00.dir\\Debug\\CMakeCCompilerABI.obj
-          cmTC_46d00.vcxproj -> C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-xnuol5\\Debug\\cmTC_46d00.exe
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.32.31326\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-kv7bsu\\Debug\\cmTC_b9f5a.exe" /INCREMENTAL /ILK:"cmTC_b9f5a.dir\\Debug\\cmTC_b9f5a.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-kv7bsu/Debug/cmTC_b9f5a.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-kv7bsu/Debug/cmTC_b9f5a.lib" /MACHINE:X64  /machine:x64 cmTC_b9f5a.dir\\Debug\\CMakeCCompilerABI.obj
+          cmTC_b9f5a.vcxproj -> C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-kv7bsu\\Debug\\cmTC_b9f5a.exe
         FinalizeBuildStatus:
-          Deleting file "cmTC_46d00.dir\\Debug\\cmTC_46d00.tlog\\unsuccessfulbuild".
-          Touching "cmTC_46d00.dir\\Debug\\cmTC_46d00.tlog\\cmTC_46d00.lastbuildstate".
-        Done Building Project "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-xnuol5\\cmTC_46d00.vcxproj" (default targets).
+          Deleting file "cmTC_b9f5a.dir\\Debug\\cmTC_b9f5a.tlog\\unsuccessfulbuild".
+          Touching "cmTC_b9f5a.dir\\Debug\\cmTC_b9f5a.tlog\\cmTC_b9f5a.lastbuildstate".
+        Done Building Project "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-kv7bsu\\cmTC_b9f5a.vcxproj" (default targets).
         
         Build succeeded.
             0 Warning(s)
             0 Error(s)
         
-        Time Elapsed 00:00:01.38
+        Time Elapsed 00:00:01.37
         
       exitCode: 0
   -
@@ -179,8 +179,8 @@ events:
     checks:
       - "Detecting CXX compiler ABI info"
     directories:
-      source: "C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-dpsbfw"
-      binary: "C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-dpsbfw"
+      source: "C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-iaij2w"
+      binary: "C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-iaij2w"
     cmakeVariables:
       CMAKE_CXX_FLAGS: "/DWIN32 /D_WINDOWS /W3 /GR /EHsc"
       CMAKE_CXX_FLAGS_DEBUG: "/MDd /Zi /Ob0 /Od /RTC1"
@@ -189,39 +189,39 @@ events:
       variable: "CMAKE_CXX_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: 'C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-dpsbfw'
+        Change Dir: 'C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-iaij2w'
         
-        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_75bf4.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_9a9b8.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         Microsoft (R) Build Engine version 17.2.1+52cd2da31 for .NET Framework
         Copyright (C) Microsoft Corporation. All rights reserved.
         
-        Build started 5/12/2025 12:38:17 PM.
-        Project "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-dpsbfw\\cmTC_75bf4.vcxproj" on node 1 (default targets).
+        Build started 5/12/2025 1:47:55 PM.
+        Project "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-iaij2w\\cmTC_9a9b8.vcxproj" on node 1 (default targets).
         PrepareForBuild:
-          Creating directory "cmTC_75bf4.dir\\Debug\\".
-          Creating directory "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-dpsbfw\\Debug\\".
-          Creating directory "cmTC_75bf4.dir\\Debug\\cmTC_75bf4.tlog\\".
+          Creating directory "cmTC_9a9b8.dir\\Debug\\".
+          Creating directory "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-iaij2w\\Debug\\".
+          Creating directory "cmTC_9a9b8.dir\\Debug\\cmTC_9a9b8.tlog\\".
         InitializeBuildStatus:
-          Creating "cmTC_75bf4.dir\\Debug\\cmTC_75bf4.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
+          Creating "cmTC_9a9b8.dir\\Debug\\cmTC_9a9b8.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
         ClCompile:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.32.31326\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_75bf4.dir\\Debug\\\\" /Fd"cmTC_75bf4.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue "C:\\MinGW\\share\\cmake-3.27\\Modules\\CMakeCXXCompilerABI.cpp"
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.32.31326\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_9a9b8.dir\\Debug\\\\" /Fd"cmTC_9a9b8.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue "C:\\MinGW\\share\\cmake-3.27\\Modules\\CMakeCXXCompilerABI.cpp"
           Microsoft (R) C/C++ Optimizing Compiler Version 19.32.31329 for x64
           Copyright (C) Microsoft Corporation.  All rights reserved.
           CMakeCXXCompilerABI.cpp
-          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_75bf4.dir\\Debug\\\\" /Fd"cmTC_75bf4.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue "C:\\MinGW\\share\\cmake-3.27\\Modules\\CMakeCXXCompilerABI.cpp"
+          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_9a9b8.dir\\Debug\\\\" /Fd"cmTC_9a9b8.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue "C:\\MinGW\\share\\cmake-3.27\\Modules\\CMakeCXXCompilerABI.cpp"
         Link:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.32.31326\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-dpsbfw\\Debug\\cmTC_75bf4.exe" /INCREMENTAL /ILK:"cmTC_75bf4.dir\\Debug\\cmTC_75bf4.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-dpsbfw/Debug/cmTC_75bf4.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-dpsbfw/Debug/cmTC_75bf4.lib" /MACHINE:X64  /machine:x64 cmTC_75bf4.dir\\Debug\\CMakeCXXCompilerABI.obj
-          cmTC_75bf4.vcxproj -> C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-dpsbfw\\Debug\\cmTC_75bf4.exe
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.32.31326\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-iaij2w\\Debug\\cmTC_9a9b8.exe" /INCREMENTAL /ILK:"cmTC_9a9b8.dir\\Debug\\cmTC_9a9b8.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-iaij2w/Debug/cmTC_9a9b8.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-iaij2w/Debug/cmTC_9a9b8.lib" /MACHINE:X64  /machine:x64 cmTC_9a9b8.dir\\Debug\\CMakeCXXCompilerABI.obj
+          cmTC_9a9b8.vcxproj -> C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-iaij2w\\Debug\\cmTC_9a9b8.exe
         FinalizeBuildStatus:
-          Deleting file "cmTC_75bf4.dir\\Debug\\cmTC_75bf4.tlog\\unsuccessfulbuild".
-          Touching "cmTC_75bf4.dir\\Debug\\cmTC_75bf4.tlog\\cmTC_75bf4.lastbuildstate".
-        Done Building Project "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-dpsbfw\\cmTC_75bf4.vcxproj" (default targets).
+          Deleting file "cmTC_9a9b8.dir\\Debug\\cmTC_9a9b8.tlog\\unsuccessfulbuild".
+          Touching "cmTC_9a9b8.dir\\Debug\\cmTC_9a9b8.tlog\\cmTC_9a9b8.lastbuildstate".
+        Done Building Project "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-iaij2w\\cmTC_9a9b8.vcxproj" (default targets).
         
         Build succeeded.
             0 Warning(s)
             0 Error(s)
         
-        Time Elapsed 00:00:01.39
+        Time Elapsed 00:00:01.47
         
       exitCode: 0
   -
@@ -236,8 +236,8 @@ events:
     checks:
       - "Performing Test CMAKE_HAVE_LIBC_PTHREAD"
     directories:
-      source: "C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-t5djyz"
-      binary: "C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-t5djyz"
+      source: "C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-xuatpx"
+      binary: "C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-xuatpx"
     cmakeVariables:
       CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS /W3"
       CMAKE_C_FLAGS_DEBUG: "/MDd /Zi /Ob0 /Od /RTC1"
@@ -246,39 +246,39 @@ events:
       variable: "CMAKE_HAVE_LIBC_PTHREAD"
       cached: true
       stdout: |
-        Change Dir: 'C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-t5djyz'
+        Change Dir: 'C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-xuatpx'
         
-        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_0f922.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_30696.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         Microsoft (R) Build Engine version 17.2.1+52cd2da31 for .NET Framework
         Copyright (C) Microsoft Corporation. All rights reserved.
         
-        Build started 5/12/2025 12:38:26 PM.
-        Project "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-t5djyz\\cmTC_0f922.vcxproj" on node 1 (default targets).
+        Build started 5/12/2025 1:48:04 PM.
+        Project "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-xuatpx\\cmTC_30696.vcxproj" on node 1 (default targets).
         PrepareForBuild:
-          Creating directory "cmTC_0f922.dir\\Debug\\".
-          Creating directory "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-t5djyz\\Debug\\".
-          Creating directory "cmTC_0f922.dir\\Debug\\cmTC_0f922.tlog\\".
+          Creating directory "cmTC_30696.dir\\Debug\\".
+          Creating directory "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-xuatpx\\Debug\\".
+          Creating directory "cmTC_30696.dir\\Debug\\cmTC_30696.tlog\\".
         InitializeBuildStatus:
-          Creating "cmTC_0f922.dir\\Debug\\cmTC_0f922.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
+          Creating "cmTC_30696.dir\\Debug\\cmTC_30696.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
         ClCompile:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.32.31326\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D CMAKE_HAVE_LIBC_PTHREAD /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_0f922.dir\\Debug\\\\" /Fd"cmTC_0f922.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-t5djyz\\src.c"
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.32.31326\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D CMAKE_HAVE_LIBC_PTHREAD /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_30696.dir\\Debug\\\\" /Fd"cmTC_30696.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-xuatpx\\src.c"
           Microsoft (R) C/C++ Optimizing Compiler Version 19.32.31329 for x64
           Copyright (C) Microsoft Corporation.  All rights reserved.
           src.c
-          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D CMAKE_HAVE_LIBC_PTHREAD /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_0f922.dir\\Debug\\\\" /Fd"cmTC_0f922.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-t5djyz\\src.c"
-        C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-t5djyz\\src.c(1,10): fatal error C1083: Cannot open include file: 'pthread.h': No such file or directory [C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-t5djyz\\cmTC_0f922.vcxproj]
-        Done Building Project "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-t5djyz\\cmTC_0f922.vcxproj" (default targets) -- FAILED.
+          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D CMAKE_HAVE_LIBC_PTHREAD /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_30696.dir\\Debug\\\\" /Fd"cmTC_30696.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-xuatpx\\src.c"
+        C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-xuatpx\\src.c(1,10): fatal error C1083: Cannot open include file: 'pthread.h': No such file or directory [C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-xuatpx\\cmTC_30696.vcxproj]
+        Done Building Project "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-xuatpx\\cmTC_30696.vcxproj" (default targets) -- FAILED.
         
         Build FAILED.
         
-        "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-t5djyz\\cmTC_0f922.vcxproj" (default target) (1) ->
+        "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-xuatpx\\cmTC_30696.vcxproj" (default target) (1) ->
         (ClCompile target) -> 
-          C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-t5djyz\\src.c(1,10): fatal error C1083: Cannot open include file: 'pthread.h': No such file or directory [C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-t5djyz\\cmTC_0f922.vcxproj]
+          C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-xuatpx\\src.c(1,10): fatal error C1083: Cannot open include file: 'pthread.h': No such file or directory [C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-xuatpx\\cmTC_30696.vcxproj]
         
             0 Warning(s)
             1 Error(s)
         
-        Time Elapsed 00:00:01.06
+        Time Elapsed 00:00:01.07
         
       exitCode: 1
   -
@@ -292,8 +292,8 @@ events:
     checks:
       - "Looking for pthread_create in pthreads"
     directories:
-      source: "C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-2p927j"
-      binary: "C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-2p927j"
+      source: "C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-65ms1p"
+      binary: "C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-65ms1p"
     cmakeVariables:
       CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS /W3"
       CMAKE_C_FLAGS_DEBUG: "/MDd /Zi /Ob0 /Od /RTC1"
@@ -302,41 +302,41 @@ events:
       variable: "CMAKE_HAVE_PTHREADS_CREATE"
       cached: true
       stdout: |
-        Change Dir: 'C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-2p927j'
+        Change Dir: 'C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-65ms1p'
         
-        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_7ba1f.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_5af31.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         Microsoft (R) Build Engine version 17.2.1+52cd2da31 for .NET Framework
         Copyright (C) Microsoft Corporation. All rights reserved.
         
-        Build started 5/12/2025 12:38:27 PM.
-        Project "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-2p927j\\cmTC_7ba1f.vcxproj" on node 1 (default targets).
+        Build started 5/12/2025 1:48:05 PM.
+        Project "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-65ms1p\\cmTC_5af31.vcxproj" on node 1 (default targets).
         PrepareForBuild:
-          Creating directory "cmTC_7ba1f.dir\\Debug\\".
-          Creating directory "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-2p927j\\Debug\\".
-          Creating directory "cmTC_7ba1f.dir\\Debug\\cmTC_7ba1f.tlog\\".
+          Creating directory "cmTC_5af31.dir\\Debug\\".
+          Creating directory "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-65ms1p\\Debug\\".
+          Creating directory "cmTC_5af31.dir\\Debug\\cmTC_5af31.tlog\\".
         InitializeBuildStatus:
-          Creating "cmTC_7ba1f.dir\\Debug\\cmTC_7ba1f.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
+          Creating "cmTC_5af31.dir\\Debug\\cmTC_5af31.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
         ClCompile:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.32.31326\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=pthread_create /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_7ba1f.dir\\Debug\\\\" /Fd"cmTC_7ba1f.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-2p927j\\CheckFunctionExists.c"
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.32.31326\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=pthread_create /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_5af31.dir\\Debug\\\\" /Fd"cmTC_5af31.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-65ms1p\\CheckFunctionExists.c"
           Microsoft (R) C/C++ Optimizing Compiler Version 19.32.31329 for x64
           Copyright (C) Microsoft Corporation.  All rights reserved.
           CheckFunctionExists.c
-          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=pthread_create /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_7ba1f.dir\\Debug\\\\" /Fd"cmTC_7ba1f.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-2p927j\\CheckFunctionExists.c"
+          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=pthread_create /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_5af31.dir\\Debug\\\\" /Fd"cmTC_5af31.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-65ms1p\\CheckFunctionExists.c"
         Link:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.32.31326\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-2p927j\\Debug\\cmTC_7ba1f.exe" /INCREMENTAL /ILK:"cmTC_7ba1f.dir\\Debug\\cmTC_7ba1f.ilk" /NOLOGO pthreads.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-2p927j/Debug/cmTC_7ba1f.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-2p927j/Debug/cmTC_7ba1f.lib" /MACHINE:X64  /machine:x64 cmTC_7ba1f.dir\\Debug\\CheckFunctionExists.obj
-        LINK : fatal error LNK1104: cannot open file 'pthreads.lib' [C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-2p927j\\cmTC_7ba1f.vcxproj]
-        Done Building Project "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-2p927j\\cmTC_7ba1f.vcxproj" (default targets) -- FAILED.
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.32.31326\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-65ms1p\\Debug\\cmTC_5af31.exe" /INCREMENTAL /ILK:"cmTC_5af31.dir\\Debug\\cmTC_5af31.ilk" /NOLOGO pthreads.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-65ms1p/Debug/cmTC_5af31.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-65ms1p/Debug/cmTC_5af31.lib" /MACHINE:X64  /machine:x64 cmTC_5af31.dir\\Debug\\CheckFunctionExists.obj
+        LINK : fatal error LNK1104: cannot open file 'pthreads.lib' [C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-65ms1p\\cmTC_5af31.vcxproj]
+        Done Building Project "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-65ms1p\\cmTC_5af31.vcxproj" (default targets) -- FAILED.
         
         Build FAILED.
         
-        "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-2p927j\\cmTC_7ba1f.vcxproj" (default target) (1) ->
+        "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-65ms1p\\cmTC_5af31.vcxproj" (default target) (1) ->
         (Link target) -> 
-          LINK : fatal error LNK1104: cannot open file 'pthreads.lib' [C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-2p927j\\cmTC_7ba1f.vcxproj]
+          LINK : fatal error LNK1104: cannot open file 'pthreads.lib' [C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-65ms1p\\cmTC_5af31.vcxproj]
         
             0 Warning(s)
             1 Error(s)
         
-        Time Elapsed 00:00:01.20
+        Time Elapsed 00:00:01.25
         
       exitCode: 1
   -
@@ -350,8 +350,8 @@ events:
     checks:
       - "Looking for pthread_create in pthread"
     directories:
-      source: "C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-sloh3b"
-      binary: "C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-sloh3b"
+      source: "C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-2dqz2u"
+      binary: "C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-2dqz2u"
     cmakeVariables:
       CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS /W3"
       CMAKE_C_FLAGS_DEBUG: "/MDd /Zi /Ob0 /Od /RTC1"
@@ -360,41 +360,41 @@ events:
       variable: "CMAKE_HAVE_PTHREAD_CREATE"
       cached: true
       stdout: |
-        Change Dir: 'C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-sloh3b'
+        Change Dir: 'C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-2dqz2u'
         
-        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_2c92d.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_af4d0.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         Microsoft (R) Build Engine version 17.2.1+52cd2da31 for .NET Framework
         Copyright (C) Microsoft Corporation. All rights reserved.
         
-        Build started 5/12/2025 12:38:29 PM.
-        Project "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-sloh3b\\cmTC_2c92d.vcxproj" on node 1 (default targets).
+        Build started 5/12/2025 1:48:07 PM.
+        Project "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-2dqz2u\\cmTC_af4d0.vcxproj" on node 1 (default targets).
         PrepareForBuild:
-          Creating directory "cmTC_2c92d.dir\\Debug\\".
-          Creating directory "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-sloh3b\\Debug\\".
-          Creating directory "cmTC_2c92d.dir\\Debug\\cmTC_2c92d.tlog\\".
+          Creating directory "cmTC_af4d0.dir\\Debug\\".
+          Creating directory "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-2dqz2u\\Debug\\".
+          Creating directory "cmTC_af4d0.dir\\Debug\\cmTC_af4d0.tlog\\".
         InitializeBuildStatus:
-          Creating "cmTC_2c92d.dir\\Debug\\cmTC_2c92d.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
+          Creating "cmTC_af4d0.dir\\Debug\\cmTC_af4d0.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
         ClCompile:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.32.31326\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=pthread_create /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_2c92d.dir\\Debug\\\\" /Fd"cmTC_2c92d.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-sloh3b\\CheckFunctionExists.c"
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.32.31326\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=pthread_create /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_af4d0.dir\\Debug\\\\" /Fd"cmTC_af4d0.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-2dqz2u\\CheckFunctionExists.c"
           Microsoft (R) C/C++ Optimizing Compiler Version 19.32.31329 for x64
           Copyright (C) Microsoft Corporation.  All rights reserved.
           CheckFunctionExists.c
-          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=pthread_create /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_2c92d.dir\\Debug\\\\" /Fd"cmTC_2c92d.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-sloh3b\\CheckFunctionExists.c"
+          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=pthread_create /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_af4d0.dir\\Debug\\\\" /Fd"cmTC_af4d0.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-2dqz2u\\CheckFunctionExists.c"
         Link:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.32.31326\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-sloh3b\\Debug\\cmTC_2c92d.exe" /INCREMENTAL /ILK:"cmTC_2c92d.dir\\Debug\\cmTC_2c92d.ilk" /NOLOGO pthread.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-sloh3b/Debug/cmTC_2c92d.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-sloh3b/Debug/cmTC_2c92d.lib" /MACHINE:X64  /machine:x64 cmTC_2c92d.dir\\Debug\\CheckFunctionExists.obj
-        LINK : fatal error LNK1104: cannot open file 'pthread.lib' [C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-sloh3b\\cmTC_2c92d.vcxproj]
-        Done Building Project "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-sloh3b\\cmTC_2c92d.vcxproj" (default targets) -- FAILED.
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.32.31326\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-2dqz2u\\Debug\\cmTC_af4d0.exe" /INCREMENTAL /ILK:"cmTC_af4d0.dir\\Debug\\cmTC_af4d0.ilk" /NOLOGO pthread.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-2dqz2u/Debug/cmTC_af4d0.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/CMakeFiles/CMakeScratch/TryCompile-2dqz2u/Debug/cmTC_af4d0.lib" /MACHINE:X64  /machine:x64 cmTC_af4d0.dir\\Debug\\CheckFunctionExists.obj
+        LINK : fatal error LNK1104: cannot open file 'pthread.lib' [C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-2dqz2u\\cmTC_af4d0.vcxproj]
+        Done Building Project "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-2dqz2u\\cmTC_af4d0.vcxproj" (default targets) -- FAILED.
         
         Build FAILED.
         
-        "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-sloh3b\\cmTC_2c92d.vcxproj" (default target) (1) ->
+        "C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-2dqz2u\\cmTC_af4d0.vcxproj" (default target) (1) ->
         (Link target) -> 
-          LINK : fatal error LNK1104: cannot open file 'pthread.lib' [C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-sloh3b\\cmTC_2c92d.vcxproj]
+          LINK : fatal error LNK1104: cannot open file 'pthread.lib' [C:\\Users\\obliv\\Desktop\\C Practice\\CPUEmulator6502\\build\\CMakeFiles\\CMakeScratch\\TryCompile-2dqz2u\\cmTC_af4d0.vcxproj]
         
             0 Warning(s)
             1 Error(s)
         
-        Time Elapsed 00:00:01.18
+        Time Elapsed 00:00:01.27
         
       exitCode: 1
 ...

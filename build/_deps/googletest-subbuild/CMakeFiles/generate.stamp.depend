@@ -1,6 +1,8 @@
 # CMake generation dependency list for this directory.
+C:/MinGW/share/cmake-3.27/Modules/CMakeDetermineSystem.cmake
 C:/MinGW/share/cmake-3.27/Modules/CMakeGenericSystem.cmake
 C:/MinGW/share/cmake-3.27/Modules/CMakeInitializeConfigs.cmake
+C:/MinGW/share/cmake-3.27/Modules/CMakeSystem.cmake.in
 C:/MinGW/share/cmake-3.27/Modules/CMakeSystemSpecificInformation.cmake
 C:/MinGW/share/cmake-3.27/Modules/CMakeSystemSpecificInitialize.cmake
 C:/MinGW/share/cmake-3.27/Modules/ExternalProject.cmake
