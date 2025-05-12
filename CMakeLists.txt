@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
 project(CPUEmulator6502)
+
+# main executable
 add_executable(main_6502 "lib/src/main_6502.cpp")
 target_include_directories(main_6502 PRIVATE lib/src)
 
@@ -7,6 +9,7 @@ target_include_directories(main_6502 PRIVATE lib/src)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# fetch GoogleTest
 include(FetchContent)
 FetchContent_Declare(
   googletest
@@ -19,14 +22,13 @@ FetchContent_MakeAvailable(googletest)
 enable_testing()
 
 set(TEST_SOURCES
-    "test/src/main_6502_test.cpp"
     "test/src/6502_tests.cpp")
 
 add_executable(main_6502_test ${TEST_SOURCES})
 
 target_include_directories(main_6502_test PRIVATE lib/src)
 
-target_link_libraries(main_6502_test PRIVATE GTest::gtest_main)
+target_link_libraries(main_6502_test GTest::gtest_main)
 
 include(GoogleTest)
 gtest_discover_tests(main_6502_test)

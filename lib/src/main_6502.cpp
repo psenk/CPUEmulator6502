@@ -5,7 +5,7 @@ int main()
     Mem mem;
     CPU cpu;
     cpu.reset(mem);
-s
+
     // hardcoding machine code
     mem[0xFFFC] = CPU::INS_LDA_ZPG;
     mem[0xFFFD] = 0x42;
