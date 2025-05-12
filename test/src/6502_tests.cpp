@@ -36,9 +36,10 @@ TEST_F(CPUTest, LDAImmediate_LoadValueIntoARegister)
     mem[0xFFFC] = CPU::INS_LDA_IMM;
     mem[0xFFFD] = 0x42;
 
-    cpu.execute(2, mem);
+    s32 cyclesExecuted = cpu.execute(2, mem);
 
     EXPECT_EQ(cpu.A, 0x42);
+    EXPECT_EQ(cyclesExecuted, 2);
     TestLDAFlagsUnchanged(cpuCopy, cpu);
     EXPECT_FALSE(cpu.Z);
     EXPECT_FALSE(cpu.N);
@@ -50,12 +51,28 @@ TEST_F(CPUTest, LDAImmediate_LoadNegativeValueIntoARegister)
     mem[0xFFFC] = CPU::INS_LDA_IMM;
     mem[0xFFFD] = 0x84;
 
-    cpu.execute(2, mem);
+    s32 cyclesExecuted = cpu.execute(2, mem);
 
     EXPECT_EQ(cpu.A, 0x84);
+    EXPECT_EQ(cyclesExecuted, 2);
     TestLDAFlagsUnchanged(cpuCopy, cpu);
     EXPECT_FALSE(cpu.Z);
     EXPECT_TRUE(cpu.N);
+}
+
+TEST_F(CPUTest, LDAImmediate_LoadZeroIntoARegister)
+{
+    CPU cpuCopy = cpu;
+    mem[0xFFFC] = CPU::INS_LDA_IMM;
+    mem[0xFFFD] = 0x0;
+
+    s32 cyclesExecuted = cpu.execute(2, mem);
+
+    EXPECT_EQ(cpu.A, 0x0);
+    EXPECT_EQ(cyclesExecuted, 2);
+    TestLDAFlagsUnchanged(cpuCopy, cpu);
+    EXPECT_TRUE(cpu.Z);
+    EXPECT_FALSE(cpu.N);
 }
 
 TEST_F(CPUTest, LDAZeroPage_LoadValueIntoARegister)
@@ -65,9 +82,10 @@ TEST_F(CPUTest, LDAZeroPage_LoadValueIntoARegister)
     mem[0xFFFD] = 0x42;
     mem[0x0042] = 0x73;
 
-    cpu.execute(3, mem);
+    s32 cyclesExecuted = cpu.execute(3, mem);
 
     EXPECT_EQ(cpu.A, 0x73);
+    EXPECT_EQ(cyclesExecuted, 3);
     TestLDAFlagsUnchanged(cpuCopy, cpu);
     EXPECT_FALSE(cpu.Z);
     EXPECT_FALSE(cpu.N);
@@ -81,9 +99,10 @@ TEST_F(CPUTest, LDAZeroPageX_LoadValueIntoARegister)
     mem[0xFFFD] = 0x42;
     mem[0x0047] = 0x73;
 
-    cpu.execute(4, mem);
+    s32 cyclesExecuted = cpu.execute(4, mem);
 
     EXPECT_EQ(cpu.A, 0x73);
+    EXPECT_EQ(cyclesExecuted, 4);
     TestLDAFlagsUnchanged(cpuCopy, cpu);
     EXPECT_FALSE(cpu.Z);
     EXPECT_FALSE(cpu.N);
@@ -97,9 +116,10 @@ TEST_F(CPUTest, LDAZeroPageX_LoadValueIntoARegister_WrapAround)
     mem[0xFFFD] = 0x80;
     mem[0x007F] = 0x73;
 
-    cpu.execute(4, mem);
+    s32 cyclesExecuted = cpu.execute(4, mem);
 
     EXPECT_EQ(cpu.A, 0x73);
+    EXPECT_EQ(cyclesExecuted, 4);
     TestLDAFlagsUnchanged(cpuCopy, cpu);
     EXPECT_FALSE(cpu.Z);
     EXPECT_FALSE(cpu.N);

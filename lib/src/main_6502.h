@@ -11,6 +11,7 @@ using Byte = unsigned char;  // 8-bit
 using Word = unsigned short; // 16-bit
 
 using u32 = unsigned int;
+using s32 = signed int;
 
 // memory
 struct Mem
@@ -43,7 +44,7 @@ struct Mem
     }
 
     /* write one word/two bytes to memory */
-    void writeWord(u32 &cycles, Word input, u32 address)
+    void writeWord(s32 &cycles, Word input, u32 address)
     {
         data[address] = input & 0xFF;
         data[address + 1] = input >> 8;
@@ -87,7 +88,7 @@ struct CPU
 
     /* fetch one byte from memory
        cycles and memory by reference */
-    Byte fetchByte(u32 &cycles, Mem &memory)
+    Byte fetchByte(s32 &cycles, Mem &memory)
     {
         Byte data = memory[PC];
         PC++;
@@ -98,28 +99,28 @@ struct CPU
     /* read byte from memory
        cycles and memory by reference
        no PC increment (no code being executed) */
-    Byte readByteFromMemory(u32 &cycles, Byte address, Mem &memory)
+    Byte readByteFromMemory(s32 &cycles, Byte address, Mem &memory)
     {
         Byte data = memory[address];
         cycles--;
         return data;
     }
 
-    Byte readByteFromARegister(u32 &cycles)
+    Byte readByteFromARegister(s32 &cycles)
     {
         Byte data = A;
         cycles--;
         return data;
     }
 
-    Byte readByteFromXRegister(u32 &cycles)
+    Byte readByteFromXRegister(s32 &cycles)
     {
         Byte data = X;
         cycles--;
         return data;
     }
 
-    Byte readByteFromYRegister(u32 &cycles)
+    Byte readByteFromYRegister(s32 &cycles)
     {
         Byte data = Y;
         cycles--;
@@ -129,7 +130,7 @@ struct CPU
     /* fetch one word from memory
        cycles and memory by reference
        little endian */
-    Word fetchWord(u32 &cycles, Mem &memory)
+    Word fetchWord(s32 &cycles, Mem &memory)
     {
         Word data = memory[PC];
         PC++;
@@ -155,8 +156,9 @@ struct CPU
     }
 
     /* execute code */
-    void execute(u32 cycles, Mem &memory)
+    s32 execute(s32 cycles, Mem &memory)
     {
+        const u32 cyclesRequested = cycles;
         while (cycles > 0)
         {
             Byte instruction = fetchByte(cycles, memory);
@@ -167,7 +169,7 @@ struct CPU
             {
                 Word subroutineAddress = fetchWord(cycles, memory);
                 memory.writeWord(cycles, PC - 1, SP);
-                SP++;
+                SP += 2;
                 PC = subroutineAddress;
                 cycles--;
                 break;
@@ -205,5 +207,7 @@ struct CPU
             }
             }
         }
+        const s32 cyclesUsed = cyclesRequested - cycles;
+        return cyclesUsed;
     }
 };
