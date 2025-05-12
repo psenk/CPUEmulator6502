@@ -98,9 +98,16 @@ struct CPU
     /* read byte from memory
        cycles and memory by reference
        no PC increment (no code being executed) */
-    Byte readByte(u32 &cycles, Byte address, Mem &memory)
+    Byte readByteFromMemory(u32 &cycles, Byte address, Mem &memory)
     {
         Byte data = memory[address];
+        cycles--;
+        return data;
+    }
+
+    Byte readByteFromARegister(u32 &cycles)
+    {
+        Byte data = A;
         cycles--;
         return data;
     }
@@ -108,6 +115,13 @@ struct CPU
     Byte readByteFromXRegister(u32 &cycles)
     {
         Byte data = X;
+        cycles--;
+        return data;
+    }
+
+    Byte readByteFromYRegister(u32 &cycles)
+    {
+        Byte data = Y;
         cycles--;
         return data;
     }
@@ -170,17 +184,17 @@ struct CPU
             case INS_LDA_ZPG: // test complete
             {
                 Byte zeroPageAddress = fetchByte(cycles, memory);
-                A = readByte(cycles, zeroPageAddress, memory);
+                A = readByteFromMemory(cycles, zeroPageAddress, memory);
                 LDA_setStatus();
                 break;
             }
 
-            case INS_LDA_ZPX:
+            case INS_LDA_ZPX: // test complete
             {
                 Byte zeroPageAddress = fetchByte(cycles, memory);
                 Byte xRegister = readByteFromXRegister(cycles);
                 Byte newAddress = zeroPageAddress + xRegister;
-                A = readByte(cycles, newAddress, memory);
+                A = readByteFromMemory(cycles, newAddress, memory);
                 LDA_setStatus();
                 break;
             }

@@ -53,3 +53,15 @@ TEST_F(CPUTest, LDAZeroPageX_LoadValueIntoARegister)
 
     EXPECT_EQ(cpu.A, 0x73);
 }
+
+TEST_F(CPUTest, LDAZeroPageX_LoadValueIntoARegister_WrapAround)
+{
+    cpu.X = 0xFF;
+    mem[0xFFFC] = CPU::INS_LDA_ZPX;
+    mem[0xFFFD] = 0x80;
+    mem[0x007F] = 0x73;
+
+    cpu.execute(4, mem);
+
+    EXPECT_EQ(cpu.A, 0x73);
+}
