@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\obliv\Desktop\C Practice\CPUEmulator6502\build\CMakeFiles\f4f495c2a7897d8f200ff20eb7b31481\INSTALL_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{1223E921-3802-36FB-BB9C-87AC2D975659}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

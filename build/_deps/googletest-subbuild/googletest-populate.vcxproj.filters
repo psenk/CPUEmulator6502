@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\obliv\Desktop\C Practice\CPUEmulator6502\build\_deps\googletest-subbuild\CMakeFiles\e25b0c00218ad851c165c58bbe3e0c48\googletest-populate-mkdir.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\obliv\Desktop\C Practice\CPUEmulator6502\build\_deps\googletest-subbuild\CMakeFiles\e25b0c00218ad851c165c58bbe3e0c48\googletest-populate-download.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\obliv\Desktop\C Practice\CPUEmulator6502\build\_deps\googletest-subbuild\CMakeFiles\e25b0c00218ad851c165c58bbe3e0c48\googletest-populate-update.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\obliv\Desktop\C Practice\CPUEmulator6502\build\_deps\googletest-subbuild\CMakeFiles\e25b0c00218ad851c165c58bbe3e0c48\googletest-populate-patch.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\obliv\Desktop\C Practice\CPUEmulator6502\build\_deps\googletest-subbuild\CMakeFiles\e25b0c00218ad851c165c58bbe3e0c48\googletest-populate-configure.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\obliv\Desktop\C Practice\CPUEmulator6502\build\_deps\googletest-subbuild\CMakeFiles\e25b0c00218ad851c165c58bbe3e0c48\googletest-populate-build.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\obliv\Desktop\C Practice\CPUEmulator6502\build\_deps\googletest-subbuild\CMakeFiles\e25b0c00218ad851c165c58bbe3e0c48\googletest-populate-install.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\obliv\Desktop\C Practice\CPUEmulator6502\build\_deps\googletest-subbuild\CMakeFiles\e25b0c00218ad851c165c58bbe3e0c48\googletest-populate-test.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\obliv\Desktop\C Practice\CPUEmulator6502\build\_deps\googletest-subbuild\CMakeFiles\8b444c987f6f561224c15f171e1cbb31\googletest-populate-complete.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\obliv\Desktop\C Practice\CPUEmulator6502\build\_deps\googletest-subbuild\CMakeFiles\2d54d0ef71ad9c937ae70ff8a3ab5c15\googletest-populate.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\obliv\Desktop\C Practice\CPUEmulator6502\build\_deps\googletest-subbuild\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\Users\obliv\Desktop\C Practice\CPUEmulator6502\build\_deps\googletest-subbuild\CMakeFiles\googletest-populate" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{32C58E3C-38AB-3C9E-99AC-F07882A0EB35}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

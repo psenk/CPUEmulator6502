@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\obliv\Desktop\C Practice\CPUEmulator6502\test\src\main_6502_test.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\obliv\Desktop\C Practice\CPUEmulator6502\test\src\6502_tests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\obliv\Desktop\C Practice\CPUEmulator6502\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{E2B79F50-A47F-32C9-8C28-2D45BA79C1E2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

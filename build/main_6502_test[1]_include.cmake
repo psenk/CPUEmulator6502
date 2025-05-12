@@ -1,0 +1,5 @@
+if(EXISTS "C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/main_6502_test[1]_tests.cmake")
+  include("C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/main_6502_test[1]_tests.cmake")
+else()
+  add_test(main_6502_test_NOT_BUILT main_6502_test_NOT_BUILT)
+endif()
