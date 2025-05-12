@@ -1,3 +1,0 @@
-C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/_deps/googletest-subbuild/CMakeFiles/googletest-populate.dir
-C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/_deps/googletest-subbuild/CMakeFiles/ALL_BUILD.dir
-C:/Users/obliv/Desktop/C Practice/CPUEmulator6502/build/_deps/googletest-subbuild/CMakeFiles/ZERO_CHECK.dir
