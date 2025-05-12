@@ -72,7 +72,7 @@ struct CPU
     Byte I : 1; // interrupt disable
     Byte D : 1; // decimal mode
     Byte B : 1; // break command
-    Byte O : 1; // overflow flag
+    Byte V : 1; // overflow flag
     Byte N : 1; // negative flag
 
     /* reset CPU */
@@ -81,7 +81,7 @@ struct CPU
         PC = 0xFFFC;
         SP = 0x0100;
         A = X = Y = 0;
-        C = Z = I = D = B = O = N = 0;
+        C = Z = I = D = B = V = N = 0;
         memory.initialize();
     }
 
