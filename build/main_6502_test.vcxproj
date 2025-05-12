@@ -373,7 +373,6 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="C:\Users\obliv\Desktop\C Practice\CPUEmulator6502\test\src\main_6502_test.cpp" />
     <ClCompile Include="C:\Users\obliv\Desktop\C Practice\CPUEmulator6502\test\src\6502_tests.cpp" />
   </ItemGroup>
   <ItemGroup>

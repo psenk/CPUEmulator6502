@@ -1,1 +1,2 @@
+CPUTest.RunInlineProgram 6 0.00579562
 ---

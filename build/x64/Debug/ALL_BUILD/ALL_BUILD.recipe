@@ -5,10 +5,10 @@
       <FullPath>C:\Users\obliv\Desktop\C Practice\CPUEmulator6502\build\x64\Debug\ZERO_CHECK</FullPath>
     </ProjectOutput>
     <ProjectOutput>
-      <FullPath>C:\Users\obliv\Desktop\C Practice\CPUEmulator6502\build\Debug\main.exe</FullPath>
+      <FullPath>C:\Users\obliv\Desktop\C Practice\CPUEmulator6502\build\Debug\main_6502.exe</FullPath>
     </ProjectOutput>
     <ProjectOutput>
-      <FullPath>C:\Users\obliv\Desktop\C Practice\CPUEmulator6502\build\Debug\main_test.exe</FullPath>
+      <FullPath>C:\Users\obliv\Desktop\C Practice\CPUEmulator6502\build\Debug\main_6502_test.exe</FullPath>
     </ProjectOutput>
     <ProjectOutput>
       <FullPath>C:\Users\obliv\Desktop\C Practice\CPUEmulator6502\build\x64\Debug\ALL_BUILD</FullPath>
