@@ -105,6 +105,13 @@ struct CPU
         return data;
     }
 
+    Byte readByteFromXRegister(u32 &cycles)
+    {
+        Byte data = X;
+        cycles--;
+        return data;
+    }
+
     /* fetch one word from memory
        cycles and memory by reference
        little endian */
@@ -152,7 +159,7 @@ struct CPU
                 break;
             }
             // load accumulator immediate
-            case INS_LDA_IMM:
+            case INS_LDA_IMM: // test complete
             {
                 Byte value = fetchByte(cycles, memory);
                 A = value;
@@ -160,7 +167,7 @@ struct CPU
                 break;
             }
             // load accumulator from zero page address
-            case INS_LDA_ZPG:
+            case INS_LDA_ZPG: // test complete
             {
                 Byte zeroPageAddress = fetchByte(cycles, memory);
                 A = readByte(cycles, zeroPageAddress, memory);
@@ -171,8 +178,8 @@ struct CPU
             case INS_LDA_ZPX:
             {
                 Byte zeroPageAddress = fetchByte(cycles, memory);
-                Byte xRegisterAddress = readByte(cycles, X, memory);
-                Byte newAddress = zeroPageAddress + xRegisterAddress;
+                Byte xRegister = readByteFromXRegister(cycles);
+                Byte newAddress = zeroPageAddress + xRegister;
                 A = readByte(cycles, newAddress, memory);
                 LDA_setStatus();
                 break;
