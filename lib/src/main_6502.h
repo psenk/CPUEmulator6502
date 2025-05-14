@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <iostream>
 #include <stdlib.h>
 
 // http://6502.org/users/obelisk/
@@ -36,8 +36,7 @@ struct Mem
     }
 
     /* write one byte to memory
-       defining custom [] operator
-       return by reference & */
+       defining custom [] operator */
     Byte &operator[](u32 address)
     {
         return data[address];
@@ -86,9 +85,8 @@ struct CPU
         memory.initialize();
     }
 
-    /* fetch one byte from memory
-       cycles and memory by reference */
-    Byte fetchByte(s32 &cycles, Mem &memory)
+    /* fetch next byte from memory */
+    Byte fetchNextByte(s32 &cycles, Mem &memory)
     {
         Byte data = memory[PC];
         PC++;
@@ -96,41 +94,9 @@ struct CPU
         return data;
     }
 
-    /* read byte from memory
-       cycles and memory by reference
-       no PC increment (no code being executed) */
-    Byte readByteFromMemory(s32 &cycles, Byte address, Mem &memory)
-    {
-        Byte data = memory[address];
-        cycles--;
-        return data;
-    }
-
-    Byte readByteFromARegister(s32 &cycles)
-    {
-        Byte data = A;
-        cycles--;
-        return data;
-    }
-
-    Byte readByteFromXRegister(s32 &cycles)
-    {
-        Byte data = X;
-        cycles--;
-        return data;
-    }
-
-    Byte readByteFromYRegister(s32 &cycles)
-    {
-        Byte data = Y;
-        cycles--;
-        return data;
-    }
-
-    /* fetch one word from memory
-       cycles and memory by reference
+    /* fetch next word from memory
        little endian */
-    Word fetchWord(s32 &cycles, Mem &memory)
+    Word fetchNextWord(s32 &cycles, Mem &memory)
     {
         Word data = memory[PC];
         PC++;
@@ -144,30 +110,83 @@ struct CPU
         return data;
     }
 
-    static constexpr Byte INS_JSR = 0x20;
-    static constexpr Byte INS_LDA_IMM = 0xA9;
-    static constexpr Byte INS_LDA_ZPG = 0xA5;
-    static constexpr Byte INS_LDA_ZPX = 0xB5;
+    /* fetch byte from memory */
+    Byte fetchByteFromAddress(s32 &cycles, Word address, Mem &memory)
+    {
+        Byte data = memory[address];
+        cycles--;
+        return data;
+    }
 
+    /* fetch one word from address
+       little endian */
+    Word fetchWordFromAddress(s32 &cycles, Word address, Mem &memory)
+    {
+
+        Word data = memory[address];
+        address++;
+
+        data |= (memory[address] << 8);
+
+        // handle endianness?
+
+        cycles -= 2;
+        return data;
+    }
+
+    /* fetch byte from the A register */
+    Byte fetchByteFromARegister()
+    {
+        Byte data = A;
+        return data;
+    }
+
+    /* fetch byte from the X register */
+    Byte fetchByteFromXRegister()
+    {
+        Byte data = X;
+        return data;
+    }
+
+    /* fetch byte from the Y register */
+    Byte fetchByteFromYRegister()
+    {
+        Byte data = Y;
+        return data;
+    }
+
+    // opcodes
+    static constexpr Byte INS_JSR = 0x20;
+    // LDA instructions
+    static constexpr Byte INS_LDA_IMM = 0xA9,
+                          INS_LDA_ZPG = 0xA5,
+                          INS_LDA_ZPX = 0xB5,
+                          INS_LDA_ABS = 0xAD,
+                          INS_LDA_ABX = 0xBD,
+                          INS_LDA_ABY = 0xB9,
+                          INS_LDA_INX = 0xA1,
+                          INS_LDA_INY = 0xB1;
+
+    /* set common flags for LDA instructions */
     void LDA_setStatus()
     {
         Z = (A == 0);
         N = (A & 0b10000000) > 0;
     }
 
-    /* execute code */
+    /* execute instructions */
     s32 execute(s32 cycles, Mem &memory)
     {
-        const u32 cyclesRequested = cycles;
+        const s32 cyclesRequested = cycles;
         while (cycles > 0)
         {
-            Byte instruction = fetchByte(cycles, memory);
+            Byte instruction = fetchNextByte(cycles, memory);
             switch (instruction)
             {
             // jump to subroutine
             case INS_JSR:
             {
-                Word subroutineAddress = fetchWord(cycles, memory);
+                Word subroutineAddress = fetchNextWord(cycles, memory);
                 memory.writeWord(cycles, PC - 1, SP);
                 SP += 2;
                 PC = subroutineAddress;
@@ -175,35 +194,106 @@ struct CPU
                 break;
             }
             // load accumulator immediate
-            case INS_LDA_IMM: // test complete
+            case INS_LDA_IMM: // testing complete
             {
-                Byte value = fetchByte(cycles, memory);
+                Byte value = fetchNextByte(cycles, memory);
                 A = value;
                 LDA_setStatus();
                 break;
             }
             // load accumulator from zero page address
-            case INS_LDA_ZPG: // test complete
+            case INS_LDA_ZPG: // testing complete
             {
-                Byte zeroPageAddress = fetchByte(cycles, memory);
-                A = readByteFromMemory(cycles, zeroPageAddress, memory);
+                Byte zeroPageAddress = fetchNextByte(cycles, memory);
+                A = fetchByteFromAddress(cycles, zeroPageAddress, memory);
                 LDA_setStatus();
                 break;
             }
-
-            case INS_LDA_ZPX: // test complete
+            // load accumulator from zero page address + x register
+            case INS_LDA_ZPX: // testing complete
             {
-                Byte zeroPageAddress = fetchByte(cycles, memory);
-                Byte xRegister = readByteFromXRegister(cycles);
-                Byte newAddress = zeroPageAddress + xRegister;
-                A = readByteFromMemory(cycles, newAddress, memory);
+                Byte zeroPageAddress = fetchNextByte(cycles, memory);
+                Byte xRegister = fetchByteFromXRegister();
+                Byte newAddress = zeroPageAddress + xRegister; // cycle is taken for addition here
+                cycles--;
+                A = fetchByteFromAddress(cycles, newAddress, memory);
+                LDA_setStatus();
+                break;
+            }
+            // load accumulator from absolute address
+            case INS_LDA_ABS: // testing complete
+            {
+                Word absoluteAddress = fetchNextWord(cycles, memory);
+                A = fetchByteFromAddress(cycles, absoluteAddress, memory);
+                LDA_setStatus();
+                break;
+            }
+            // load accumulator from absolute address + x register
+            case INS_LDA_ABX: // testing complete
+            {
+                Word absoluteAddress = fetchNextWord(cycles, memory);
+                Byte xRegister = fetchByteFromXRegister();
+                Word newAddress = absoluteAddress + xRegister;
+
+                bool pageCrossed = (absoluteAddress & 0xFF00) != (newAddress & 0xFF00);
+                if (pageCrossed)
+                {
+                    cycles--;
+                }
+                A = fetchByteFromAddress(cycles, newAddress, memory);
+                LDA_setStatus();
+                break;
+            }
+            // load accumulator from absolute address + y register
+            case INS_LDA_ABY: // testing complete
+            {
+                Word absoluteAddress = fetchNextWord(cycles, memory);
+                Byte yRegister = fetchByteFromYRegister();
+                Word newAddress = absoluteAddress + yRegister;
+
+                bool pageCrossed = (absoluteAddress & 0xFF00) != (newAddress & 0xFF00);
+                if (pageCrossed)
+                {
+                    cycles--;
+                }
+                A = fetchByteFromAddress(cycles, newAddress, memory);
+                LDA_setStatus();
+                break;
+            }
+            // load accumulator with indexed indirect addressing with x register
+            case INS_LDA_INX: // testing complete
+            {
+                Byte zeroPageAddress = fetchNextByte(cycles, memory);
+                Byte xRegister = fetchByteFromXRegister();
+                Word addedAddress = (zeroPageAddress + xRegister) & 0xFF; // cycle is taken for addition here
+                cycles--;
+                Word newAddress = fetchWordFromAddress(cycles, addedAddress, memory);
+                A = fetchByteFromAddress(cycles, newAddress, memory);
+                LDA_setStatus();
+                break;
+            }
+            // load accumulator with indirect indexed addressing with y register
+            case INS_LDA_INY: // testing complete
+            {
+                Byte zeroPageAddress = fetchNextByte(cycles, memory);
+                Word newAddress = fetchWordFromAddress(cycles, zeroPageAddress, memory);
+                Byte yRegister = fetchByteFromYRegister();
+                Word addedAddress = newAddress + yRegister; // no cycles taken adding here
+
+                bool pageCrossed = (newAddress & 0xFF00) != (addedAddress & 0xFF00);
+                if (pageCrossed)
+                {
+                    cycles--;
+                }
+                A = fetchByteFromAddress(cycles, addedAddress, memory);
                 LDA_setStatus();
                 break;
             }
             default:
             {
-                printf("Instruction not handled: %d", instruction);
-                break;
+                std::cout << "Instruction not handled: " << instruction << std::endl;
+                PC--;
+                return -1;
             }
             }
         }
