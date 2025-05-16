@@ -19,7 +19,9 @@ namespace m6502
     struct CPU;
 }
 
-// memory
+/**
+ * MEMORY
+ */
 struct m6502::Mem
 {
     static constexpr u32 MAX_MEM = 1024 * 64;
@@ -57,7 +59,9 @@ struct m6502::Mem
     }
 };
 
-// CPU
+/**
+ * CPU
+ */
 struct m6502::CPU
 {
     /*
@@ -73,6 +77,8 @@ struct m6502::CPU
 
     Byte A, X, Y; // registers
 
+    enum RegisterType;
+
     Byte C : 1; // carry flag
     Byte Z : 1; // zero flag
     Byte I : 1; // interrupt disable
@@ -81,7 +87,10 @@ struct m6502::CPU
     Byte V : 1; // overflow flag
     Byte N : 1; // negative flag
 
-    /* reset CPU */
+    /**
+     * RESET COMMAND
+     */
+
     void reset(Mem &memory)
     {
         PC = 0xFFFC;
@@ -90,6 +99,10 @@ struct m6502::CPU
         C = Z = I = D = B = V = N = 0;
         memory.initialize();
     }
+
+    /**
+     * FETCH FUNCTIONS
+     */
 
     /* fetch next byte from memory */
     Byte fetchNextByte(s32 &cycles, Mem &memory)
@@ -161,7 +174,10 @@ struct m6502::CPU
         return data;
     }
 
-    // opcodes
+    /**
+     * INSTRUCTION OPCODES
+     */
+
     // LDA instructions
     static constexpr Byte INS_LDA_IMM = 0xA9,
                           INS_LDA_ZPG = 0xA5,
@@ -171,12 +187,14 @@ struct m6502::CPU
                           INS_LDA_ABY = 0xB9,
                           INS_LDA_INX = 0xA1,
                           INS_LDA_INY = 0xB1;
+
     // LDX instructions
     static constexpr Byte INS_LDX_IMM = 0xA2,
                           INS_LDX_ZPG = 0xA6,
                           INS_LDX_ZPY = 0xB6,
                           INS_LDX_ABS = 0xAE,
                           INS_LDX_ABY = 0xBE;
+
     // LDY instructions
     static constexpr Byte INS_LDY_IMM = 0xA0,
                           INS_LDY_ZPG = 0xA4,
@@ -184,12 +202,41 @@ struct m6502::CPU
                           INS_LDY_ABS = 0xAC,
                           INS_LDY_ABX = 0xBC;
 
-    /* set common flags for load instructions */
-    void load_setStatus(Byte reg)
-    {
-        Z = (reg == 0);
-        N = (reg & 0b10000000) > 0;
-    }
+    // STA instructions
+    static constexpr Byte INS_STA_ZPG = 0x85,
+                          INS_STA_ZPX = 0x95,
+                          INS_STA_ABS = 0x8D,
+                          INS_STA_ABX = 0x9D,
+                          INS_STA_ABY = 0x99,
+                          INS_STA_INX = 0x81,
+                          INS_STA_INY = 0x91;
 
+    // STX instructions
+    static constexpr Byte INS_STA_ZPG = 0x86,
+                          INS_STA_ZPY = 0x96,
+                          INS_STA_ABS = 0x8E;
+
+    // STY instructions
+    static constexpr Byte INS_STA_ZPG = 0x84,
+                          INS_STA_ZPX = 0x94,
+                          INS_STA_ABS = 0x8C;
+
+    /**
+     * ADDRESSING MODES
+     */
+
+    s32 fetchAddressZeroPage(s32 &cycles, Mem &memory);
+    s32 fetchAddressZeroPagePlusRegister(s32 &cycles, RegisterType reg, Mem &memory);
+    s32 fetchAddressAbsolute(s32 &cycles, Mem &memory);
+    s32 fetchAddressAbsolutePlusRegister(s32 &cycles, RegisterType reg, Mem &memory);
+
+    /**
+     * SET FLAGS
+     */
+    void setFlagStatusLoad(Byte reg);
+
+    /**
+     * CPU EXECUTE FUNCTION
+     */
     s32 execute(s32 cycles, Mem &memory);
 };
