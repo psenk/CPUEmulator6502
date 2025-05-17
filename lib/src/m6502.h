@@ -49,14 +49,6 @@ struct m6502::Mem
     {
         return data[address];
     }
-
-    /* write one word/two bytes to memory */
-    void writeWord(s32 &cycles, Word input, u32 address)
-    {
-        data[address] = input & 0xFF;
-        data[address + 1] = input >> 8;
-        cycles -= 2;
-    }
 };
 
 /**
@@ -105,7 +97,7 @@ struct m6502::CPU
      */
 
     /* fetch next byte from memory */
-    Byte fetchNextByte(s32 &cycles, Mem &memory)
+    Byte fetchNextByte(s32 &cycles, const Mem &memory)
     {
         Byte data = memory[PC];
         PC++;
@@ -115,7 +107,7 @@ struct m6502::CPU
 
     /* fetch next word from memory
        little endian */
-    Word fetchNextWord(s32 &cycles, Mem &memory)
+    Word fetchNextWord(s32 &cycles, const Mem &memory)
     {
         Word data = memory[PC];
         PC++;
@@ -130,7 +122,7 @@ struct m6502::CPU
     }
 
     /* fetch byte from memory */
-    Byte fetchByteFromAddress(s32 &cycles, Word address, Mem &memory)
+    Byte fetchByteFromAddress(s32 &cycles, Word address, const Mem &memory)
     {
         Byte data = memory[address];
         cycles--;
@@ -139,7 +131,7 @@ struct m6502::CPU
 
     /* fetch one word from address
        little endian */
-    Word fetchWordFromAddress(s32 &cycles, Word address, Mem &memory)
+    Word fetchWordFromAddress(s32 &cycles, Word address, const Mem &memory)
     {
 
         Word data = memory[address];
@@ -172,6 +164,25 @@ struct m6502::CPU
     {
         Byte data = Y;
         return data;
+    }
+
+    /**
+     * WRITE FUNCTIONS
+     */
+
+    /* write one byte to memory */
+    void writeByte(s32 &cycles, Byte value, Word address, Mem &memory)
+    {
+        memory[address] = value;
+        cycles -= 1;
+    }
+
+    /* write one word to memory */
+    void writeWord(s32 &cycles, Word value, Word address, Mem &memory)
+    {
+        memory[address] = value & 0xFF;
+        memory[address + 1] = value >> 8;
+        cycles -= 2;
     }
 
     /**
@@ -212,23 +223,25 @@ struct m6502::CPU
                           INS_STA_INY = 0x91;
 
     // STX instructions
-    static constexpr Byte INS_STA_ZPG = 0x86,
-                          INS_STA_ZPY = 0x96,
-                          INS_STA_ABS = 0x8E;
+    static constexpr Byte INS_STX_ZPG = 0x86,
+                          INS_STX_ZPY = 0x96,
+                          INS_STX_ABS = 0x8E;
 
     // STY instructions
-    static constexpr Byte INS_STA_ZPG = 0x84,
-                          INS_STA_ZPX = 0x94,
-                          INS_STA_ABS = 0x8C;
+    static constexpr Byte INS_STY_ZPG = 0x84,
+                          INS_STY_ZPX = 0x94,
+                          INS_STY_ABS = 0x8C;
 
     /**
      * ADDRESSING MODES
      */
 
-    s32 fetchAddressZeroPage(s32 &cycles, Mem &memory);
-    s32 fetchAddressZeroPagePlusRegister(s32 &cycles, RegisterType reg, Mem &memory);
-    s32 fetchAddressAbsolute(s32 &cycles, Mem &memory);
-    s32 fetchAddressAbsolutePlusRegister(s32 &cycles, RegisterType reg, Mem &memory);
+    s32 fetchAddressZeroPage(s32 &cycles, const Mem &memory);
+    s32 fetchAddressZeroPagePlusRegister(s32 &cycles, RegisterType reg, const Mem &memory);
+    s32 fetchAddressAbsolute(s32 &cycles, const Mem &memory);
+    s32 fetchAddressAbsolutePlusRegister(s32 &cycles, RegisterType reg, const Mem &memory);
+    s32 fetchAddressIndexedIndirect(s32 &cycles, const Mem &memory);
+    s32 fetchAddressIndirectIndexed(s32 &cycles, const Mem &memory, bool extraCycle);
 
     /**
      * SET FLAGS

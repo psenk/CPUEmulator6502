@@ -5,7 +5,7 @@
 // :: - start at global scope
 // testing - namespace that contains Test class
 // ::Test - Test class within testing namespace
-class CPUTest : public ::testing::Test
+class LoadRegisterTests : public ::testing::Test
 {
 protected:
     m6502::Mem mem;
@@ -39,6 +39,7 @@ protected:
     void testLoadZeroPagePlusRegisterWrapAround(m6502::Byte opcode,
                                                 m6502::Byte m6502::CPU::*addedReg,
                                                 m6502::Byte m6502::CPU::*reg);
+
     // load absolute
     void testLoadAbsolute(m6502::Byte opcode,
                           m6502::Byte m6502::CPU::*reg);
@@ -50,98 +51,23 @@ protected:
     void testLoadAbsolutePlusRegisterPageCrossed(m6502::Byte opcode,
                                                  m6502::Byte m6502::CPU::*addedReg,
                                                  m6502::Byte m6502::CPU::*reg);
+
+    // test flags
+    static void testLoadFlagsUnchanged(const m6502::CPU &cpuCopy,
+                                       const m6502::CPU &cpu)
+    {
+        EXPECT_EQ(cpuCopy.C, cpu.C);
+        EXPECT_EQ(cpuCopy.I, cpu.I);
+        EXPECT_EQ(cpuCopy.D, cpu.D);
+        EXPECT_EQ(cpuCopy.B, cpu.B);
+        EXPECT_EQ(cpuCopy.V, cpu.V);
+    }
 };
-
-static void testFullCPUUnchanged(const m6502::CPU &cpuCopy,
-                                 const m6502::CPU &cpu)
-{
-    EXPECT_EQ(cpuCopy.PC, cpu.PC);
-    EXPECT_EQ(cpuCopy.SP, cpu.SP);
-    EXPECT_EQ(cpuCopy.A, cpu.A);
-    EXPECT_EQ(cpuCopy.X, cpu.X);
-    EXPECT_EQ(cpuCopy.Y, cpu.Y);
-    EXPECT_EQ(cpuCopy.C, cpu.C);
-    EXPECT_EQ(cpuCopy.Z, cpu.Z);
-    EXPECT_EQ(cpuCopy.I, cpu.I);
-    EXPECT_EQ(cpuCopy.D, cpu.D);
-    EXPECT_EQ(cpuCopy.B, cpu.B);
-    EXPECT_EQ(cpuCopy.V, cpu.V);
-    EXPECT_EQ(cpuCopy.N, cpu.N);
-}
-
-static void testLoadFlagsUnchanged(const m6502::CPU &cpuCopy,
-                                   const m6502::CPU &cpu)
-{
-    EXPECT_EQ(cpuCopy.C, cpu.C);
-    EXPECT_EQ(cpuCopy.I, cpu.I);
-    EXPECT_EQ(cpuCopy.D, cpu.D);
-    EXPECT_EQ(cpuCopy.B, cpu.B);
-    EXPECT_EQ(cpuCopy.V, cpu.V);
-}
-
-/**
- * CPU TESTING
- */
-TEST_F(CPUTest, CPUDoesNothingWithZeroCyclesExecuted)
-{
-    // arrange:
-    using namespace m6502;
-    CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 0;
-
-    // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
-
-    // assert:
-    EXPECT_EQ(cyclesExecuted, 0);
-    testFullCPUUnchanged(cpuCopy, cpu);
-}
-
-TEST_F(CPUTest, CPUNotGivenEnoughCyclesForInstruction)
-{
-    // arrange
-    using namespace m6502;
-    CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 1;
-
-    mem[0xFFFC] = CPU::INS_LDA_IMM;
-    mem[0xFFFD] = 0x42;
-    mem[0x0042] = 0x00;
-
-    // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
-
-    // assert:
-    EXPECT_EQ(cyclesExecuted, 2);
-    EXPECT_EQ(mem[0x0042], 0x00);
-    testLoadFlagsUnchanged(cpuCopy, cpu);
-    EXPECT_FALSE(cpu.Z);
-    EXPECT_FALSE(cpu.N);
-}
-
-TEST_F(CPUTest, CPUExecutesBadFunction)
-{
-    // arrange
-    using namespace m6502;
-    CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 1;
-
-    mem[0xFFFC] = 0x02; // invalid opcode
-
-    // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
-
-    // assert:
-    EXPECT_EQ(cyclesExecuted, -1);
-    testFullCPUUnchanged(cpuCopy, cpu);
-    EXPECT_FALSE(cpu.Z);
-    EXPECT_FALSE(cpu.N);
-}
 
 /**
  * LOAD IMMEDIATE TESTING
  */
-void CPUTest::testLoadImmediate(
+void LoadRegisterTests::testLoadImmediate(
     m6502::Byte opcode,
     m6502::Byte m6502::CPU::*reg)
 {
@@ -164,7 +90,7 @@ void CPUTest::testLoadImmediate(
     EXPECT_FALSE(cpu.N);
 }
 
-void CPUTest::testLoadImmediateNegativeValue(
+void LoadRegisterTests::testLoadImmediateNegativeValue(
     m6502::Byte opcode,
     m6502::Byte m6502::CPU::*reg)
 {
@@ -187,7 +113,7 @@ void CPUTest::testLoadImmediateNegativeValue(
     EXPECT_TRUE(cpu.N);
 }
 
-void CPUTest::testLoadImmediateZeroValue(
+void LoadRegisterTests::testLoadImmediateZeroValue(
     m6502::Byte opcode,
     m6502::Byte m6502::CPU::*reg)
 {
@@ -210,55 +136,55 @@ void CPUTest::testLoadImmediateZeroValue(
     EXPECT_FALSE(cpu.N);
 }
 
-TEST_F(CPUTest, LDAImmediate_LoadValue)
+TEST_F(LoadRegisterTests, LDAImmediate_LoadValue)
 {
     using namespace m6502;
     testLoadImmediate(CPU::INS_LDA_IMM, &CPU::A);
 }
 
-TEST_F(CPUTest, LDXImmediate_LoadValue)
+TEST_F(LoadRegisterTests, LDXImmediate_LoadValue)
 {
     using namespace m6502;
     testLoadImmediate(CPU::INS_LDX_IMM, &CPU::X);
 }
 
-TEST_F(CPUTest, LDYImmediate_LoadValue)
+TEST_F(LoadRegisterTests, LDYImmediate_LoadValue)
 {
     using namespace m6502;
     testLoadImmediate(CPU::INS_LDY_IMM, &CPU::Y);
 }
 
-TEST_F(CPUTest, LDAImmediate_LoadNegativeValue)
+TEST_F(LoadRegisterTests, LDAImmediate_LoadNegativeValue)
 {
     using namespace m6502;
     testLoadImmediateNegativeValue(CPU::INS_LDA_IMM, &CPU::A);
 }
 
-TEST_F(CPUTest, LDXImmediate_LoadNegativeValue)
+TEST_F(LoadRegisterTests, LDXImmediate_LoadNegativeValue)
 {
     using namespace m6502;
     testLoadImmediateNegativeValue(CPU::INS_LDX_IMM, &CPU::X);
 }
 
-TEST_F(CPUTest, LDYImmediate_LoadNegativeValue)
+TEST_F(LoadRegisterTests, LDYImmediate_LoadNegativeValue)
 {
     using namespace m6502;
     testLoadImmediateNegativeValue(CPU::INS_LDY_IMM, &CPU::Y);
 }
 
-TEST_F(CPUTest, LDAImmediate_LoadZero)
+TEST_F(LoadRegisterTests, LDAImmediate_LoadZero)
 {
     using namespace m6502;
     testLoadImmediateZeroValue(CPU::INS_LDA_IMM, &CPU::A);
 }
 
-TEST_F(CPUTest, LDXImmediate_LoadZero)
+TEST_F(LoadRegisterTests, LDXImmediate_LoadZero)
 {
     using namespace m6502;
     testLoadImmediateZeroValue(CPU::INS_LDX_IMM, &CPU::X);
 }
 
-TEST_F(CPUTest, LDYImmediate_LoadZero)
+TEST_F(LoadRegisterTests, LDYImmediate_LoadZero)
 {
     using namespace m6502;
     testLoadImmediateZeroValue(CPU::INS_LDY_IMM, &CPU::Y);
@@ -268,7 +194,7 @@ TEST_F(CPUTest, LDYImmediate_LoadZero)
  * LOAD ZERO PAGE TESTING
  */
 
-void CPUTest::testLoadZeroPage(
+void LoadRegisterTests::testLoadZeroPage(
     m6502::Byte opcode,
     m6502::Byte m6502::CPU::*reg)
 {
@@ -292,19 +218,19 @@ void CPUTest::testLoadZeroPage(
     EXPECT_FALSE(cpu.N);
 }
 
-TEST_F(CPUTest, LDAZeroPage_LoadValue)
+TEST_F(LoadRegisterTests, LDAZeroPage_LoadValue)
 {
     using namespace m6502;
     testLoadZeroPage(CPU::INS_LDA_ZPG, &CPU::A);
 }
 
-TEST_F(CPUTest, LDXZeroPage_LoadValue)
+TEST_F(LoadRegisterTests, LDXZeroPage_LoadValue)
 {
     using namespace m6502;
     testLoadZeroPage(CPU::INS_LDX_ZPG, &CPU::X);
 }
 
-TEST_F(CPUTest, LDYZeroPage_LoadValue)
+TEST_F(LoadRegisterTests, LDYZeroPage_LoadValue)
 {
     using namespace m6502;
     testLoadZeroPage(CPU::INS_LDY_ZPG, &CPU::Y);
@@ -314,7 +240,7 @@ TEST_F(CPUTest, LDYZeroPage_LoadValue)
  * LOAD ZERO PAGE + REGISTER TESTING
  */
 
-void CPUTest::testLoadZeroPagePlusRegister(
+void LoadRegisterTests::testLoadZeroPagePlusRegister(
     m6502::Byte opcode,
     m6502::Byte m6502::CPU::*addedReg,
     m6502::Byte m6502::CPU::*reg)
@@ -340,7 +266,7 @@ void CPUTest::testLoadZeroPagePlusRegister(
     EXPECT_FALSE(cpu.N);
 }
 
-void CPUTest::testLoadZeroPagePlusRegisterWrapAround(
+void LoadRegisterTests::testLoadZeroPagePlusRegisterWrapAround(
     m6502::Byte opcode,
     m6502::Byte m6502::CPU::*addedReg,
     m6502::Byte m6502::CPU::*reg)
@@ -366,47 +292,47 @@ void CPUTest::testLoadZeroPagePlusRegisterWrapAround(
     EXPECT_FALSE(cpu.N);
 }
 
-TEST_F(CPUTest, LDAZeroPageX_LoadValue)
+TEST_F(LoadRegisterTests, LDAZeroPageX_LoadValue)
 {
     using namespace m6502;
     testLoadZeroPagePlusRegister(CPU::INS_LDA_ZPX, &CPU::X, &CPU::A);
 }
 
-TEST_F(CPUTest, LDXZeroPageY_LoadValue)
+TEST_F(LoadRegisterTests, LDXZeroPageY_LoadValue)
 {
     using namespace m6502;
     testLoadZeroPagePlusRegister(CPU::INS_LDX_ZPY, &CPU::Y, &CPU::X);
 }
 
-TEST_F(CPUTest, LDYZeroPageX_LoadValue)
+TEST_F(LoadRegisterTests, LDYZeroPageX_LoadValue)
 {
     using namespace m6502;
     testLoadZeroPagePlusRegister(CPU::INS_LDY_ZPX, &CPU::X, &CPU::Y);
 }
 
-TEST_F(CPUTest, LDAZeroPageX_LoadValue_WrapAround)
+TEST_F(LoadRegisterTests, LDAZeroPageX_LoadValue_WrapAround)
 {
     using namespace m6502;
     testLoadZeroPagePlusRegisterWrapAround(CPU::INS_LDA_ZPX, &CPU::X, &CPU::A);
 }
 
-TEST_F(CPUTest, LDXZeroPageY_LoadValue_WrapAround)
+TEST_F(LoadRegisterTests, LDXZeroPageY_LoadValue_WrapAround)
 {
     using namespace m6502;
     testLoadZeroPagePlusRegister(CPU::INS_LDX_ZPY, &CPU::Y, &CPU::X);
 }
 
-TEST_F(CPUTest, LDYZeroPageX_LoadValue_WrapAround)
+TEST_F(LoadRegisterTests, LDYZeroPageX_LoadValue_WrapAround)
 {
     using namespace m6502;
     testLoadZeroPagePlusRegister(CPU::INS_LDY_ZPX, &CPU::X, &CPU::Y);
 }
 
 /**
- * ABSOLUTE TESTING
+ * LOAD ABSOLUTE TESTING
  */
 
-void CPUTest::testLoadAbsolute(
+void LoadRegisterTests::testLoadAbsolute(
     m6502::Byte opcode,
     m6502::Byte m6502::CPU::*reg)
 {
@@ -431,19 +357,19 @@ void CPUTest::testLoadAbsolute(
     EXPECT_FALSE(cpu.N);
 }
 
-TEST_F(CPUTest, LDAAbsolute_LoadValue)
+TEST_F(LoadRegisterTests, LDAAbsolute_LoadValue)
 {
     using namespace m6502;
     testLoadAbsolute(CPU::INS_LDA_ABS, &CPU::A);
 }
 
-TEST_F(CPUTest, LDXAbsolute_LoadValue)
+TEST_F(LoadRegisterTests, LDXAbsolute_LoadValue)
 {
     using namespace m6502;
     testLoadAbsolute(CPU::INS_LDX_ABS, &CPU::X);
 }
 
-TEST_F(CPUTest, LDYAbsolute_LoadValue)
+TEST_F(LoadRegisterTests, LDYAbsolute_LoadValue)
 {
     using namespace m6502;
     testLoadAbsolute(CPU::INS_LDY_ABS, &CPU::Y);
@@ -453,7 +379,7 @@ TEST_F(CPUTest, LDYAbsolute_LoadValue)
  * LOAD ABSOLUTE + REGISTER
  */
 
-void CPUTest::testLoadAbsolutePlusRegister(
+void LoadRegisterTests::testLoadAbsolutePlusRegister(
     m6502::Byte opcode,
     m6502::Byte m6502::CPU::*addedReg,
     m6502::Byte m6502::CPU::*reg)
@@ -480,7 +406,7 @@ void CPUTest::testLoadAbsolutePlusRegister(
     EXPECT_FALSE(cpu.N);
 }
 
-void CPUTest::testLoadAbsolutePlusRegisterPageCrossed(
+void LoadRegisterTests::testLoadAbsolutePlusRegisterPageCrossed(
     m6502::Byte opcode,
     m6502::Byte m6502::CPU::*addedReg,
     m6502::Byte m6502::CPU::*reg)
@@ -507,59 +433,59 @@ void CPUTest::testLoadAbsolutePlusRegisterPageCrossed(
     EXPECT_FALSE(cpu.N);
 }
 
-TEST_F(CPUTest, LDAAbsoluteX_LoadValue)
+TEST_F(LoadRegisterTests, LDAAbsoluteX_LoadValue)
 {
     using namespace m6502;
     testLoadAbsolutePlusRegister(CPU::INS_LDA_ABX, &CPU::X, &CPU::A);
 }
 
-TEST_F(CPUTest, LDAAbsoluteY_LoadValue)
+TEST_F(LoadRegisterTests, LDAAbsoluteY_LoadValue)
 {
     using namespace m6502;
     testLoadAbsolutePlusRegister(CPU::INS_LDA_ABY, &CPU::Y, &CPU::A);
 }
 
-TEST_F(CPUTest, LDXAbsoluteY_LoadValue)
+TEST_F(LoadRegisterTests, LDXAbsoluteY_LoadValue)
 {
     using namespace m6502;
     testLoadAbsolutePlusRegister(CPU::INS_LDX_ABY, &CPU::Y, &CPU::X);
 }
 
-TEST_F(CPUTest, LDYAbsoluteX_LoadValue)
+TEST_F(LoadRegisterTests, LDYAbsoluteX_LoadValue)
 {
     using namespace m6502;
     testLoadAbsolutePlusRegister(CPU::INS_LDY_ABX, &CPU::X, &CPU::Y);
 }
 
-TEST_F(CPUTest, LDAAbsoluteX_LoadValue_PageCrossed)
+TEST_F(LoadRegisterTests, LDAAbsoluteX_LoadValue_PageCrossed)
 {
     using namespace m6502;
     testLoadAbsolutePlusRegisterPageCrossed(CPU::INS_LDA_ABX, &CPU::X, &CPU::A);
 }
 
-TEST_F(CPUTest, LDAAbsoluteY_LoadValue_PageCrossed)
+TEST_F(LoadRegisterTests, LDAAbsoluteY_LoadValue_PageCrossed)
 {
     using namespace m6502;
     testLoadAbsolutePlusRegisterPageCrossed(CPU::INS_LDA_ABY, &CPU::Y, &CPU::A);
 }
 
-TEST_F(CPUTest, LDXAbsoluteY_LoadValue_PageCrossed)
+TEST_F(LoadRegisterTests, LDXAbsoluteY_LoadValue_PageCrossed)
 {
     using namespace m6502;
     testLoadAbsolutePlusRegisterPageCrossed(CPU::INS_LDX_ABY, &CPU::Y, &CPU::X);
 }
 
-TEST_F(CPUTest, LDYAbsoluteX_LoadValue_PageCrossed)
+TEST_F(LoadRegisterTests, LDYAbsoluteX_LoadValue_PageCrossed)
 {
     using namespace m6502;
     testLoadAbsolutePlusRegisterPageCrossed(CPU::INS_LDY_ABX, &CPU::X, &CPU::Y);
 }
 
 /**
- * INDEXED INDIRECT TESTING
+ * LOAD INDEXED INDIRECT TESTING
  */
 
-TEST_F(CPUTest, LDAIndirectX_LoadValue)
+TEST_F(LoadRegisterTests, LDAIndirectX_LoadValue)
 {
     // arrange
     using namespace m6502;
@@ -585,10 +511,10 @@ TEST_F(CPUTest, LDAIndirectX_LoadValue)
 }
 
 /**
- * INDIRECT INDEXED TESTING
+ * LOAD INDIRECT INDEXED TESTING
  */
 
-TEST_F(CPUTest, LDAIndirectY_LoadValue)
+TEST_F(LoadRegisterTests, LDAIndirectY_LoadValue)
 {
     // arrange
     using namespace m6502;
@@ -613,7 +539,7 @@ TEST_F(CPUTest, LDAIndirectY_LoadValue)
     EXPECT_FALSE(cpu.N);
 }
 
-TEST_F(CPUTest, LDAIndirectY_LoadValue_PageCrossed)
+TEST_F(LoadRegisterTests, LDAIndirectY_LoadValue_PageCrossed)
 {
     // arrange
     using namespace m6502;

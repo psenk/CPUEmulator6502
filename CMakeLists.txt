@@ -30,12 +30,14 @@ FetchContent_MakeAvailable(googletest)
 enable_testing()
 
 # test executable
-set(TEST_SOURCES "test/src/m6502_tests.cpp")
-add_executable(m6502_test ${TEST_SOURCES})
+set(TEST_SOURCES "test/src/cpuTests.cpp"
+                 "test/src/loadRegisterTests.cpp"
+                 "test/src/storeRegisterTests.cpp")
+add_executable(m6502_tests ${TEST_SOURCES})
 
 # link library to exe
-target_link_libraries(m6502_test PRIVATE m6502_lib GTest::gtest GTest::gtest_main)
-target_include_directories(m6502_test PRIVATE ${gtest_SOURCE_DIR}/include)
+target_link_libraries(m6502_tests PRIVATE m6502_lib GTest::gtest GTest::gtest_main)
+target_include_directories(m6502_tests PRIVATE ${gtest_SOURCE_DIR}/include)
 
 include(GoogleTest)
-gtest_discover_tests(m6502_test)
+gtest_discover_tests(m6502_tests)

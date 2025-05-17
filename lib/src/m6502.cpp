@@ -14,13 +14,13 @@ namespace m6502
      * ADDRESSING MODES
      */
 
-    s32 CPU::fetchAddressZeroPage(s32 &cycles, Mem &memory)
+    s32 CPU::fetchAddressZeroPage(s32 &cycles, const Mem &memory)
     {
         Word zeroPageAddress = fetchNextByte(cycles, memory);
         return zeroPageAddress;
     }
 
-    s32 CPU::fetchAddressZeroPagePlusRegister(s32 &cycles, RegisterType reg, Mem &memory)
+    s32 CPU::fetchAddressZeroPagePlusRegister(s32 &cycles, RegisterType reg, const Mem &memory)
     {
         Byte zeroPageAddress = fetchNextByte(cycles, memory);
         Byte registerValue;
@@ -37,13 +37,13 @@ namespace m6502
         return effectiveAddress;
     }
 
-    s32 CPU::fetchAddressAbsolute(s32 &cycles, Mem &memory)
+    s32 CPU::fetchAddressAbsolute(s32 &cycles, const Mem &memory)
     {
         Word absoluteAddress = fetchNextWord(cycles, memory);
         return absoluteAddress;
     }
 
-    s32 CPU::fetchAddressAbsolutePlusRegister(s32 &cycles, RegisterType reg, Mem &memory)
+    s32 CPU::fetchAddressAbsolutePlusRegister(s32 &cycles, RegisterType reg, const Mem &memory)
     {
         Word absoluteAddress = fetchNextWord(cycles, memory);
         Byte registerValue;
@@ -65,6 +65,36 @@ namespace m6502
         return newAddress;
     }
 
+    s32 CPU::fetchAddressIndexedIndirect(s32 &cycles, const Mem &memory)
+    {
+        Byte zeroPageAddress = fetchNextByte(cycles, memory);
+        Byte xRegister = fetchByteFromXRegister();
+        Word indexedAddress = (zeroPageAddress + xRegister) & 0xFF; // cycle is taken for addition here
+        cycles--;
+        Word effectiveAddress = fetchWordFromAddress(cycles, indexedAddress, memory);
+        return effectiveAddress;
+    }
+
+    s32 CPU::fetchAddressIndirectIndexed(s32 &cycles, const Mem &memory, bool extraCycle)
+    {
+        Byte zeroPageAddress = fetchNextByte(cycles, memory);
+        Byte yRegister = fetchByteFromYRegister();
+        Word address = fetchWordFromAddress(cycles, zeroPageAddress, memory);
+        Word effectiveAddress = address + yRegister; // no cycles taken adding here
+
+        if (extraCycle)
+        {
+            bool pageCrossed = (address & 0xFF00) != (effectiveAddress & 0xFF00);
+            if (pageCrossed)
+            {
+                cycles--;
+            }
+            return effectiveAddress;
+        }
+        cycles--;
+        return effectiveAddress;
+    }
+
     /**
      * SET FLAGS
      */
@@ -81,6 +111,14 @@ namespace m6502
 
     s32 CPU::execute(s32 cycles, Mem &memory)
     {
+
+        // load register from a memory address
+        auto loadRegister = [&cycles, &memory, this](Word address, Byte &reg)
+        {
+            reg = fetchByteFromAddress(cycles, address, memory);
+            setFlagStatusLoad(reg);
+        };
+
         const s32 cyclesRequested = cycles;
         while (cycles > 0)
         {
@@ -89,7 +127,11 @@ namespace m6502
             {
 
             /**
-             * LOAD ACCUMULATOR
+             * LOAD INSTRUCTIONS
+             */
+
+            /**
+             * ACCUMULATOR
              */
 
             // load accumulator immediate
@@ -104,80 +146,60 @@ namespace m6502
             case INS_LDA_ZPG: // testing complete
             {
                 Word address = fetchAddressZeroPage(cycles, memory);
-                A = fetchByteFromAddress(cycles, address, memory);
-                setFlagStatusLoad(A);
+                loadRegister(address, A);
                 break;
             }
 
             // load accumulator from zero page address + x register
             case INS_LDA_ZPX: // testing complete
             {
-                Word effectiveAddress = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
-                A = fetchByteFromAddress(cycles, effectiveAddress, memory);
-                setFlagStatusLoad(A);
+                Word address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
+                loadRegister(address, A);
                 break;
             }
 
             // load accumulator from absolute address
             case INS_LDA_ABS: // testing complete
             {
-                Word effectiveAddress = fetchAddressAbsolute(cycles, memory);
-                A = fetchByteFromAddress(cycles, effectiveAddress, memory);
-                setFlagStatusLoad(A);
+                Word address = fetchAddressAbsolute(cycles, memory);
+                loadRegister(address, A);
                 break;
             }
 
             // load accumulator from absolute address + x register
             case INS_LDA_ABX: // testing complete
             {
-                Word effectiveAddress = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
-                A = fetchByteFromAddress(cycles, effectiveAddress, memory);
-                setFlagStatusLoad(A);
+                Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
+                loadRegister(address, A);
                 break;
             }
 
             // load accumulator from absolute address + y register
             case INS_LDA_ABY: // testing complete
             {
-                Word effectiveAddress = fetchAddressAbsolutePlusRegister(cycles, Y_REGISTER, memory);
-                A = fetchByteFromAddress(cycles, effectiveAddress, memory);
-                setFlagStatusLoad(A);
+                Word address = fetchAddressAbsolutePlusRegister(cycles, Y_REGISTER, memory);
+                loadRegister(address, A);
                 break;
             }
 
             // load accumulator with indexed indirect addressing + x register
             case INS_LDA_INX: // testing complete
             {
-                Byte zeroPageAddress = fetchNextByte(cycles, memory);
-                Byte xRegister = fetchByteFromXRegister();
-                Word addedAddress = (zeroPageAddress + xRegister) & 0xFF; // cycle is taken for addition here
-                cycles--;
-                Word newAddress = fetchWordFromAddress(cycles, addedAddress, memory);
-                A = fetchByteFromAddress(cycles, newAddress, memory);
-                setFlagStatusLoad(A);
+                Word address = fetchAddressIndexedIndirect(cycles, memory);
+                loadRegister(address, A);
                 break;
             }
 
             // load accumulator with indirect indexed addressing + y register
             case INS_LDA_INY: // testing complete
             {
-                Byte zeroPageAddress = fetchNextByte(cycles, memory);
-                Word newAddress = fetchWordFromAddress(cycles, zeroPageAddress, memory);
-                Byte yRegister = fetchByteFromYRegister();
-                Word addedAddress = newAddress + yRegister; // no cycles taken adding here
-
-                bool pageCrossed = (newAddress & 0xFF00) != (addedAddress & 0xFF00);
-                if (pageCrossed)
-                {
-                    cycles--;
-                }
-                A = fetchByteFromAddress(cycles, addedAddress, memory);
-                setFlagStatusLoad(A);
+                Word address = fetchAddressIndirectIndexed(cycles, memory, true);
+                loadRegister(address, A);
                 break;
             }
 
             /**
-             * LOAD X REGISTER
+             * X REGISTER
              */
 
             // load x register immediate
@@ -192,40 +214,36 @@ namespace m6502
             case INS_LDX_ZPG: // testing complete
             {
                 Word address = fetchAddressZeroPage(cycles, memory);
-                X = fetchByteFromAddress(cycles, address, memory);
-                setFlagStatusLoad(X);
+                loadRegister(address, X);
                 break;
             }
 
-            // load x register from zero page address + y register
+            // load x register from zero page + y register address
             case INS_LDX_ZPY: // testing complete
             {
-                Word effectiveAddress = fetchAddressZeroPagePlusRegister(cycles, Y_REGISTER, memory);
-                X = fetchByteFromAddress(cycles, effectiveAddress, memory);
-                setFlagStatusLoad(X);
+                Word address = fetchAddressZeroPagePlusRegister(cycles, Y_REGISTER, memory);
+                loadRegister(address, X);
                 break;
             }
 
             // load x register from absolute address
             case INS_LDX_ABS: // testing complete
             {
-                Word effectiveAddress = fetchAddressAbsolute(cycles, memory);
-                X = fetchByteFromAddress(cycles, effectiveAddress, memory);
-                setFlagStatusLoad(X);
+                Word address = fetchAddressAbsolute(cycles, memory);
+                loadRegister(address, X);
                 break;
             }
 
-            // load x register from absolute address + y register
+            // load x register from absolute + y register address
             case INS_LDX_ABY: // testing complete
             {
-                Word effectiveAddress = fetchAddressAbsolutePlusRegister(cycles, Y_REGISTER, memory);
-                X = fetchByteFromAddress(cycles, effectiveAddress, memory);
-                setFlagStatusLoad(X);
+                Word address = fetchAddressAbsolutePlusRegister(cycles, Y_REGISTER, memory);
+                loadRegister(address, X);
                 break;
             }
 
             /**
-             * LOAD Y REGISTER
+             * Y REGISTER
              */
 
             // load Y register immediate
@@ -240,35 +258,153 @@ namespace m6502
             case INS_LDY_ZPG: // testing complete
             {
                 Word address = fetchAddressZeroPage(cycles, memory);
-                Y = fetchByteFromAddress(cycles, address, memory);
-                setFlagStatusLoad(Y);
+                loadRegister(address, Y);
                 break;
             }
 
-            // load y register from zero page address + x register
+            // load y register from zero page + x register address
             case INS_LDY_ZPX: // testing complete
             {
-                Word effectiveAddress = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
-                Y = fetchByteFromAddress(cycles, effectiveAddress, memory);
-                setFlagStatusLoad(Y);
+                Word address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
+                loadRegister(address, Y);
                 break;
             }
 
             // load y register from absolute address
             case INS_LDY_ABS: // testing complete
             {
-                Word effectiveAddress = fetchAddressAbsolute(cycles, memory);
-                Y = fetchByteFromAddress(cycles, effectiveAddress, memory);
-                setFlagStatusLoad(Y);
+                Word address = fetchAddressAbsolute(cycles, memory);
+                loadRegister(address, Y);
                 break;
             }
 
-            // load y register from absolute address + x register
+            // load y register from absolute + x register address
             case INS_LDY_ABX: // testing complete
             {
-                Word effectiveAddress = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
-                Y = fetchByteFromAddress(cycles, effectiveAddress, memory);
-                setFlagStatusLoad(Y);
+                Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
+                loadRegister(address, Y);
+                break;
+            }
+
+            /**
+             * STORE INSTRUCTIONS
+             */
+
+            /**
+             * ACCUMULATOR
+             */
+
+            // store accumulator value to memory from zero page address
+            case INS_STA_ZPG: // testing complete
+            {
+                Word address = fetchAddressZeroPage(cycles, memory);
+                writeByte(cycles, A, address, memory);
+                break;
+            }
+
+            // store accumulator value to memory from zero page + x register address
+            case INS_STA_ZPX: // testing complete
+            {
+                Word address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
+                writeByte(cycles, A, address, memory);
+                break;
+            }
+
+            // store accumulator value to memory from absolute address
+            case INS_STA_ABS: // testing complete
+            {
+                Word address = fetchAddressAbsolute(cycles, memory);
+                writeByte(cycles, A, address, memory);
+                break;
+            }
+
+            // store accumulator to memory from absolute + x register address
+            case INS_STA_ABX: // testing complete
+            {
+                Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
+                cycles--; // for arithmetic
+                writeByte(cycles, A, address, memory);
+                break;
+            }
+
+            // store accumulator to memory from absolute + y register address
+            case INS_STA_ABY: // testing complete
+            {
+                Word address = fetchAddressAbsolutePlusRegister(cycles, Y_REGISTER, memory);
+                cycles--; // for arithmetic
+                writeByte(cycles, A, address, memory);
+                break;
+            }
+
+            // store accumulator to memory from indexed indirect + x register address
+            case INS_STA_INX: // testing complete
+            {
+                Word address = fetchAddressIndexedIndirect(cycles, memory);
+                writeByte(cycles, A, address, memory);
+                break;
+            }
+
+            // store accumulator to memeory from indirect indexed + y register address
+            case INS_STA_INY: // testing complete
+            {
+                Word address = fetchAddressIndirectIndexed(cycles, memory, false);
+                writeByte(cycles, A, address, memory);
+                break;
+            }
+
+            /**
+             * X REGISTER
+             */
+
+            // store x register value to memory from zero page address
+            case INS_STX_ZPG: // testing complete
+            {
+                Word address = fetchAddressZeroPage(cycles, memory);
+                writeByte(cycles, X, address, memory);
+                break;
+            }
+
+            // store x register value to memory from zero page + x register address
+            case INS_STX_ZPY: // testing complete
+            {
+                Word address = fetchAddressZeroPagePlusRegister(cycles, Y_REGISTER, memory);
+                writeByte(cycles, X, address, memory);
+                break;
+            }
+
+            // store x register value to memory from absolute address
+            case INS_STX_ABS: // testing complete
+            {
+                Word address = fetchAddressAbsolute(cycles, memory);
+                writeByte(cycles, X, address, memory);
+                break;
+            }
+
+            /**
+             * Y REGISTER
+             */
+
+            // store y register to memory from zero page address
+            case INS_STY_ZPG: // testing complete
+            {
+                Word address = fetchAddressZeroPage(cycles, memory);
+                writeByte(cycles, Y, address, memory);
+                break;
+            }
+
+            // store y register to memory from zero page + x register address
+            case INS_STY_ZPX: // testing complete
+            {
+                Word address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
+                writeByte(cycles, Y, address, memory);
+                break;
+            }
+
+            // store y register value to memory from absolute address
+            case INS_STY_ABS: // testing complete
+            {
+                Word address = fetchAddressAbsolute(cycles, memory);
+                writeByte(cycles, Y, address, memory);
                 break;
             }
 
