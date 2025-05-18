@@ -16,21 +16,21 @@ namespace m6502
 
     s32 CPU::fetchAddressZeroPage(s32 &cycles, const Mem &memory)
     {
-        Word zeroPageAddress = fetchNextByte(cycles, memory);
+        Word zeroPageAddress = readNextByte(cycles, memory);
         return zeroPageAddress;
     }
 
     s32 CPU::fetchAddressZeroPagePlusRegister(s32 &cycles, RegisterType reg, const Mem &memory)
     {
-        Byte zeroPageAddress = fetchNextByte(cycles, memory);
+        Byte zeroPageAddress = readNextByte(cycles, memory);
         Byte registerValue;
         if (reg == X_REGISTER)
         {
-            registerValue = fetchByteFromXRegister();
+            registerValue = readByteFromXRegister();
         }
         else
         {
-            registerValue = fetchByteFromYRegister();
+            registerValue = readByteFromYRegister();
         }
         Byte effectiveAddress = zeroPageAddress + registerValue; // cycle is taken for addition here
         cycles--;
@@ -39,21 +39,21 @@ namespace m6502
 
     s32 CPU::fetchAddressAbsolute(s32 &cycles, const Mem &memory)
     {
-        Word absoluteAddress = fetchNextWord(cycles, memory);
+        Word absoluteAddress = readNextWord(cycles, memory);
         return absoluteAddress;
     }
 
     s32 CPU::fetchAddressAbsolutePlusRegister(s32 &cycles, RegisterType reg, const Mem &memory)
     {
-        Word absoluteAddress = fetchNextWord(cycles, memory);
+        Word absoluteAddress = readNextWord(cycles, memory);
         Byte registerValue;
         if (reg == X_REGISTER)
         {
-            registerValue = fetchByteFromXRegister();
+            registerValue = readByteFromXRegister();
         }
         else
         {
-            registerValue = fetchByteFromYRegister();
+            registerValue = readByteFromYRegister();
         }
         Word newAddress = absoluteAddress + registerValue;
 
@@ -67,19 +67,19 @@ namespace m6502
 
     s32 CPU::fetchAddressIndexedIndirect(s32 &cycles, const Mem &memory)
     {
-        Byte zeroPageAddress = fetchNextByte(cycles, memory);
-        Byte xRegister = fetchByteFromXRegister();
+        Byte zeroPageAddress = readNextByte(cycles, memory);
+        Byte xRegister = readByteFromXRegister();
         Word indexedAddress = (zeroPageAddress + xRegister) & 0xFF; // cycle is taken for addition here
         cycles--;
-        Word effectiveAddress = fetchWordFromAddress(cycles, indexedAddress, memory);
+        Word effectiveAddress = readWordFromAddress(cycles, indexedAddress, memory);
         return effectiveAddress;
     }
 
     s32 CPU::fetchAddressIndirectIndexed(s32 &cycles, const Mem &memory, bool extraCycle)
     {
-        Byte zeroPageAddress = fetchNextByte(cycles, memory);
-        Byte yRegister = fetchByteFromYRegister();
-        Word address = fetchWordFromAddress(cycles, zeroPageAddress, memory);
+        Byte zeroPageAddress = readNextByte(cycles, memory);
+        Byte yRegister = readByteFromYRegister();
+        Word address = readWordFromAddress(cycles, zeroPageAddress, memory);
         Word effectiveAddress = address + yRegister; // no cycles taken adding here
 
         if (extraCycle)
@@ -115,14 +115,14 @@ namespace m6502
         // load register from a memory address
         auto loadRegister = [&cycles, &memory, this](Word address, Byte &reg)
         {
-            reg = fetchByteFromAddress(cycles, address, memory);
+            reg = readByteFromAddress(cycles, address, memory);
             setFlagStatusLoad(reg);
         };
 
         const s32 cyclesRequested = cycles;
         while (cycles > 0)
         {
-            Byte instruction = fetchNextByte(cycles, memory);
+            Byte instruction = readNextByte(cycles, memory);
             switch (instruction)
             {
 
@@ -137,7 +137,7 @@ namespace m6502
             // load accumulator immediate
             case INS_LDA_IMM: // testing complete
             {
-                A = fetchNextByte(cycles, memory);
+                A = readNextByte(cycles, memory);
                 setFlagStatusLoad(A);
                 break;
             }
@@ -205,7 +205,7 @@ namespace m6502
             // load x register immediate
             case INS_LDX_IMM: // testing complete
             {
-                X = fetchNextByte(cycles, memory);
+                X = readNextByte(cycles, memory);
                 setFlagStatusLoad(X);
                 break;
             }
@@ -249,7 +249,7 @@ namespace m6502
             // load Y register immediate
             case INS_LDY_IMM: // testing complete
             {
-                Y = fetchNextByte(cycles, memory);
+                Y = readNextByte(cycles, memory);
                 setFlagStatusLoad(Y);
                 break;
             }
@@ -405,6 +405,41 @@ namespace m6502
             {
                 Word address = fetchAddressAbsolute(cycles, memory);
                 writeByte(cycles, Y, address, memory);
+                break;
+            }
+
+            /**
+             * JUMP AND CALL INSTRUCTIONS
+             */
+
+            // jump to location from absolute address
+            case INS_JMP_ABS:
+            {
+                break;
+            }
+
+            // jump to location from indirect address
+            case INS_JMP_IND:
+            {
+                break;
+            }
+
+            // jump to subroutine from absolute address
+            case INS_JSR_ABS:
+            {
+                Word address = readNextWord(cycles, memory);
+                pushWordToStack(cycles, PC - 1, memory);
+                PC = address;
+                cycles--;
+                break;
+            }
+
+            // return from subroutine
+            case INS_RTS:
+            {
+                Word address = popWordFromStack(cycles, memory);
+                PC = address + 1;
+                cycles--; // for arithmetic
                 break;
             }
 

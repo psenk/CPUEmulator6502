@@ -65,7 +65,7 @@ struct m6502::CPU
     */
 
     Word PC; // program counter
-    Word SP; // stack pointer
+    Byte SP; // stack pointer
 
     Byte A, X, Y; // registers
 
@@ -86,18 +86,18 @@ struct m6502::CPU
     void reset(Mem &memory)
     {
         PC = 0xFFFC;
-        SP = 0x0100;
+        SP = 0xFF;
         A = X = Y = 0;
         C = Z = I = D = B = V = N = 0;
         memory.initialize();
     }
 
     /**
-     * FETCH FUNCTIONS
+     * READ FUNCTIONS
      */
 
-    /* fetch next byte from memory */
-    Byte fetchNextByte(s32 &cycles, const Mem &memory)
+    /* read next byte from memory */
+    Byte readNextByte(s32 &cycles, const Mem &memory)
     {
         Byte data = memory[PC];
         PC++;
@@ -105,9 +105,9 @@ struct m6502::CPU
         return data;
     }
 
-    /* fetch next word from memory
+    /* read next word from memory
        little endian */
-    Word fetchNextWord(s32 &cycles, const Mem &memory)
+    Word readNextWord(s32 &cycles, const Mem &memory)
     {
         Word data = memory[PC];
         PC++;
@@ -121,17 +121,16 @@ struct m6502::CPU
         return data;
     }
 
-    /* fetch byte from memory */
-    Byte fetchByteFromAddress(s32 &cycles, Word address, const Mem &memory)
+    /* read byte from memory */
+    Byte readByteFromAddress(s32 &cycles, Word address, const Mem &memory)
     {
-        Byte data = memory[address];
         cycles--;
-        return data;
+        return memory[address];;
     }
 
-    /* fetch one word from address
+    /* read one word from address
        little endian */
-    Word fetchWordFromAddress(s32 &cycles, Word address, const Mem &memory)
+    Word readWordFromAddress(s32 &cycles, Word address, const Mem &memory)
     {
 
         Word data = memory[address];
@@ -145,25 +144,22 @@ struct m6502::CPU
         return data;
     }
 
-    /* fetch byte from the A register */
-    Byte fetchByteFromARegister()
+    /* read byte from the A register */
+    Byte readByteFromARegister()
     {
-        Byte data = A;
-        return data;
+        return A;
     }
 
-    /* fetch byte from the X register */
-    Byte fetchByteFromXRegister()
+    /* read byte from the X register */
+    Byte readByteFromXRegister()
     {
-        Byte data = X;
-        return data;
+        return X;
     }
 
-    /* fetch byte from the Y register */
-    Byte fetchByteFromYRegister()
+    /* read byte from the Y register */
+    Byte readByteFromYRegister()
     {
-        Byte data = Y;
-        return data;
+        return Y;
     }
 
     /**
@@ -183,6 +179,48 @@ struct m6502::CPU
         memory[address] = value & 0xFF;
         memory[address + 1] = value >> 8;
         cycles -= 2;
+    }
+
+    /**
+     * STACK FUNCTIONS
+     */
+
+    // convert the 8 bit stack pointer to a 16 bit address
+    // the 0x01 is assumed because the full stack is on the $01 page
+    Word spToAddress() const
+    {
+        return 0x0100 | SP;
+    }
+
+    // push byte to the stack
+    void pushByteToStack(s32 &cycles, Byte value, Mem &memory)
+    {
+        writeByte(cycles, value, spToAddress(), memory);
+        SP--;
+    }
+
+    // push word to the stack
+    // little endian
+    void pushWordToStack(s32 &cycles, Word value, Mem &memory)
+    {
+        pushByteToStack(cycles, (value >> 8) & 0xFF, memory);
+        pushByteToStack(cycles, value & 0xFF, memory);
+    }
+
+    // pop byte off the stack
+    Byte popByteFromStack(s32 &cycles, Mem &memory)
+    {
+        SP++;
+        cycles--;
+        return readByteFromAddress(cycles, spToAddress(), memory);
+    }
+
+    // pop word off the stack
+    Word popWordFromStack(s32 &cycles, Mem &memory)
+    {
+        Byte lowByte = popByteFromStack(cycles, memory);
+        Byte highByte = popByteFromStack(cycles, memory);
+        return (highByte << 8) | lowByte;
     }
 
     /**
@@ -231,6 +269,12 @@ struct m6502::CPU
     static constexpr Byte INS_STY_ZPG = 0x84,
                           INS_STY_ZPX = 0x94,
                           INS_STY_ABS = 0x8C;
+
+    // jump and call instructions
+    static constexpr Byte INS_JMP_ABS = 0x4C,
+                          INS_JMP_IND = 0x6C,
+                          INS_JSR_ABS = 0x20,
+                          INS_RTS     = 0x60;
 
     /**
      * ADDRESSING MODES
