@@ -99,10 +99,10 @@ namespace m6502
      * SET FLAGS
      */
 
-    void CPU::setFlagStatusLoad(Byte reg)
+    void CPU::setFlagStatusLoad(Byte value)
     {
-        Z = (reg == 0);
-        N = (reg & 0b10000000) > 0;
+        P.bits.Z = (value == 0) ? 1 : 0;
+        P.bits.N = (value & 0x80) ? 1 : 0;
     }
 
     /**
@@ -430,7 +430,7 @@ namespace m6502
                 Word address = readNextWord(cycles, memory);
                 pushWordToStack(cycles, PC - 1, memory);
                 PC = address;
-                cycles--;
+                cycles--; // for arithmetic
                 break;
             }
 

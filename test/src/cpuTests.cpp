@@ -25,13 +25,7 @@ static void testFullCPUUnchanged(const m6502::CPU &cpuCopy,
     EXPECT_EQ(cpuCopy.A, cpu.A);
     EXPECT_EQ(cpuCopy.X, cpu.X);
     EXPECT_EQ(cpuCopy.Y, cpu.Y);
-    EXPECT_EQ(cpuCopy.C, cpu.C);
-    EXPECT_EQ(cpuCopy.Z, cpu.Z);
-    EXPECT_EQ(cpuCopy.I, cpu.I);
-    EXPECT_EQ(cpuCopy.D, cpu.D);
-    EXPECT_EQ(cpuCopy.B, cpu.B);
-    EXPECT_EQ(cpuCopy.V, cpu.V);
-    EXPECT_EQ(cpuCopy.N, cpu.N);
+    EXPECT_EQ(cpuCopy.P.value, cpu.P.value);
 }
 
 TEST_F(CPUTests, CPUDoesNothingWithZeroCyclesExecuted)

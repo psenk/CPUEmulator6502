@@ -16,6 +16,7 @@ namespace m6502
     using s32 = signed int;
 
     struct Mem;
+    union StatusFlags;
     struct CPU;
 }
 
@@ -51,6 +52,22 @@ struct m6502::Mem
     }
 };
 
+union m6502::StatusFlags
+{
+    struct
+    {
+        Byte C : 1; // carry flag
+        Byte Z : 1; // zero flag
+        Byte I : 1; // interrupt disable
+        Byte D : 1; // decimal mode
+        Byte B : 1; // break command
+        Byte U : 1; // unused
+        Byte V : 1; // overflow flag
+        Byte N : 1; // negative flag
+    } bits;
+    Byte value;
+};
+
 /**
  * CPU
  */
@@ -71,13 +88,7 @@ struct m6502::CPU
 
     enum RegisterType;
 
-    Byte C : 1; // carry flag
-    Byte Z : 1; // zero flag
-    Byte I : 1; // interrupt disable
-    Byte D : 1; // decimal mode
-    Byte B : 1; // break command
-    Byte V : 1; // overflow flag
-    Byte N : 1; // negative flag
+    StatusFlags P;
 
     /**
      * RESET COMMAND
@@ -88,7 +99,7 @@ struct m6502::CPU
         PC = 0xFFFC;
         SP = 0xFF;
         A = X = Y = 0;
-        C = Z = I = D = B = V = N = 0;
+        P.value = 0x24;
         memory.initialize();
     }
 
@@ -125,7 +136,8 @@ struct m6502::CPU
     Byte readByteFromAddress(s32 &cycles, Word address, const Mem &memory)
     {
         cycles--;
-        return memory[address];;
+        return memory[address];
+        ;
     }
 
     /* read one word from address
@@ -274,7 +286,7 @@ struct m6502::CPU
     static constexpr Byte INS_JMP_ABS = 0x4C,
                           INS_JMP_IND = 0x6C,
                           INS_JSR_ABS = 0x20,
-                          INS_RTS     = 0x60;
+                          INS_RTS = 0x60;
 
     /**
      * ADDRESSING MODES

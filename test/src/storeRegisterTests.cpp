@@ -44,13 +44,7 @@ protected:
     static void testStoreFlagsUnchanged(const m6502::CPU &cpuCopy,
                                         const m6502::CPU &cpu)
     {
-        EXPECT_EQ(cpuCopy.C, cpu.C);
-        EXPECT_EQ(cpuCopy.Z, cpu.Z);
-        EXPECT_EQ(cpuCopy.I, cpu.I);
-        EXPECT_EQ(cpuCopy.D, cpu.D);
-        EXPECT_EQ(cpuCopy.B, cpu.B);
-        EXPECT_EQ(cpuCopy.V, cpu.V);
-        EXPECT_EQ(cpuCopy.N, cpu.N);
+        EXPECT_EQ(cpuCopy.P.value, cpu.P.value);
     }
 };
 

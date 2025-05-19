@@ -56,11 +56,11 @@ protected:
     static void testLoadFlagsUnchanged(const m6502::CPU &cpuCopy,
                                        const m6502::CPU &cpu)
     {
-        EXPECT_EQ(cpuCopy.C, cpu.C);
-        EXPECT_EQ(cpuCopy.I, cpu.I);
-        EXPECT_EQ(cpuCopy.D, cpu.D);
-        EXPECT_EQ(cpuCopy.B, cpu.B);
-        EXPECT_EQ(cpuCopy.V, cpu.V);
+        EXPECT_EQ(cpuCopy.P.bits.C, cpu.P.bits.C);
+        EXPECT_EQ(cpuCopy.P.bits.I, cpu.P.bits.I);
+        EXPECT_EQ(cpuCopy.P.bits.D, cpu.P.bits.D);
+        EXPECT_EQ(cpuCopy.P.bits.B, cpu.P.bits.B);
+        EXPECT_EQ(cpuCopy.P.bits.V, cpu.P.bits.V);
     }
 };
 
@@ -86,8 +86,8 @@ void LoadRegisterTests::testLoadImmediate(
     EXPECT_EQ(cpu.*reg, 0x42);
     EXPECT_EQ(cyclesExecuted, 2);
     testLoadFlagsUnchanged(cpuCopy, cpu);
-    EXPECT_FALSE(cpu.Z);
-    EXPECT_FALSE(cpu.N);
+    EXPECT_FALSE(cpu.P.bits.Z);
+    EXPECT_FALSE(cpu.P.bits.N);
 }
 
 void LoadRegisterTests::testLoadImmediateNegativeValue(
@@ -109,8 +109,8 @@ void LoadRegisterTests::testLoadImmediateNegativeValue(
     EXPECT_EQ(cpu.*reg, 0x84);
     EXPECT_EQ(cyclesExecuted, 2);
     testLoadFlagsUnchanged(cpuCopy, cpu);
-    EXPECT_FALSE(cpu.Z);
-    EXPECT_TRUE(cpu.N);
+    EXPECT_FALSE(cpu.P.bits.Z);
+    EXPECT_TRUE(cpu.P.bits.N);
 }
 
 void LoadRegisterTests::testLoadImmediateZeroValue(
@@ -132,8 +132,8 @@ void LoadRegisterTests::testLoadImmediateZeroValue(
     EXPECT_EQ(cpu.*reg, 0x00);
     EXPECT_EQ(cyclesExecuted, 2);
     testLoadFlagsUnchanged(cpuCopy, cpu);
-    EXPECT_TRUE(cpu.Z);
-    EXPECT_FALSE(cpu.N);
+    EXPECT_TRUE(cpu.P.bits.Z);
+    EXPECT_FALSE(cpu.P.bits.N);
 }
 
 TEST_F(LoadRegisterTests, LDAImmediate_LoadValue)
@@ -214,8 +214,8 @@ void LoadRegisterTests::testLoadZeroPage(
     EXPECT_EQ(cpu.*reg, 0x42);
     EXPECT_EQ(cyclesExecuted, 3);
     testLoadFlagsUnchanged(cpuCopy, cpu);
-    EXPECT_FALSE(cpu.Z);
-    EXPECT_FALSE(cpu.N);
+    EXPECT_FALSE(cpu.P.bits.Z);
+    EXPECT_FALSE(cpu.P.bits.N);
 }
 
 TEST_F(LoadRegisterTests, LDAZeroPage_LoadValue)
@@ -262,8 +262,8 @@ void LoadRegisterTests::testLoadZeroPagePlusRegister(
     EXPECT_EQ(cpu.*reg, 0x42);
     EXPECT_EQ(cyclesExecuted, 4);
     testLoadFlagsUnchanged(cpuCopy, cpu);
-    EXPECT_FALSE(cpu.Z);
-    EXPECT_FALSE(cpu.N);
+    EXPECT_FALSE(cpu.P.bits.Z);
+    EXPECT_FALSE(cpu.P.bits.N);
 }
 
 void LoadRegisterTests::testLoadZeroPagePlusRegisterWrapAround(
@@ -288,8 +288,8 @@ void LoadRegisterTests::testLoadZeroPagePlusRegisterWrapAround(
     EXPECT_EQ(cpu.*reg, 0x73);
     EXPECT_EQ(cyclesExecuted, 4);
     testLoadFlagsUnchanged(cpuCopy, cpu);
-    EXPECT_FALSE(cpu.Z);
-    EXPECT_FALSE(cpu.N);
+    EXPECT_FALSE(cpu.P.bits.Z);
+    EXPECT_FALSE(cpu.P.bits.N);
 }
 
 TEST_F(LoadRegisterTests, LDAZeroPageX_LoadValue)
@@ -353,8 +353,8 @@ void LoadRegisterTests::testLoadAbsolute(
     EXPECT_EQ(cpu.*reg, 0x42);
     EXPECT_EQ(cyclesExecuted, 4);
     testLoadFlagsUnchanged(cpuCopy, cpu);
-    EXPECT_FALSE(cpu.Z);
-    EXPECT_FALSE(cpu.N);
+    EXPECT_FALSE(cpu.P.bits.Z);
+    EXPECT_FALSE(cpu.P.bits.N);
 }
 
 TEST_F(LoadRegisterTests, LDAAbsolute_LoadValue)
@@ -402,8 +402,8 @@ void LoadRegisterTests::testLoadAbsolutePlusRegister(
     EXPECT_EQ(cpu.*reg, 0x42);
     EXPECT_EQ(cyclesExecuted, 4);
     testLoadFlagsUnchanged(cpuCopy, cpu);
-    EXPECT_FALSE(cpu.Z);
-    EXPECT_FALSE(cpu.N);
+    EXPECT_FALSE(cpu.P.bits.Z);
+    EXPECT_FALSE(cpu.P.bits.N);
 }
 
 void LoadRegisterTests::testLoadAbsolutePlusRegisterPageCrossed(
@@ -429,8 +429,8 @@ void LoadRegisterTests::testLoadAbsolutePlusRegisterPageCrossed(
     EXPECT_EQ(cpu.*reg, 0x42);
     EXPECT_EQ(cyclesExecuted, 5);
     testLoadFlagsUnchanged(cpuCopy, cpu);
-    EXPECT_FALSE(cpu.Z);
-    EXPECT_FALSE(cpu.N);
+    EXPECT_FALSE(cpu.P.bits.Z);
+    EXPECT_FALSE(cpu.P.bits.N);
 }
 
 TEST_F(LoadRegisterTests, LDAAbsoluteX_LoadValue)
@@ -506,8 +506,8 @@ TEST_F(LoadRegisterTests, LDAIndirectX_LoadValue)
     EXPECT_EQ(cpu.A, 0x42);
     EXPECT_EQ(cyclesExecuted, 6);
     testLoadFlagsUnchanged(cpuCopy, cpu);
-    EXPECT_FALSE(cpu.Z);
-    EXPECT_FALSE(cpu.N);
+    EXPECT_FALSE(cpu.P.bits.Z);
+    EXPECT_FALSE(cpu.P.bits.N);
 }
 
 /**
@@ -535,8 +535,8 @@ TEST_F(LoadRegisterTests, LDAIndirectY_LoadValue)
     EXPECT_EQ(cpu.A, 0x42);
     EXPECT_EQ(cyclesExecuted, 5);
     testLoadFlagsUnchanged(cpuCopy, cpu);
-    EXPECT_FALSE(cpu.Z);
-    EXPECT_FALSE(cpu.N);
+    EXPECT_FALSE(cpu.P.bits.Z);
+    EXPECT_FALSE(cpu.P.bits.N);
 }
 
 TEST_F(LoadRegisterTests, LDAIndirectY_LoadValue_PageCrossed)
@@ -560,6 +560,6 @@ TEST_F(LoadRegisterTests, LDAIndirectY_LoadValue_PageCrossed)
     EXPECT_EQ(cpu.A, 0x42);
     EXPECT_EQ(cyclesExecuted, 6);
     testLoadFlagsUnchanged(cpuCopy, cpu);
-    EXPECT_FALSE(cpu.Z);
-    EXPECT_FALSE(cpu.N);
+    EXPECT_FALSE(cpu.P.bits.Z);
+    EXPECT_FALSE(cpu.P.bits.N);
 }
