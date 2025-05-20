@@ -472,14 +472,16 @@ namespace m6502
             // push accumulator to stack
             case INS_PHA:
             {
-                pushWordToStack(cycles, A, memory);
+                pushByteToStack(cycles, A, memory);
+                cycles--; // extra cycle
                 break;
             }
 
             // push processor status to stack
             case INS_PHP:
             {
-                pushWordToStack(cycles, P.value, memory);
+                pushByteToStack(cycles, P.value, memory);
+                cycles--; // extra cycle
                 break;
             }
 
