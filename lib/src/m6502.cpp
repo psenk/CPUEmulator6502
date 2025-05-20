@@ -99,7 +99,7 @@ namespace m6502
      * SET FLAGS
      */
 
-    void CPU::setFlagStatusLoad(Byte value)
+    void CPU::setFlagStatus_NZ(Byte value)
     {
         P.bits.Z = (value == 0) ? 1 : 0;
         P.bits.N = (value & 0x80) ? 1 : 0;
@@ -116,7 +116,7 @@ namespace m6502
         auto loadRegister = [&cycles, &memory, this](Word address, Byte &reg)
         {
             reg = readByteFromAddress(cycles, address, memory);
-            setFlagStatusLoad(reg);
+            setFlagStatus_NZ(reg);
         };
 
         const s32 cyclesRequested = cycles;
@@ -138,7 +138,7 @@ namespace m6502
             case INS_LDA_IMM: // testing complete
             {
                 A = readNextByte(cycles, memory);
-                setFlagStatusLoad(A);
+                setFlagStatus_NZ(A);
                 break;
             }
 
@@ -206,7 +206,7 @@ namespace m6502
             case INS_LDX_IMM: // testing complete
             {
                 X = readNextByte(cycles, memory);
-                setFlagStatusLoad(X);
+                setFlagStatus_NZ(X);
                 break;
             }
 
@@ -250,7 +250,7 @@ namespace m6502
             case INS_LDY_IMM: // testing complete
             {
                 Y = readNextByte(cycles, memory);
-                setFlagStatusLoad(Y);
+                setFlagStatus_NZ(Y);
                 break;
             }
 
@@ -445,6 +445,60 @@ namespace m6502
                 Word address = popWordFromStack(cycles, memory);
                 PC = address + 1;
                 cycles--; // for arithmetic
+                break;
+            }
+
+            /**
+             * STACK OPERATION INSTRUCTIONS
+             */
+
+            // transfer stack pointer to x register
+            case INS_TSX:
+            {
+                X = SP;
+                cycles--; // for transfer of data
+                setFlagStatus_NZ(X);
+                break;
+            }
+
+            // transfer x register to stack pointer
+            case INS_TXS:
+            {
+                SP = X;
+                cycles--; // for transfer of data
+                break;
+            }
+
+            // push accumulator to stack
+            case INS_PHA:
+            {
+                pushWordToStack(cycles, A, memory);
+                break;
+            }
+
+            // push processor status to stack
+            case INS_PHP:
+            {
+                pushWordToStack(cycles, P.value, memory);
+                break;
+            }
+
+            // pull from stack to accumulator
+            case INS_PLA:
+            {
+                Byte value = popByteFromStack(cycles, memory);
+                A = value;
+                cycles--; // extra cycle
+                setFlagStatus_NZ(A);
+                break;
+            }
+
+            // pull processor from stack
+            case INS_PLP:
+            {
+                Byte value = popByteFromStack(cycles, memory);
+                P.value = value;
+                cycles--; // extra cycle
                 break;
             }
 

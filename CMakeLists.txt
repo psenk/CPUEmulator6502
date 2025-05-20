@@ -33,7 +33,8 @@ enable_testing()
 set(TEST_SOURCES "test/src/cpuTests.cpp"
                  "test/src/loadRegisterTests.cpp"
                  "test/src/storeRegisterTests.cpp"
-                 "test/src/jumpsAndCallsTests.cpp")
+                 "test/src/jumpsAndCallsTests.cpp"
+                 "test/src/stackOperationTests.cpp")
                  add_executable(m6502_tests ${TEST_SOURCES})
 
 # link library to exe
