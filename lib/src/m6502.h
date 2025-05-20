@@ -85,7 +85,6 @@ struct m6502::CPU
     Byte SP; // stack pointer
 
     Byte A, X, Y; // registers
-
     enum RegisterType;
 
     StatusFlags P;

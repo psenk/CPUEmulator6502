@@ -415,12 +415,17 @@ namespace m6502
             // jump to location from absolute address
             case INS_JMP_ABS:
             {
+                Word address = readNextWord(cycles, memory);
+                PC = address;
                 break;
             }
 
             // jump to location from indirect address
             case INS_JMP_IND:
             {
+                Word address = readNextWord(cycles, memory);
+                Word effectiveAddress = readWordFromAddress(cycles, address, memory);
+                PC = effectiveAddress;
                 break;
             }
 

@@ -18,24 +18,24 @@ protected:
 
     // load zero page
     void testStoreZeroPage(m6502::Byte opcode,
-                          m6502::Byte m6502::CPU::*reg);
+                           m6502::Byte m6502::CPU::*reg);
 
     // load zero page + register
     void testStoreZeroPagePlusRegister(m6502::Byte opcode,
-                                      m6502::Byte m6502::CPU::*addedReg,
-                                      m6502::Byte m6502::CPU::*reg);
+                                       m6502::Byte m6502::CPU::*addedReg,
+                                       m6502::Byte m6502::CPU::*reg);
     void testStoreZeroPagePlusRegisterWrapAround(m6502::Byte opcode,
-                                                m6502::Byte m6502::CPU::*addedReg,
-                                                m6502::Byte m6502::CPU::*reg);
+                                                 m6502::Byte m6502::CPU::*addedReg,
+                                                 m6502::Byte m6502::CPU::*reg);
 
     // load absolute
     void testStoreAbsolute(m6502::Byte opcode,
-                          m6502::Byte m6502::CPU::*reg);
+                           m6502::Byte m6502::CPU::*reg);
 
     // load absolute + register
     void testStoreAbsolutePlusRegister(m6502::Byte opcode,
-                                      m6502::Byte m6502::CPU::*addedReg,
-                                      m6502::Byte m6502::CPU::*reg);
+                                       m6502::Byte m6502::CPU::*addedReg,
+                                       m6502::Byte m6502::CPU::*reg);
     void testLoadAbsolutePlusRegisterPageCrossed(m6502::Byte opcode,
                                                  m6502::Byte m6502::CPU::*addedReg,
                                                  m6502::Byte m6502::CPU::*reg);
@@ -64,7 +64,7 @@ void StoreRegisterTests::testStoreZeroPage(
     cpu.*reg = 0x42;
     mem[0xFFFC] = opcode;
     mem[0xFFFD] = 0x73;
-    
+
     // act:
     s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
