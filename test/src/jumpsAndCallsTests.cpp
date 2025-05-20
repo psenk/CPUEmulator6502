@@ -9,7 +9,7 @@ protected:
 
     void SetUp()
     {
-        cpu.reset(mem);
+        cpu.reset(mem, 0xFF00);
     }
 
     void TearDown()
@@ -24,13 +24,16 @@ protected:
     }
 };
 
+/**
+ * JUMP TO SUBROUTINE TESTING
+ */
+
 TEST_F(JumpsAndCallsTests, JSR_JumpToSubroutine)
 {
     // arrange
     using namespace m6502;
     CPU cpuCopy = cpu;
     static constexpr s32 NUM_CYCLES = 6;
-    cpu.PC = 0xFF00;
 
     mem[0xFF00] = CPU::INS_JSR_ABS;
     mem[0xFF01] = 0x20;
@@ -49,13 +52,16 @@ TEST_F(JumpsAndCallsTests, JSR_JumpToSubroutine)
     testJumpsAndCallsFlagsUnchanged(cpuCopy, cpu);
 }
 
+/**
+ * RETURN FROM SUBROUTINE TESTING
+ */
+
 TEST_F(JumpsAndCallsTests, RTS_ReturnFromAddress)
 {
     // arrange
     using namespace m6502;
     CPU cpuCopy = cpu;
     static constexpr s32 NUM_CYCLES = 6;
-    cpu.PC = 0xFF00;
     cpu.SP -= 2;
     mem[0x01FF] = 0x04;
     mem[0x01FE] = 0x20;
@@ -72,13 +78,17 @@ TEST_F(JumpsAndCallsTests, RTS_ReturnFromAddress)
     testJumpsAndCallsFlagsUnchanged(cpuCopy, cpu);
 }
 
+
+/**
+ * JUMP TO LOCATION TESTING
+ */
+
 TEST_F(JumpsAndCallsTests, JMP_JumpToAddressAbsolute)
 {
     // arrange
     using namespace m6502;
     CPU cpuCopy = cpu;
     static constexpr s32 NUM_CYCLES = 3;
-    cpu.PC = 0xFF00;
 
     mem[0xFF00] = CPU::INS_JMP_ABS;
     mem[0xFF01] = 0x20;
@@ -100,7 +110,7 @@ TEST_F(JumpsAndCallsTests, JMP_JumpToAddressAbsolute_PageBoundary)
     using namespace m6502;
     CPU cpuCopy = cpu;
     static constexpr s32 NUM_CYCLES = 3;
-    cpu.PC = 0x20FE;
+    cpu.reset(mem, 0x20FE);
 
     mem[0x20FE] = CPU::INS_JMP_ABS;
     mem[0x20FF] = 0x20;
@@ -122,7 +132,6 @@ TEST_F(JumpsAndCallsTests, JMP_JumpToAddressIndirect)
     using namespace m6502;
     CPU cpuCopy = cpu;
     static constexpr s32 NUM_CYCLES = 5;
-    cpu.PC = 0xFF00;
 
     mem[0xFF00] = CPU::INS_JMP_IND;
     mem[0xFF01] = 0x20;
@@ -146,7 +155,7 @@ TEST_F(JumpsAndCallsTests, JMP_JumpToAddressIndirect_PageBoundary)
     using namespace m6502;
     CPU cpuCopy = cpu;
     static constexpr s32 NUM_CYCLES = 5;
-    cpu.PC = 0x20FE;
+    cpu.reset(mem, 0x20FE);
 
     mem[0x20FE] = CPU::INS_JMP_IND;
     mem[0x20FF] = 0xFF;

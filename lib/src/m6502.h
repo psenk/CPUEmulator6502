@@ -93,9 +93,9 @@ struct m6502::CPU
      * RESET COMMAND
      */
 
-    void reset(Mem &memory)
+    void reset(Mem &memory, Word vector = 0xFFFC)
     {
-        PC = 0xFFFC;
+        PC = vector;
         SP = 0xFF;
         A = X = Y = 0;
         P.value = 0x24;
@@ -136,7 +136,6 @@ struct m6502::CPU
     {
         cycles--;
         return memory[address];
-        ;
     }
 
     /* read one word from address
@@ -222,7 +221,7 @@ struct m6502::CPU
     Byte popByteFromStack(s32 &cycles, Mem &memory)
     {
         SP++;
-        cycles--;
+        cycles--; // for SP incrementing
         return readByteFromAddress(cycles, spToAddress(), memory);
     }
 
@@ -287,6 +286,14 @@ struct m6502::CPU
                           INS_JSR_ABS = 0x20,
                           INS_RTS = 0x60;
 
+    // stack operation instructions
+    static constexpr Byte INS_TSX = 0xBA,
+                          INS_TXS = 0x9A,
+                          INS_PHA = 0x48,
+                          INS_PHP = 0x08,
+                          INS_PLA = 0x68,
+                          INS_PLP = 0x28;
+
     /**
      * ADDRESSING MODES
      */
@@ -301,10 +308,12 @@ struct m6502::CPU
     /**
      * SET FLAGS
      */
-    void setFlagStatusLoad(Byte reg);
+
+    void setFlagStatus_NZ(Byte reg);
 
     /**
      * CPU EXECUTE FUNCTION
      */
+
     s32 execute(s32 cycles, Mem &memory);
 };
