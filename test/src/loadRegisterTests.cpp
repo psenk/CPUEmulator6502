@@ -22,35 +22,219 @@ protected:
 
     // load immediate
     void testLoadImmediate(m6502::Byte opcode,
-                           m6502::Byte m6502::CPU::*reg);
+                           m6502::Byte m6502::CPU::*reg)
+    {
+        // arrange:
+        using namespace m6502;
+        CPU cpuCopy = cpu;
+        static constexpr s32 NUM_CYCLES = 2;
+
+        mem[0xFFFC] = opcode;
+        mem[0xFFFD] = 0x42;
+
+        // act:
+        s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+
+        // assert:
+        EXPECT_EQ(cpu.*reg, 0x42);
+        EXPECT_EQ(cyclesExecuted, 2);
+        testLoadFlagsUnchanged(cpuCopy, cpu);
+        EXPECT_FALSE(cpu.P.bits.Z);
+        EXPECT_FALSE(cpu.P.bits.N);
+    }
     void testLoadImmediateNegativeValue(m6502::Byte opcode,
-                                        m6502::Byte m6502::CPU::*reg);
+                                        m6502::Byte m6502::CPU::*reg)
+    {
+        // arrange:
+        using namespace m6502;
+        CPU cpuCopy = cpu;
+        static constexpr s32 NUM_CYCLES = 2;
+
+        mem[0xFFFC] = opcode;
+        mem[0xFFFD] = 0x84;
+
+        // act:
+        s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+
+        // assert:
+        EXPECT_EQ(cpu.*reg, 0x84);
+        EXPECT_EQ(cyclesExecuted, 2);
+        testLoadFlagsUnchanged(cpuCopy, cpu);
+        EXPECT_FALSE(cpu.P.bits.Z);
+        EXPECT_TRUE(cpu.P.bits.N);
+    }
     void testLoadImmediateZeroValue(m6502::Byte opcode,
-                                    m6502::Byte m6502::CPU::*reg);
+                                    m6502::Byte m6502::CPU::*reg)
+    {
+        // arrange:
+        using namespace m6502;
+        CPU cpuCopy = cpu;
+        static constexpr s32 NUM_CYCLES = 2;
+
+        mem[0xFFFC] = opcode;
+        mem[0xFFFD] = 0x00;
+
+        // act:
+        s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+
+        // assert:
+        EXPECT_EQ(cpu.*reg, 0x00);
+        EXPECT_EQ(cyclesExecuted, 2);
+        testLoadFlagsUnchanged(cpuCopy, cpu);
+        EXPECT_TRUE(cpu.P.bits.Z);
+        EXPECT_FALSE(cpu.P.bits.N);
+    }
 
     // load zero page
     void testLoadZeroPage(m6502::Byte opcode,
-                          m6502::Byte m6502::CPU::*reg);
+                          m6502::Byte m6502::CPU::*reg)
+    {
+        // arrange:
+        using namespace m6502;
+        CPU cpuCopy = cpu;
+        static constexpr s32 NUM_CYCLES = 3;
+
+        mem[0xFFFC] = opcode;
+        mem[0xFFFD] = 0x73;
+        mem[0x0073] = 0x42;
+
+        // act:
+        s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+
+        // assert:
+        EXPECT_EQ(cpu.*reg, 0x42);
+        EXPECT_EQ(cyclesExecuted, 3);
+        testLoadFlagsUnchanged(cpuCopy, cpu);
+        EXPECT_FALSE(cpu.P.bits.Z);
+        EXPECT_FALSE(cpu.P.bits.N);
+    }
 
     // load zero page + register
     void testLoadZeroPagePlusRegister(m6502::Byte opcode,
                                       m6502::Byte m6502::CPU::*addedReg,
-                                      m6502::Byte m6502::CPU::*reg);
+                                      m6502::Byte m6502::CPU::*reg)
+    {
+        // arrange:
+        using namespace m6502;
+        CPU cpuCopy = cpu;
+        static constexpr s32 NUM_CYCLES = 4;
+        cpu.*addedReg = 0x05;
+
+        mem[0xFFFC] = opcode;
+        mem[0xFFFD] = 0x73;
+        mem[0x0078] = 0x42;
+
+        // act:
+        s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+
+        // assert:
+        EXPECT_EQ(cpu.*reg, 0x42);
+        EXPECT_EQ(cyclesExecuted, 4);
+        testLoadFlagsUnchanged(cpuCopy, cpu);
+        EXPECT_FALSE(cpu.P.bits.Z);
+        EXPECT_FALSE(cpu.P.bits.N);
+    }
     void testLoadZeroPagePlusRegisterWrapAround(m6502::Byte opcode,
                                                 m6502::Byte m6502::CPU::*addedReg,
-                                                m6502::Byte m6502::CPU::*reg);
+                                                m6502::Byte m6502::CPU::*reg)
+    {
+        // arrange:
+        using namespace m6502;
+        CPU cpuCopy = cpu;
+        static constexpr s32 NUM_CYCLES = 4;
+        cpu.*addedReg = 0xFF;
+
+        mem[0xFFFC] = opcode;
+        mem[0xFFFD] = 0x80;
+        mem[0x007F] = 0x73;
+
+        // act:
+        s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+
+        // assert:
+        EXPECT_EQ(cpu.*reg, 0x73);
+        EXPECT_EQ(cyclesExecuted, 4);
+        testLoadFlagsUnchanged(cpuCopy, cpu);
+        EXPECT_FALSE(cpu.P.bits.Z);
+        EXPECT_FALSE(cpu.P.bits.N);
+    }
 
     // load absolute
     void testLoadAbsolute(m6502::Byte opcode,
-                          m6502::Byte m6502::CPU::*reg);
+                          m6502::Byte m6502::CPU::*reg)
+    {
+        // arrange
+        using namespace m6502;
+        CPU cpuCopy = cpu;
+        static constexpr s32 NUM_CYCLES = 4;
+
+        mem[0xFFFC] = opcode;
+        mem[0xFFFD] = 0x20;
+        mem[0xFFFE] = 0x04;
+        mem[0x0420] = 0x42;
+
+        // act
+        s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+
+        // assert
+        EXPECT_EQ(cpu.*reg, 0x42);
+        EXPECT_EQ(cyclesExecuted, 4);
+        testLoadFlagsUnchanged(cpuCopy, cpu);
+        EXPECT_FALSE(cpu.P.bits.Z);
+        EXPECT_FALSE(cpu.P.bits.N);
+    }
 
     // load absolute + register
     void testLoadAbsolutePlusRegister(m6502::Byte opcode,
                                       m6502::Byte m6502::CPU::*addedReg,
-                                      m6502::Byte m6502::CPU::*reg);
+                                      m6502::Byte m6502::CPU::*reg)
+    {
+        // arrange
+        using namespace m6502;
+        CPU cpuCopy = cpu;
+        static constexpr s32 NUM_CYCLES = 4;
+        cpu.*addedReg = 0x05;
+
+        mem[0xFFFC] = opcode;
+        mem[0xFFFD] = 0x20;
+        mem[0xFFFE] = 0x04;
+        mem[0x0425] = 0x42;
+
+        // act
+        s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+
+        // assert
+        EXPECT_EQ(cpu.*reg, 0x42);
+        EXPECT_EQ(cyclesExecuted, 4);
+        testLoadFlagsUnchanged(cpuCopy, cpu);
+        EXPECT_FALSE(cpu.P.bits.Z);
+        EXPECT_FALSE(cpu.P.bits.N);
+    }
     void testLoadAbsolutePlusRegisterPageCrossed(m6502::Byte opcode,
                                                  m6502::Byte m6502::CPU::*addedReg,
-                                                 m6502::Byte m6502::CPU::*reg);
+                                                 m6502::Byte m6502::CPU::*reg)
+    {
+        // arrange
+        using namespace m6502;
+        CPU cpuCopy = cpu;
+        static constexpr s32 NUM_CYCLES = 5;
+        cpu.*addedReg = 0x00FF;
+
+        mem[0xFFFC] = opcode;
+        mem[0xFFFD] = 0x20;
+        mem[0xFFFE] = 0x04;
+        mem[0x051F] = 0x42;
+
+        // act
+        s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+
+        // assert
+        EXPECT_EQ(cpu.*reg, 0x42);
+        EXPECT_EQ(cyclesExecuted, 5);
+        testLoadFlagsUnchanged(cpuCopy, cpu);
+        EXPECT_FALSE(cpu.P.bits.Z);
+        EXPECT_FALSE(cpu.P.bits.N);
+    }
 
     // test flags
     static void testLoadFlagsUnchanged(const m6502::CPU &cpuCopy,
@@ -67,74 +251,6 @@ protected:
 /**
  * LOAD IMMEDIATE TESTING
  */
-void LoadRegisterTests::testLoadImmediate(
-    m6502::Byte opcode,
-    m6502::Byte m6502::CPU::*reg)
-{
-    // arrange:
-    using namespace m6502;
-    CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 2;
-
-    mem[0xFFFC] = opcode;
-    mem[0xFFFD] = 0x42;
-
-    // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
-
-    // assert:
-    EXPECT_EQ(cpu.*reg, 0x42);
-    EXPECT_EQ(cyclesExecuted, 2);
-    testLoadFlagsUnchanged(cpuCopy, cpu);
-    EXPECT_FALSE(cpu.P.bits.Z);
-    EXPECT_FALSE(cpu.P.bits.N);
-}
-
-void LoadRegisterTests::testLoadImmediateNegativeValue(
-    m6502::Byte opcode,
-    m6502::Byte m6502::CPU::*reg)
-{
-    // arrange:
-    using namespace m6502;
-    CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 2;
-
-    mem[0xFFFC] = opcode;
-    mem[0xFFFD] = 0x84;
-
-    // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
-
-    // assert:
-    EXPECT_EQ(cpu.*reg, 0x84);
-    EXPECT_EQ(cyclesExecuted, 2);
-    testLoadFlagsUnchanged(cpuCopy, cpu);
-    EXPECT_FALSE(cpu.P.bits.Z);
-    EXPECT_TRUE(cpu.P.bits.N);
-}
-
-void LoadRegisterTests::testLoadImmediateZeroValue(
-    m6502::Byte opcode,
-    m6502::Byte m6502::CPU::*reg)
-{
-    // arrange:
-    using namespace m6502;
-    CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 2;
-
-    mem[0xFFFC] = opcode;
-    mem[0xFFFD] = 0x00;
-
-    // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
-
-    // assert:
-    EXPECT_EQ(cpu.*reg, 0x00);
-    EXPECT_EQ(cyclesExecuted, 2);
-    testLoadFlagsUnchanged(cpuCopy, cpu);
-    EXPECT_TRUE(cpu.P.bits.Z);
-    EXPECT_FALSE(cpu.P.bits.N);
-}
 
 TEST_F(LoadRegisterTests, LDAImmediate_LoadValue)
 {
@@ -194,30 +310,6 @@ TEST_F(LoadRegisterTests, LDYImmediate_LoadZero)
  * LOAD ZERO PAGE TESTING
  */
 
-void LoadRegisterTests::testLoadZeroPage(
-    m6502::Byte opcode,
-    m6502::Byte m6502::CPU::*reg)
-{
-    // arrange:
-    using namespace m6502;
-    CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 3;
-
-    mem[0xFFFC] = opcode;
-    mem[0xFFFD] = 0x73;
-    mem[0x0073] = 0x42;
-
-    // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
-
-    // assert:
-    EXPECT_EQ(cpu.*reg, 0x42);
-    EXPECT_EQ(cyclesExecuted, 3);
-    testLoadFlagsUnchanged(cpuCopy, cpu);
-    EXPECT_FALSE(cpu.P.bits.Z);
-    EXPECT_FALSE(cpu.P.bits.N);
-}
-
 TEST_F(LoadRegisterTests, LDAZeroPage_LoadValue)
 {
     using namespace m6502;
@@ -239,58 +331,6 @@ TEST_F(LoadRegisterTests, LDYZeroPage_LoadValue)
 /**
  * LOAD ZERO PAGE + REGISTER TESTING
  */
-
-void LoadRegisterTests::testLoadZeroPagePlusRegister(
-    m6502::Byte opcode,
-    m6502::Byte m6502::CPU::*addedReg,
-    m6502::Byte m6502::CPU::*reg)
-{
-    // arrange:
-    using namespace m6502;
-    CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 4;
-    cpu.*addedReg = 0x05;
-
-    mem[0xFFFC] = opcode;
-    mem[0xFFFD] = 0x73;
-    mem[0x0078] = 0x42;
-
-    // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
-
-    // assert:
-    EXPECT_EQ(cpu.*reg, 0x42);
-    EXPECT_EQ(cyclesExecuted, 4);
-    testLoadFlagsUnchanged(cpuCopy, cpu);
-    EXPECT_FALSE(cpu.P.bits.Z);
-    EXPECT_FALSE(cpu.P.bits.N);
-}
-
-void LoadRegisterTests::testLoadZeroPagePlusRegisterWrapAround(
-    m6502::Byte opcode,
-    m6502::Byte m6502::CPU::*addedReg,
-    m6502::Byte m6502::CPU::*reg)
-{
-    // arrange:
-    using namespace m6502;
-    CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 4;
-    cpu.*addedReg = 0xFF;
-
-    mem[0xFFFC] = opcode;
-    mem[0xFFFD] = 0x80;
-    mem[0x007F] = 0x73;
-
-    // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
-
-    // assert:
-    EXPECT_EQ(cpu.*reg, 0x73);
-    EXPECT_EQ(cyclesExecuted, 4);
-    testLoadFlagsUnchanged(cpuCopy, cpu);
-    EXPECT_FALSE(cpu.P.bits.Z);
-    EXPECT_FALSE(cpu.P.bits.N);
-}
 
 TEST_F(LoadRegisterTests, LDAZeroPageX_LoadValue)
 {
@@ -332,31 +372,6 @@ TEST_F(LoadRegisterTests, LDYZeroPageX_LoadValue_WrapAround)
  * LOAD ABSOLUTE TESTING
  */
 
-void LoadRegisterTests::testLoadAbsolute(
-    m6502::Byte opcode,
-    m6502::Byte m6502::CPU::*reg)
-{
-    // arrange
-    using namespace m6502;
-    CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 4;
-
-    mem[0xFFFC] = opcode;
-    mem[0xFFFD] = 0x20;
-    mem[0xFFFE] = 0x04;
-    mem[0x0420] = 0x42;
-
-    // act
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
-
-    // assert
-    EXPECT_EQ(cpu.*reg, 0x42);
-    EXPECT_EQ(cyclesExecuted, 4);
-    testLoadFlagsUnchanged(cpuCopy, cpu);
-    EXPECT_FALSE(cpu.P.bits.Z);
-    EXPECT_FALSE(cpu.P.bits.N);
-}
-
 TEST_F(LoadRegisterTests, LDAAbsolute_LoadValue)
 {
     using namespace m6502;
@@ -378,60 +393,6 @@ TEST_F(LoadRegisterTests, LDYAbsolute_LoadValue)
 /**
  * LOAD ABSOLUTE + REGISTER
  */
-
-void LoadRegisterTests::testLoadAbsolutePlusRegister(
-    m6502::Byte opcode,
-    m6502::Byte m6502::CPU::*addedReg,
-    m6502::Byte m6502::CPU::*reg)
-{
-    // arrange
-    using namespace m6502;
-    CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 4;
-    cpu.*addedReg = 0x05;
-
-    mem[0xFFFC] = opcode;
-    mem[0xFFFD] = 0x20;
-    mem[0xFFFE] = 0x04;
-    mem[0x0425] = 0x42;
-
-    // act
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
-
-    // assert
-    EXPECT_EQ(cpu.*reg, 0x42);
-    EXPECT_EQ(cyclesExecuted, 4);
-    testLoadFlagsUnchanged(cpuCopy, cpu);
-    EXPECT_FALSE(cpu.P.bits.Z);
-    EXPECT_FALSE(cpu.P.bits.N);
-}
-
-void LoadRegisterTests::testLoadAbsolutePlusRegisterPageCrossed(
-    m6502::Byte opcode,
-    m6502::Byte m6502::CPU::*addedReg,
-    m6502::Byte m6502::CPU::*reg)
-{
-    // arrange
-    using namespace m6502;
-    CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 5;
-    cpu.*addedReg = 0x00FF;
-
-    mem[0xFFFC] = opcode;
-    mem[0xFFFD] = 0x20;
-    mem[0xFFFE] = 0x04;
-    mem[0x051F] = 0x42;
-
-    // act
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
-
-    // assert
-    EXPECT_EQ(cpu.*reg, 0x42);
-    EXPECT_EQ(cyclesExecuted, 5);
-    testLoadFlagsUnchanged(cpuCopy, cpu);
-    EXPECT_FALSE(cpu.P.bits.Z);
-    EXPECT_FALSE(cpu.P.bits.N);
-}
 
 TEST_F(LoadRegisterTests, LDAAbsoluteX_LoadValue)
 {

@@ -18,27 +18,119 @@ protected:
 
     // load zero page
     void testStoreZeroPage(m6502::Byte opcode,
-                           m6502::Byte m6502::CPU::*reg);
+                           m6502::Byte m6502::CPU::*reg)
+    {
+        // arrange:
+        using namespace m6502;
+        CPU cpuCopy = cpu;
+        static constexpr s32 NUM_CYCLES = 3;
+
+        cpu.*reg = 0x42;
+        mem[0xFFFC] = opcode;
+        mem[0xFFFD] = 0x73;
+
+        // act:
+        s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+
+        // assert:
+        EXPECT_EQ(mem[0x0073], 0x42);
+        EXPECT_EQ(cyclesExecuted, 3);
+        testStoreFlagsUnchanged(cpuCopy, cpu);
+    }
 
     // load zero page + register
     void testStoreZeroPagePlusRegister(m6502::Byte opcode,
                                        m6502::Byte m6502::CPU::*addedReg,
-                                       m6502::Byte m6502::CPU::*reg);
+                                       m6502::Byte m6502::CPU::*reg)
+    {
+        // arrange:
+        using namespace m6502;
+        CPU cpuCopy = cpu;
+        static constexpr s32 NUM_CYCLES = 4;
+        cpu.*reg = 0x42;
+        cpu.*addedReg = 0x05;
+
+        mem[0xFFFC] = opcode;
+        mem[0xFFFD] = 0x73;
+
+        // act:
+        s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+
+        // assert:
+        EXPECT_EQ(mem[0x0078], 0x42);
+        EXPECT_EQ(cyclesExecuted, 4);
+        testStoreFlagsUnchanged(cpuCopy, cpu);
+    }
     void testStoreZeroPagePlusRegisterWrapAround(m6502::Byte opcode,
                                                  m6502::Byte m6502::CPU::*addedReg,
-                                                 m6502::Byte m6502::CPU::*reg);
+                                                 m6502::Byte m6502::CPU::*reg)
+    {
+        // arrange:
+        using namespace m6502;
+        CPU cpuCopy = cpu;
+        static constexpr s32 NUM_CYCLES = 4;
+        cpu.*reg = 0x42;
+        cpu.*addedReg = 0xFF;
+
+        mem[0xFFFC] = opcode;
+        mem[0xFFFD] = 0x80;
+
+        // act:
+        s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+
+        // assert:
+        EXPECT_EQ(mem[0x007F], 0x42);
+        EXPECT_EQ(cyclesExecuted, 4);
+        testStoreFlagsUnchanged(cpuCopy, cpu);
+    }
 
     // load absolute
     void testStoreAbsolute(m6502::Byte opcode,
-                           m6502::Byte m6502::CPU::*reg);
+                           m6502::Byte m6502::CPU::*reg)
+    {
+        // arrange
+        using namespace m6502;
+        CPU cpuCopy = cpu;
+        static constexpr s32 NUM_CYCLES = 4;
+        cpu.*reg = 0x42;
+
+        mem[0xFFFC] = opcode;
+        mem[0xFFFD] = 0x20;
+        mem[0xFFFE] = 0x04;
+
+        // act
+        s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+
+        // assert
+        EXPECT_EQ(mem[0x0420], 0x42);
+        EXPECT_EQ(cyclesExecuted, 4);
+        testStoreFlagsUnchanged(cpuCopy, cpu);
+    }
 
     // load absolute + register
     void testStoreAbsolutePlusRegister(m6502::Byte opcode,
                                        m6502::Byte m6502::CPU::*addedReg,
-                                       m6502::Byte m6502::CPU::*reg);
-    void testLoadAbsolutePlusRegisterPageCrossed(m6502::Byte opcode,
-                                                 m6502::Byte m6502::CPU::*addedReg,
-                                                 m6502::Byte m6502::CPU::*reg);
+                                       m6502::Byte m6502::CPU::*reg)
+    {
+        // arrange
+        using namespace m6502;
+        CPU cpuCopy = cpu;
+        static constexpr s32 NUM_CYCLES = 5;
+        cpu.*reg = 0x42;
+        cpu.*addedReg = 0x05;
+
+        mem[0xFFFC] = opcode;
+        mem[0xFFFD] = 0x20;
+        mem[0xFFFE] = 0x04;
+
+        // act
+        s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+
+        // assert
+        EXPECT_EQ(cpu.*reg, 0x42);
+        EXPECT_EQ(cyclesExecuted, 5);
+        testStoreFlagsUnchanged(cpuCopy, cpu);
+    }
 
     // test flags
     static void testStoreFlagsUnchanged(const m6502::CPU &cpuCopy,
@@ -51,28 +143,6 @@ protected:
 /**
  * STORE ZERO PAGE TESTING
  */
-
-void StoreRegisterTests::testStoreZeroPage(
-    m6502::Byte opcode,
-    m6502::Byte m6502::CPU::*reg)
-{
-    // arrange:
-    using namespace m6502;
-    CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 3;
-
-    cpu.*reg = 0x42;
-    mem[0xFFFC] = opcode;
-    mem[0xFFFD] = 0x73;
-
-    // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
-
-    // assert:
-    EXPECT_EQ(mem[0x0073], 0x42);
-    EXPECT_EQ(cyclesExecuted, 3);
-    testStoreFlagsUnchanged(cpuCopy, cpu);
-}
 
 TEST_F(StoreRegisterTests, STAZeroPage_StoreValue)
 {
@@ -95,54 +165,6 @@ TEST_F(StoreRegisterTests, STYZeroPage_StoreValue)
 /**
  * STORE ZERO PAGE + REGISTER TESTING
  */
-
-void StoreRegisterTests::testStoreZeroPagePlusRegister(
-    m6502::Byte opcode,
-    m6502::Byte m6502::CPU::*addedReg,
-    m6502::Byte m6502::CPU::*reg)
-{
-    // arrange:
-    using namespace m6502;
-    CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 4;
-    cpu.*reg = 0x42;
-    cpu.*addedReg = 0x05;
-
-    mem[0xFFFC] = opcode;
-    mem[0xFFFD] = 0x73;
-
-    // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
-
-    // assert:
-    EXPECT_EQ(mem[0x0078], 0x42);
-    EXPECT_EQ(cyclesExecuted, 4);
-    testStoreFlagsUnchanged(cpuCopy, cpu);
-}
-
-void StoreRegisterTests::testStoreZeroPagePlusRegisterWrapAround(
-    m6502::Byte opcode,
-    m6502::Byte m6502::CPU::*addedReg,
-    m6502::Byte m6502::CPU::*reg)
-{
-    // arrange:
-    using namespace m6502;
-    CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 4;
-    cpu.*reg = 0x42;
-    cpu.*addedReg = 0xFF;
-
-    mem[0xFFFC] = opcode;
-    mem[0xFFFD] = 0x80;
-
-    // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
-
-    // assert:
-    EXPECT_EQ(mem[0x007F], 0x42);
-    EXPECT_EQ(cyclesExecuted, 4);
-    testStoreFlagsUnchanged(cpuCopy, cpu);
-}
 
 TEST_F(StoreRegisterTests, STAZeroPageX_StoreValue)
 {
@@ -184,29 +206,6 @@ TEST_F(StoreRegisterTests, STYZeroPageX_StoreValue_WrapAround)
  * STORE ABSOLUTE TESTING
  */
 
-void StoreRegisterTests::testStoreAbsolute(
-    m6502::Byte opcode,
-    m6502::Byte m6502::CPU::*reg)
-{
-    // arrange
-    using namespace m6502;
-    CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 4;
-    cpu.*reg = 0x42;
-
-    mem[0xFFFC] = opcode;
-    mem[0xFFFD] = 0x20;
-    mem[0xFFFE] = 0x04;
-
-    // act
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
-
-    // assert
-    EXPECT_EQ(mem[0x0420], 0x42);
-    EXPECT_EQ(cyclesExecuted, 4);
-    testStoreFlagsUnchanged(cpuCopy, cpu);
-}
-
 TEST_F(StoreRegisterTests, STAAbsolute_StoreValue)
 {
     using namespace m6502;
@@ -228,31 +227,6 @@ TEST_F(StoreRegisterTests, STYAbsolute_StoreValue)
 /**
  * STORE ABSOLUTE + REGISTER
  */
-
-void StoreRegisterTests::testStoreAbsolutePlusRegister(
-    m6502::Byte opcode,
-    m6502::Byte m6502::CPU::*addedReg,
-    m6502::Byte m6502::CPU::*reg)
-{
-    // arrange
-    using namespace m6502;
-    CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 5;
-    cpu.*reg = 0x42;
-    cpu.*addedReg = 0x05;
-
-    mem[0xFFFC] = opcode;
-    mem[0xFFFD] = 0x20;
-    mem[0xFFFE] = 0x04;
-
-    // act
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
-
-    // assert
-    EXPECT_EQ(cpu.*reg, 0x42);
-    EXPECT_EQ(cyclesExecuted, 5);
-    testStoreFlagsUnchanged(cpuCopy, cpu);
-}
 
 TEST_F(StoreRegisterTests, STAAbsoluteX_StoreValue)
 {
