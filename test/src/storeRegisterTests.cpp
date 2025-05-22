@@ -35,7 +35,7 @@ protected:
         // assert:
         EXPECT_EQ(mem[0x0073], 0x42);
         EXPECT_EQ(cyclesExecuted, 3);
-        testStoreFlagsUnchanged(cpuCopy, cpu);
+        testAllStoreFlagsUnchanged(cpuCopy, cpu);
     }
 
     // load zero page + register
@@ -59,7 +59,7 @@ protected:
         // assert:
         EXPECT_EQ(mem[0x0078], 0x42);
         EXPECT_EQ(cyclesExecuted, 4);
-        testStoreFlagsUnchanged(cpuCopy, cpu);
+        testAllStoreFlagsUnchanged(cpuCopy, cpu);
     }
     void testStoreZeroPagePlusRegisterWrapAround(m6502::Byte opcode,
                                                  m6502::Byte m6502::CPU::*addedReg,
@@ -81,7 +81,7 @@ protected:
         // assert:
         EXPECT_EQ(mem[0x007F], 0x42);
         EXPECT_EQ(cyclesExecuted, 4);
-        testStoreFlagsUnchanged(cpuCopy, cpu);
+        testAllStoreFlagsUnchanged(cpuCopy, cpu);
     }
 
     // load absolute
@@ -104,7 +104,7 @@ protected:
         // assert
         EXPECT_EQ(mem[0x0420], 0x42);
         EXPECT_EQ(cyclesExecuted, 4);
-        testStoreFlagsUnchanged(cpuCopy, cpu);
+        testAllStoreFlagsUnchanged(cpuCopy, cpu);
     }
 
     // load absolute + register
@@ -129,11 +129,11 @@ protected:
         // assert
         EXPECT_EQ(cpu.*reg, 0x42);
         EXPECT_EQ(cyclesExecuted, 5);
-        testStoreFlagsUnchanged(cpuCopy, cpu);
+        testAllStoreFlagsUnchanged(cpuCopy, cpu);
     }
 
     // test flags
-    static void testStoreFlagsUnchanged(const m6502::CPU &cpuCopy,
+    static void testAllStoreFlagsUnchanged(const m6502::CPU &cpuCopy,
                                         const m6502::CPU &cpu)
     {
         EXPECT_EQ(cpuCopy.P.value, cpu.P.value);
@@ -264,7 +264,7 @@ TEST_F(StoreRegisterTests, STAIndirectX_LoadValue)
     // assert
     EXPECT_EQ(mem[0x0420], 0x42);
     EXPECT_EQ(cyclesExecuted, 6);
-    testStoreFlagsUnchanged(cpuCopy, cpu);
+    testAllStoreFlagsUnchanged(cpuCopy, cpu);
 }
 
 /**
@@ -291,5 +291,5 @@ TEST_F(StoreRegisterTests, STAIndirectY_LoadValue)
     // assert
     EXPECT_EQ(mem[0x0425], 0x42);
     EXPECT_EQ(cyclesExecuted, 6);
-    testStoreFlagsUnchanged(cpuCopy, cpu);
+    testAllStoreFlagsUnchanged(cpuCopy, cpu);
 }
