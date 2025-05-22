@@ -34,8 +34,10 @@ set(TEST_SOURCES "test/src/cpuTests.cpp"
                  "test/src/loadRegisterTests.cpp"
                  "test/src/storeRegisterTests.cpp"
                  "test/src/jumpsAndCallsTests.cpp"
-                 "test/src/stackOperationTests.cpp")
-                 add_executable(m6502_tests ${TEST_SOURCES})
+                 "test/src/stackOperationTests.cpp"
+                 "test/src/logicalTests.cpp")
+
+add_executable(m6502_tests ${TEST_SOURCES})
 
 # link library to exe
 target_link_libraries(m6502_tests PRIVATE m6502_lib GTest::gtest GTest::gtest_main)

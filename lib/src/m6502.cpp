@@ -75,14 +75,14 @@ namespace m6502
         return effectiveAddress;
     }
 
-    s32 CPU::fetchAddressIndirectIndexed(s32 &cycles, const Mem &memory, bool extraCycle)
+    s32 CPU::fetchAddressIndirectIndexed(s32 &cycles, const Mem &memory, bool notStoreInstruction)
     {
         Byte zeroPageAddress = readNextByte(cycles, memory);
         Byte yRegister = readByteFromYRegister();
         Word address = readWordFromAddress(cycles, zeroPageAddress, memory);
         Word effectiveAddress = address + yRegister; // no cycles taken adding here
 
-        if (extraCycle)
+        if (notStoreInstruction)
         {
             bool pageCrossed = (address & 0xFF00) != (effectiveAddress & 0xFF00);
             if (pageCrossed)
@@ -116,6 +116,27 @@ namespace m6502
         auto loadRegister = [&cycles, &memory, this](Word address, Byte &reg)
         {
             reg = readByteFromAddress(cycles, address, memory);
+            setFlagStatus_NZ(reg);
+        };
+
+        // and byte with a register
+        auto andOperation = [&cycles, &memory, this](Word byteAddress, Byte &reg)
+        {
+            reg &= readByteFromAddress(cycles, byteAddress, memory);
+            setFlagStatus_NZ(reg);
+        };
+
+        // xor bite with a register
+        auto xorOperation = [&cycles, &memory, this](Word byteAddress, Byte &reg)
+        {
+            reg ^= readByteFromAddress(cycles, byteAddress, memory);
+            setFlagStatus_NZ(reg);
+        };
+
+        // or bite with a register
+        auto orOperation = [&cycles, &memory, this](Word byteAddress, Byte &reg)
+        {
+            reg |= readByteFromAddress(cycles, byteAddress, memory);
             setFlagStatus_NZ(reg);
         };
 
@@ -413,7 +434,7 @@ namespace m6502
              */
 
             // jump to location from absolute address
-            case INS_JMP_ABS:
+            case INS_JMP_ABS: // testing complete
             {
                 Word address = readNextWord(cycles, memory);
                 PC = address;
@@ -421,7 +442,7 @@ namespace m6502
             }
 
             // jump to location from indirect address
-            case INS_JMP_IND:
+            case INS_JMP_IND: // testing complete
             {
                 Word address = readNextWord(cycles, memory);
                 Word effectiveAddress = readWordFromAddress(cycles, address, memory);
@@ -430,7 +451,7 @@ namespace m6502
             }
 
             // jump to subroutine from absolute address
-            case INS_JSR_ABS:
+            case INS_JSR_ABS: // testing complete
             {
                 Word address = readNextWord(cycles, memory);
                 pushWordToStack(cycles, PC - 1, memory);
@@ -440,7 +461,7 @@ namespace m6502
             }
 
             // return from subroutine
-            case INS_RTS:
+            case INS_RTS: // testing complete
             {
                 Word address = popWordFromStack(cycles, memory);
                 PC = address + 1;
@@ -453,7 +474,7 @@ namespace m6502
              */
 
             // transfer stack pointer to x register
-            case INS_TSX:
+            case INS_TSX: // testing complete
             {
                 X = SP;
                 cycles--; // for transfer of data
@@ -462,7 +483,7 @@ namespace m6502
             }
 
             // transfer x register to stack pointer
-            case INS_TXS:
+            case INS_TXS: // testing complete
             {
                 SP = X;
                 cycles--; // for transfer of data
@@ -470,7 +491,7 @@ namespace m6502
             }
 
             // push accumulator to stack
-            case INS_PHA:
+            case INS_PHA: // testing complete
             {
                 pushByteToStack(cycles, A, memory);
                 cycles--; // extra cycle
@@ -478,7 +499,7 @@ namespace m6502
             }
 
             // push processor status to stack
-            case INS_PHP:
+            case INS_PHP: // testing complete
             {
                 pushByteToStack(cycles, P.value, memory);
                 cycles--; // extra cycle
@@ -486,7 +507,7 @@ namespace m6502
             }
 
             // pull from stack to accumulator
-            case INS_PLA:
+            case INS_PLA: // testing complete
             {
                 Byte value = popByteFromStack(cycles, memory);
                 A = value;
@@ -496,11 +517,235 @@ namespace m6502
             }
 
             // pull processor from stack
-            case INS_PLP:
+            case INS_PLP: // testing complete
             {
                 Byte value = popByteFromStack(cycles, memory);
                 P.value = value;
                 cycles--; // extra cycle
+                break;
+            }
+
+            /**
+             * LOGICAL INSTRUCTIONS
+             */
+
+            /**
+             * AND OPERATIONS
+             */
+
+            // and immediate address
+            case INS_AND_IMM: // testing complete
+            {
+                A &= readNextByte(cycles, memory);
+                setFlagStatus_NZ(A);
+                break;
+            }
+
+            // and zero page address
+            case INS_AND_ZPG: // testing complete
+            {
+                Word address = fetchAddressZeroPage(cycles, memory);
+                andOperation(address, A);
+                break;
+            }
+
+            // and zero page + x register address
+            case INS_AND_ZPX: // testing complete
+            {
+                Word address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
+                andOperation(address, A);
+                break;
+            }
+
+            // and zero page absolute address
+            case INS_AND_ABS: // testing complete
+            {
+                Word address = fetchAddressAbsolute(cycles, memory);
+                andOperation(address, A);
+                break;
+            }
+
+            // and zero page absolute + x register address
+            case INS_AND_ABX: // testing complete
+            {
+                Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
+                andOperation(address, A);
+                break;
+            }
+
+            // and zero page absolute + y register address
+            case INS_AND_ABY: // testing complete
+            {
+                Word address = fetchAddressAbsolutePlusRegister(cycles, Y_REGISTER, memory);
+                andOperation(address, A);
+                break;
+            }
+
+            // and indexed indirect addressing
+            case INS_AND_INX: // testing complete
+            {
+                Word address = fetchAddressIndexedIndirect(cycles, memory);
+                andOperation(address, A);
+                break;
+            }
+
+            // and indirect indexed addressing
+            case INS_AND_INY:
+            {
+                Word address = fetchAddressIndirectIndexed(cycles, memory, true);
+                andOperation(address, A);
+                break;
+            }
+
+            /**
+             * EXCLUSIVE OR OPERATIONS
+             */
+
+            // or immediate address
+            case INS_EOR_IMM: // testing complete
+            {
+                A ^= readNextByte(cycles, memory);
+                setFlagStatus_NZ(A);
+                break;
+            }
+
+            // or zero page address
+            case INS_EOR_ZPG: // testing complete
+            {
+                Word address = fetchAddressZeroPage(cycles, memory);
+                xorOperation(address, A);
+                break;
+            }
+
+            // or zero page + x register address
+            case INS_EOR_ZPX: // testing complete
+            {
+                Word address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
+                xorOperation(address, A);
+                break;
+            }
+
+            // or zero page absolute address
+            case INS_EOR_ABS: // testing complete
+            {
+                Word address = fetchAddressAbsolute(cycles, memory);
+                xorOperation(address, A);
+                break;
+            }
+
+            // or zero page absolute + x register address
+            case INS_EOR_ABX: // testing complete
+            {
+                Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
+                xorOperation(address, A);
+                break;
+            }
+
+            // or zero page absolute + y register address
+            case INS_EOR_ABY: // testing complete
+            {
+                Word address = fetchAddressAbsolutePlusRegister(cycles, Y_REGISTER, memory);
+                xorOperation(address, A);
+                break;
+            }
+
+            // or indexed indirect addressing
+            case INS_EOR_INX: // testing complete
+            {
+                Word address = fetchAddressIndexedIndirect(cycles, memory);
+                xorOperation(address, A);
+                break;
+            }
+
+            // or indirect indexed addressing
+            case INS_EOR_INY:
+            {
+                Word address = fetchAddressIndirectIndexed(cycles, memory, true);
+                xorOperation(address, A);
+                break;
+            }
+
+            /**
+             * INCLUSIVE OR OPERATIONS
+             */
+
+            // or immediate address
+            case INS_ORA_IMM: // testing complete
+            {
+                A |= readNextByte(cycles, memory);
+                setFlagStatus_NZ(A);
+                break;
+            }
+
+            // or zero page address
+            case INS_ORA_ZPG: // testing complete
+            {
+                Word address = fetchAddressZeroPage(cycles, memory);
+                orOperation(address, A);
+                break;
+            }
+
+            // or zero page + x register address
+            case INS_ORA_ZPX: // testing complete
+            {
+                Word address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
+                orOperation(address, A);
+                break;
+            }
+
+            // or zero page absolute address
+            case INS_ORA_ABS: // testing complete
+            {
+                Word address = fetchAddressAbsolute(cycles, memory);
+                orOperation(address, A);
+                break;
+            }
+
+            // or zero page absolute + x register address
+            case INS_ORA_ABX: // testing complete
+            {
+                Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
+                orOperation(address, A);
+                break;
+            }
+
+            // or zero page absolute + y register address
+            case INS_ORA_ABY: // testing complete
+            {
+                Word address = fetchAddressAbsolutePlusRegister(cycles, Y_REGISTER, memory);
+                orOperation(address, A);
+                break;
+            }
+
+            // or indexed indirect addressing
+            case INS_ORA_INX: // testing complete
+            {
+                Word address = fetchAddressIndexedIndirect(cycles, memory);
+                orOperation(address, A);
+                break;
+            }
+
+            // or indirect indexed addressing
+            case INS_ORA_INY:
+            {
+                Word address = fetchAddressIndirectIndexed(cycles, memory, true);
+                orOperation(address, A);
+                break;
+            }
+
+            /**
+             * BIT TEST OPERATIONS
+             */
+
+            // bit test zero page addressing
+            case INS_BIT_ZPG:
+            {
+                break;
+            }
+
+            // bit test absolute addressing
+            case INS_BIT_ABS:
+            {
                 break;
             }
 

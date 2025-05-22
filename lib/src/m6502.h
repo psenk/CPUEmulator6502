@@ -294,6 +294,34 @@ struct m6502::CPU
                           INS_PLA = 0x68,
                           INS_PLP = 0x28;
 
+    // logical instructions
+    static constexpr Byte INS_AND_IMM = 0x29,
+                          INS_AND_ZPG = 0x25,
+                          INS_AND_ZPX = 0x35,
+                          INS_AND_ABS = 0x2D,
+                          INS_AND_ABX = 0x3D,
+                          INS_AND_ABY = 0x39,
+                          INS_AND_INX = 0x21,
+                          INS_AND_INY = 0x31,
+                          INS_EOR_IMM = 0x49,
+                          INS_EOR_ZPG = 0x45,
+                          INS_EOR_ZPX = 0x55,
+                          INS_EOR_ABS = 0x4D,
+                          INS_EOR_ABX = 0x5D,
+                          INS_EOR_ABY = 0x59,
+                          INS_EOR_INX = 0x41,
+                          INS_EOR_INY = 0x51,
+                          INS_ORA_IMM = 0x09,
+                          INS_ORA_ZPG = 0x05,
+                          INS_ORA_ZPX = 0x15,
+                          INS_ORA_ABS = 0x0D,
+                          INS_ORA_ABX = 0x1D,
+                          INS_ORA_ABY = 0x19,
+                          INS_ORA_INX = 0x01,
+                          INS_ORA_INY = 0x11,
+                          INS_BIT_ZPG = 0x24,
+                          INS_BIT_ABS = 0x2C;
+
     /**
      * ADDRESSING MODES
      */
