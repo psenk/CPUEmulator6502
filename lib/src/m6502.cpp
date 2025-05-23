@@ -105,6 +105,14 @@ namespace m6502
         P.bits.N = (value & 0x80) ? 1 : 0;
     }
 
+    void CPU::setFlagStatus_BIT(Byte value)
+    {
+        Byte andResult = A & value;
+        P.bits.Z = ((andResult & ZERO_FLAG_BIT) == 0) ? 1 : 0;
+        P.bits.V = (value & OVERFLOW_FLAG_BIT) ? 1 : 0;
+        P.bits.N = (value & NEGATIVE_FLAG_BIT) ? 1 : 0;
+    }
+
     /**
      * CPU EXECUTE FUNCTION
      */
@@ -740,12 +748,18 @@ namespace m6502
             // bit test zero page addressing
             case INS_BIT_ZPG:
             {
+                Word address = fetchAddressZeroPage(cycles, memory);
+                Byte value = readByteFromAddress(cycles, address, memory);
+                setFlagStatus_BIT(value);
                 break;
             }
 
             // bit test absolute addressing
             case INS_BIT_ABS:
             {
+                Word address = fetchAddressAbsolute(cycles, memory);
+                Byte value = readByteFromAddress(cycles, address, memory);
+                setFlagStatus_BIT(value);
                 break;
             }
 

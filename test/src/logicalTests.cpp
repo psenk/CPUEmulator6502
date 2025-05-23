@@ -441,6 +441,58 @@ protected:
         testAllLogicalFlagsUnchanged(cpuCopy, cpu);
     }
 
+    // test bit tests
+    void testLogicalBITTestZeroPage(m6502::Byte testInput, bool allTest)
+    {
+        // arrange:
+        using namespace m6502;
+        static constexpr s32 NUM_CYCLES = 3;
+        if (allTest)
+        {
+            cpu.A = 0xC0;
+        }
+        else
+        {
+            cpu.A = 0xC2;
+        }
+
+        mem[0xFFFC] = CPU::INS_BIT_ZPG;
+        mem[0xFFFD] = 0x73;
+        mem[0x0073] = testInput;
+
+        // act:
+        s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+
+        // assert:
+        EXPECT_EQ(cyclesExecuted, 3);
+    }
+
+    void testLogicalBITTestAbsolute(m6502::Byte testInput, bool allTest)
+    {
+        // arrange:
+        using namespace m6502;
+        static constexpr s32 NUM_CYCLES = 4;
+        if (allTest)
+        {
+            cpu.A = 0xC0;
+        }
+        else
+        {
+            cpu.A = 0xC2;
+        }
+
+        mem[0xFFFC] = CPU::INS_BIT_ABS;
+        mem[0xFFFD] = 0x20;
+        mem[0xFFFE] = 0x04;
+        mem[0x0420] = testInput;
+
+        // act:
+        s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+
+        // assert:
+        EXPECT_EQ(cyclesExecuted, 4);
+    }
+
     // test flags
     static void testAllLogicalFlagsUnchanged(const m6502::CPU &cpuCopy,
                                              const m6502::CPU &cpu)
@@ -743,12 +795,90 @@ TEST_F(LogicalTests, ORAIndirectY_LoadValue_PageCrossed)
  * BIT TEST TESTING
  */
 
- TEST_F(LogicalTests, BITTestZeroPage)
- {
+TEST_F(LogicalTests, BITTestZeroPage_AllFlagsSet)
+{
+    // arrange:
+    using namespace m6502;
+    testLogicalBITTestZeroPage(0xC0, true);
 
- }
+    // assert:
+    EXPECT_TRUE(cpu.P.bits.Z);
+    EXPECT_TRUE(cpu.P.bits.V);
+    EXPECT_TRUE(cpu.P.bits.N);
+}
 
- TEST_F(LogicalTests, BITTestAbsolute)
- {
+TEST_F(LogicalTests, BITTestZeroPage_ZeroNotSet)
+{
+    using namespace m6502;
+    testLogicalBITTestZeroPage(0xC2, false);
 
- }
+    EXPECT_FALSE(cpu.P.bits.Z);
+    EXPECT_TRUE(cpu.P.bits.V);
+    EXPECT_TRUE(cpu.P.bits.N);
+}
+
+TEST_F(LogicalTests, BITTestZeroPage_OverflowNotSet)
+{
+    using namespace m6502;
+    testLogicalBITTestZeroPage(0x9B, false);
+
+    // assert:
+    EXPECT_FALSE(cpu.P.bits.Z);
+    EXPECT_FALSE(cpu.P.bits.V);
+    EXPECT_TRUE(cpu.P.bits.N);
+}
+
+TEST_F(LogicalTests, BITTestZeroPage_NegativeNotSet)
+{
+    using namespace m6502;
+    testLogicalBITTestZeroPage(0x1B, false);
+
+    // assert:
+    EXPECT_FALSE(cpu.P.bits.Z);
+    EXPECT_FALSE(cpu.P.bits.V);
+    EXPECT_FALSE(cpu.P.bits.N);
+}
+
+TEST_F(LogicalTests, BITTestAbsolute_AllFlagsSet)
+{
+    // arrange
+    using namespace m6502;
+    testLogicalBITTestAbsolute(0xC0, true);
+
+    // assert
+    EXPECT_TRUE(cpu.P.bits.Z);
+    EXPECT_TRUE(cpu.P.bits.V);
+    EXPECT_TRUE(cpu.P.bits.N);
+}
+
+TEST_F(LogicalTests, BITTestAbsolute_ZeroNotSet)
+{
+    using namespace m6502;
+    testLogicalBITTestAbsolute(0xC2, false);
+
+    EXPECT_FALSE(cpu.P.bits.Z);
+    EXPECT_TRUE(cpu.P.bits.V);
+    EXPECT_TRUE(cpu.P.bits.N);
+}
+
+TEST_F(LogicalTests, BITTestAbsolute_OverflowNotSet)
+{
+    using namespace m6502;
+    testLogicalBITTestAbsolute(0x9B, false);
+
+    // assert:
+    EXPECT_FALSE(cpu.P.bits.Z);
+    EXPECT_FALSE(cpu.P.bits.V);
+    EXPECT_TRUE(cpu.P.bits.N);
+}
+
+TEST_F(LogicalTests, BITTestAbsolute_NegativeNotSet)
+{
+    using namespace m6502;
+    testLogicalBITTestAbsolute(0x1B, false);
+
+    // assert:
+    EXPECT_FALSE(cpu.P.bits.Z);
+    EXPECT_FALSE(cpu.P.bits.V);
+    EXPECT_FALSE(cpu.P.bits.N);
+}

@@ -233,6 +233,10 @@ struct m6502::CPU
         return (highByte << 8) | lowByte;
     }
 
+    static constexpr Byte ZERO_FLAG_BIT = 0x02;
+    static constexpr Byte OVERFLOW_FLAG_BIT = 0x40;
+    static constexpr Byte NEGATIVE_FLAG_BIT = 0x80;
+
     /**
      * INSTRUCTION OPCODES
      */
@@ -338,6 +342,7 @@ struct m6502::CPU
      */
 
     void setFlagStatus_NZ(Byte reg);
+    void setFlagStatus_BIT(Byte value);
 
     /**
      * CPU EXECUTE FUNCTION
