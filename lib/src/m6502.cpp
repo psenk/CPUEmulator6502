@@ -152,6 +152,7 @@ namespace m6502
         while (cycles > 0)
         {
             Byte instruction = readNextByte(cycles, memory);
+            std::cout << "Instruction: 0x" << std::hex << (int)instruction << std::endl;
             switch (instruction)
             {
 
@@ -763,11 +764,29 @@ namespace m6502
                 break;
             }
 
+            // TODO: fix after other commands implemented?
+            case INS_BRK:
+            {
+                Byte signatureByte = readNextByte(cycles, memory);
+                pushByteToStack(cycles, PC >> 8, memory);
+                pushByteToStack(cycles, PC & 0xFF, memory);
+                P.value |= BREAK_FLAG_BIT;
+                pushByteToStack(cycles, P.value, memory);
+                P.value |= INTERRUPT_FLAG_BIT;
+                Byte irqVectorLow = readByteFromAddress(cycles, IRQ_VECTOR_LOW, memory);
+                Byte irqVectorHigh = readByteFromAddress(cycles, IRQ_VECTOR_HIGH, memory);
+                Word irqVector = (irqVectorHigh << 8) | irqVectorLow;
+                PC = irqVector;
+                break;
+            }
+
             // error
             default:
             {
-                std::cout << "Instruction not handled: " << instruction << std::endl;
+                using namespace std;
+                cout << "Instruction not handled: " << hex << (int)instruction << endl;
                 PC--;
+                throw;
                 return -1;
             }
             }
@@ -775,5 +794,23 @@ namespace m6502
 
         const s32 cyclesUsed = cyclesRequested - cycles;
         return cyclesUsed;
+    }
+
+    Word CPU::loadProgram(Byte *program, u32 numBytes, Mem &memory)
+    {
+        if (program)
+        {
+            u32 programPtr = 0;
+            // first word is always address where program is stored (e.g '00 80' @ '$8000')
+            const Word loadAddress = program[programPtr] | (program[programPtr + 1] << 8);
+            programPtr += 2;
+            for (u32 i = loadAddress; i < loadAddress + numBytes - 2; i++)
+            {
+                memory[i] = program[programPtr++];
+            }
+            return loadAddress;
+        }
+        throw;
+        return -1;
     }
 }

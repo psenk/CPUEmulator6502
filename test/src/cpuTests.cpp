@@ -15,20 +15,20 @@ protected:
     void TearDown()
     {
     }
+
+    static void testFullCPUUnchanged(const m6502::CPU &cpuCopy,
+                                     const m6502::CPU &cpu)
+    {
+        EXPECT_EQ(cpuCopy.PC, cpu.PC);
+        EXPECT_EQ(cpuCopy.SP, cpu.SP);
+        EXPECT_EQ(cpuCopy.A, cpu.A);
+        EXPECT_EQ(cpuCopy.X, cpu.X);
+        EXPECT_EQ(cpuCopy.Y, cpu.Y);
+        EXPECT_EQ(cpuCopy.P.value, cpu.P.value);
+    }
 };
 
-static void testFullCPUUnchanged(const m6502::CPU &cpuCopy,
-                                 const m6502::CPU &cpu)
-{
-    EXPECT_EQ(cpuCopy.PC, cpu.PC);
-    EXPECT_EQ(cpuCopy.SP, cpu.SP);
-    EXPECT_EQ(cpuCopy.A, cpu.A);
-    EXPECT_EQ(cpuCopy.X, cpu.X);
-    EXPECT_EQ(cpuCopy.Y, cpu.Y);
-    EXPECT_EQ(cpuCopy.P.value, cpu.P.value);
-}
-
-TEST_F(CPUTests, CPUDoesNothingWithZeroCyclesExecuted)
+TEST_F(CPUTests, CPUDoesNothingWithZeroCycles)
 {
     // arrange:
     using namespace m6502;
@@ -43,7 +43,7 @@ TEST_F(CPUTests, CPUDoesNothingWithZeroCyclesExecuted)
     testFullCPUUnchanged(cpuCopy, cpu);
 }
 
-TEST_F(CPUTests, CPUNotGivenEnoughCyclesForInstruction)
+TEST_F(CPUTests, CPUNotGivenEnoughCycles)
 {
     // arrange
     using namespace m6502;
@@ -77,4 +77,54 @@ TEST_F(CPUTests, CPUExecutesBadFunction)
     // assert:
     EXPECT_EQ(cyclesExecuted, -1);
     testFullCPUUnchanged(cpuCopy, cpu);
+}
+
+TEST_F(CPUTests, CPULoadProgram)
+{
+    // arrange:
+    using namespace m6502;
+    const u32 numBytes = 10;
+    Byte testProgram[numBytes] = {0x20, 0x04, 0x02, 0x03, 0x04,
+                                  0x05, 0x06, 0x07, 0x08, 0x09};
+
+    // act:
+    cpu.loadProgram(testProgram, numBytes, mem);
+
+    // assert:
+    EXPECT_EQ(mem[0x0420], 0x02);
+    EXPECT_EQ(mem[0x0421], 0x03);
+    EXPECT_EQ(mem[0x0422], 0x04);
+    EXPECT_EQ(mem[0x0423], 0x05);
+    EXPECT_EQ(mem[0x0424], 0x06);
+    EXPECT_EQ(mem[0x0425], 0x07);
+    EXPECT_EQ(mem[0x0426], 0x08);
+    EXPECT_EQ(mem[0x0427], 0x09);
+}
+
+TEST_F(CPUTests, CPURunProgram)
+{
+    using namespace std;
+    // arrange:
+    using namespace m6502;
+    const u32 numBytes = 7;
+    Byte testProgram[numBytes] = {0x20, 0x04, 0xA9, 0x42, 0xB4,
+                                  0x50, 0x00};
+    Word address = cpu.loadProgram(testProgram, numBytes, mem);
+    cpu.PC = address;
+    cpu.X = 0x10;
+    Word brkAddress = address + 4;
+    mem[0x0060] = 0x42;
+    mem[0xFFFE] = brkAddress & 0xFF;
+    mem[0xFFFF] = brkAddress >> 8;
+
+    // act:
+    for (s32 clock = 100; clock > 0;)
+    {
+        clock -= cpu.execute(clock, mem);
+        if (cpu.A == 0x42 && cpu.Y == 0x42) break;
+    }
+
+    // assert:
+    EXPECT_EQ(cpu.A, 0x42);
+    EXPECT_EQ(cpu.Y, 0x42);
 }

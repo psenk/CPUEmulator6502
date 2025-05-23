@@ -234,8 +234,12 @@ struct m6502::CPU
     }
 
     static constexpr Byte ZERO_FLAG_BIT = 0x02;
+    static constexpr Byte INTERRUPT_FLAG_BIT = 0x04;
+    static constexpr Byte BREAK_FLAG_BIT = 0x10;
     static constexpr Byte OVERFLOW_FLAG_BIT = 0x40;
     static constexpr Byte NEGATIVE_FLAG_BIT = 0x80;
+    static constexpr Word IRQ_VECTOR_LOW = 0xFFFE;
+    static constexpr Word IRQ_VECTOR_HIGH = 0xFFFF;
 
     /**
      * INSTRUCTION OPCODES
@@ -326,6 +330,9 @@ struct m6502::CPU
                           INS_BIT_ZPG = 0x24,
                           INS_BIT_ABS = 0x2C;
 
+    // system functions
+    static constexpr Byte INS_BRK = 0x00;
+
     /**
      * ADDRESSING MODES
      */
@@ -345,8 +352,9 @@ struct m6502::CPU
     void setFlagStatus_BIT(Byte value);
 
     /**
-     * CPU EXECUTE FUNCTION
+     * CPU FUNCTIONS
      */
 
     s32 execute(s32 cycles, Mem &memory);
+    Word loadProgram(Byte *program, u32 numBytes, Mem &memory);
 };
