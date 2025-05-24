@@ -62,7 +62,7 @@ TEST_F(CPUTests, CPUNotGivenEnoughCycles)
     EXPECT_EQ(mem[0x0042], 0x00);
 }
 
-TEST_F(CPUTests, CPUExecutesBadFunction)
+TEST_F(CPUTests, CPUExecutesBadInstruction)
 {
     // arrange
     using namespace m6502;
@@ -71,11 +71,8 @@ TEST_F(CPUTests, CPUExecutesBadFunction)
 
     mem[0xFFFC] = 0x02; // invalid opcode
 
-    // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
-
-    // assert:
-    EXPECT_EQ(cyclesExecuted, -1);
+    // act/assert:
+    EXPECT_THROW(cpu.execute(NUM_CYCLES, mem), std::runtime_error);
     testFullCPUUnchanged(cpuCopy, cpu);
 }
 
@@ -101,9 +98,29 @@ TEST_F(CPUTests, CPULoadProgram)
     EXPECT_EQ(mem[0x0427], 0x09);
 }
 
+TEST_F(CPUTests, CPULoadProgram_InvalidProgram)
+{
+    // arrange:
+    using namespace m6502;
+    const u32 numBytes = 2;
+
+    // act/assert:
+    EXPECT_THROW(cpu.loadProgram(NULL, numBytes, mem), std::invalid_argument);
+}
+
+TEST_F(CPUTests, CPULoadProgram_ProgramTooSmall)
+{
+    // arrange:
+    using namespace m6502;
+    const u32 numBytes = 2;
+    Byte testProgram[numBytes] = {0x20, 0x40};
+
+    // act/assert:
+    EXPECT_THROW(cpu.loadProgram(testProgram, numBytes, mem), std::invalid_argument);
+}
+
 TEST_F(CPUTests, CPURunProgram)
 {
-    using namespace std;
     // arrange:
     using namespace m6502;
     const u32 numBytes = 7;
@@ -121,7 +138,10 @@ TEST_F(CPUTests, CPURunProgram)
     for (s32 clock = 100; clock > 0;)
     {
         clock -= cpu.execute(clock, mem);
-        if (cpu.A == 0x42 && cpu.Y == 0x42) break;
+        if (cpu.A == 0x42 && cpu.Y == 0x42)
+        {
+            break;
+        }
     }
 
     // assert:

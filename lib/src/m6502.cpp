@@ -784,10 +784,9 @@ namespace m6502
             default:
             {
                 using namespace std;
-                cout << "Instruction not handled: " << hex << (int)instruction << endl;
+                cout << "Instruction not handled: 0x" << hex << (int)instruction << endl;
                 PC--;
-                throw;
-                return -1;
+                throw runtime_error("Unhandled instruction.");
             }
             }
         }
@@ -798,19 +797,21 @@ namespace m6502
 
     Word CPU::loadProgram(Byte *program, u32 numBytes, Mem &memory)
     {
-        if (program)
+        if (!program || numBytes <= 2)
         {
-            u32 programPtr = 0;
-            // first word is always address where program is stored (e.g '00 80' @ '$8000')
-            const Word loadAddress = program[programPtr] | (program[programPtr + 1] << 8);
-            programPtr += 2;
-            for (u32 i = loadAddress; i < loadAddress + numBytes - 2; i++)
-            {
-                memory[i] = program[programPtr++];
-            }
-            return loadAddress;
+            throw std::invalid_argument("Invalid program or size too small.");
         }
-        throw;
-        return -1;
+
+        u32 programPtr = 0;
+        // first word is always address where program is stored (e.g '00 80' @ '$8000')
+        const Word loadAddress = program[programPtr] | (program[programPtr + 1] << 8);
+        programPtr += 2;
+
+        const u32 programSize = numBytes - 2;
+        for (u32 i = 0; i < programSize; i++)
+        {
+            memory[loadAddress + i] = program[programPtr++];
+        }
+        return loadAddress;
     }
 }
