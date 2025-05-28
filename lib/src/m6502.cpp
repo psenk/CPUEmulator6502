@@ -599,7 +599,7 @@ namespace m6502
             }
 
             // and indirect indexed addressing
-            case INS_AND_INY:
+            case INS_AND_INY: // testing complete
             {
                 Word address = fetchAddressIndirectIndexed(cycles, memory, true);
                 andOperation(address, A);
@@ -667,7 +667,7 @@ namespace m6502
             }
 
             // or indirect indexed addressing
-            case INS_EOR_INY:
+            case INS_EOR_INY: // testing complete
             {
                 Word address = fetchAddressIndirectIndexed(cycles, memory, true);
                 xorOperation(address, A);
@@ -735,7 +735,7 @@ namespace m6502
             }
 
             // or indirect indexed addressing
-            case INS_ORA_INY:
+            case INS_ORA_INY: // testing complete
             {
                 Word address = fetchAddressIndirectIndexed(cycles, memory, true);
                 orOperation(address, A);
@@ -747,7 +747,7 @@ namespace m6502
              */
 
             // bit test zero page addressing
-            case INS_BIT_ZPG:
+            case INS_BIT_ZPG: // testing complete
             {
                 Word address = fetchAddressZeroPage(cycles, memory);
                 Byte value = readByteFromAddress(cycles, address, memory);
@@ -756,11 +756,51 @@ namespace m6502
             }
 
             // bit test absolute addressing
-            case INS_BIT_ABS:
+            case INS_BIT_ABS: // testing complete
             {
                 Word address = fetchAddressAbsolute(cycles, memory);
                 Byte value = readByteFromAddress(cycles, address, memory);
                 setFlagStatus_BIT(value);
+                break;
+            }
+
+            /**
+             * REGISTER TRANSFER INSTRUCTIONS
+             */
+
+            // transfer accumulator to x register
+            case INS_TAX: // testing complete
+            {
+                X = A;
+                cycles--;
+                setFlagStatus_NZ(X);
+                break;
+            }
+
+            // transfer accumulator to y register
+            case INS_TAY: // testing complete
+            {
+                Y = A;
+                cycles--;
+                setFlagStatus_NZ(Y);
+                break;
+            }
+
+            // transfer x register to accumulator
+            case INS_TXA: // testing complete
+            {
+                A = X;
+                cycles--;
+                setFlagStatus_NZ(A);
+                break;
+            }
+
+            // transfer y register to accumulator
+            case INS_TYA: // testing complete
+            {
+                A = Y;
+                cycles--;
+                setFlagStatus_NZ(A);
                 break;
             }
 

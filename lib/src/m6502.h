@@ -196,7 +196,8 @@ struct m6502::CPU
      */
 
     // convert the 8 bit stack pointer to a 16 bit address
-    // the 0x01 is assumed because the full stack is on the $01 page
+    // the 0x01 high byte is assumed because 
+    // the full stack is on the $01 page
     Word spToAddress() const
     {
         return 0x0100 | SP;
@@ -238,6 +239,7 @@ struct m6502::CPU
     static constexpr Byte BREAK_FLAG_BIT = 0x10;
     static constexpr Byte OVERFLOW_FLAG_BIT = 0x40;
     static constexpr Byte NEGATIVE_FLAG_BIT = 0x80;
+
     static constexpr Word IRQ_VECTOR_LOW = 0xFFFE;
     static constexpr Word IRQ_VECTOR_HIGH = 0xFFFF;
 
@@ -329,6 +331,12 @@ struct m6502::CPU
                           INS_ORA_INY = 0x11,
                           INS_BIT_ZPG = 0x24,
                           INS_BIT_ABS = 0x2C;
+
+    // register transfer instructions
+    static constexpr Byte INS_TAX = 0xAA,
+                          INS_TAY = 0xA8,
+                          INS_TXA = 0x8A,
+                          INS_TYA = 0x98;
 
     // system functions
     static constexpr Byte INS_BRK = 0x00;
