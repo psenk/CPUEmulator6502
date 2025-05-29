@@ -23,6 +23,7 @@ namespace m6502
 /**
  * MEMORY
  */
+
 struct m6502::Mem
 {
     static constexpr u32 MAX_MEM = 1024 * 64;
@@ -71,6 +72,7 @@ union m6502::StatusFlags
 /**
  * CPU
  */
+
 struct m6502::CPU
 {
     /*
@@ -337,6 +339,20 @@ struct m6502::CPU
                           INS_TAY = 0xA8,
                           INS_TXA = 0x8A,
                           INS_TYA = 0x98;
+
+    // increment and decrement instructions
+    static constexpr Byte INS_INC_ZPG = 0x56,
+                          INS_INC_ZPX = 0xF6,
+                          INS_INC_ABS = 0xEE,
+                          INS_INC_ABX = 0xFE,
+                          INS_INX = 0xE8,
+                          INS_INY = 0xC8,
+                          INS_DEC_ZPG = 0xC6,
+                          INS_DEC_ZPX = 0xD6,
+                          INS_DEC_ABS = 0xCE,
+                          INS_DEC_ABX = 0xDE,
+                          INS_DEX = 0xCA,
+                          INS_DEY = 0x88;
 
     // system functions
     static constexpr Byte INS_BRK = 0x00;

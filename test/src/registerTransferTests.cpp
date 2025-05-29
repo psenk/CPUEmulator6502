@@ -16,23 +16,6 @@ protected:
     {
     }
 
-    // test flags
-    static void testTransferFlagsUnchanged(const m6502::CPU &cpuCopy,
-                                           const m6502::CPU &cpu)
-    {
-        EXPECT_EQ(cpuCopy.P.bits.C, cpu.P.bits.C);
-        EXPECT_EQ(cpuCopy.P.bits.I, cpu.P.bits.I);
-        EXPECT_EQ(cpuCopy.P.bits.D, cpu.P.bits.D);
-        EXPECT_EQ(cpuCopy.P.bits.B, cpu.P.bits.B);
-        EXPECT_EQ(cpuCopy.P.bits.V, cpu.P.bits.V);
-    }
-
-    static void testAllFlagsUnchanged(const m6502::CPU &cpuCopy,
-                                      const m6502::CPU &cpu)
-    {
-        EXPECT_EQ(cpuCopy.P.value, cpu.P.value);
-    }
-
     void testRegisterTransfer(m6502::Byte opcode,
                               m6502::Byte value,
                               m6502::Byte m6502::CPU::*inputRegister,
@@ -51,6 +34,23 @@ protected:
         // assert:
         EXPECT_EQ(cpu.*outputRegister, value);
         EXPECT_EQ(cyclesExecuted, 2);
+    }
+
+    // test flags
+    static void testTransferFlagsUnchanged(const m6502::CPU &cpuCopy,
+                                           const m6502::CPU &cpu)
+    {
+        EXPECT_EQ(cpuCopy.P.bits.C, cpu.P.bits.C);
+        EXPECT_EQ(cpuCopy.P.bits.I, cpu.P.bits.I);
+        EXPECT_EQ(cpuCopy.P.bits.D, cpu.P.bits.D);
+        EXPECT_EQ(cpuCopy.P.bits.B, cpu.P.bits.B);
+        EXPECT_EQ(cpuCopy.P.bits.V, cpu.P.bits.V);
+    }
+
+    static void testAllFlagsUnchanged(const m6502::CPU &cpuCopy,
+                                      const m6502::CPU &cpu)
+    {
+        EXPECT_EQ(cpuCopy.P.value, cpu.P.value);
     }
 };
 
@@ -136,7 +136,7 @@ TEST_F(RegisterTransferTests, TXA_LoadValue_NegativeValue)
 
 TEST_F(RegisterTransferTests, TYA_LoadValue)
 {
-    
+
     using namespace m6502;
     CPU cpuCopy = cpu;
     testRegisterTransfer(CPU::INS_TYA, 0x42, &CPU::Y, &CPU::A);
@@ -145,7 +145,7 @@ TEST_F(RegisterTransferTests, TYA_LoadValue)
 
 TEST_F(RegisterTransferTests, TYA_LoadValue_ZeroValue)
 {
-    
+
     using namespace m6502;
     CPU cpuCopy = cpu;
     testRegisterTransfer(CPU::INS_TYA, 0x00, &CPU::Y, &CPU::A);
@@ -155,7 +155,7 @@ TEST_F(RegisterTransferTests, TYA_LoadValue_ZeroValue)
 
 TEST_F(RegisterTransferTests, TYA_LoadValue_NegativeValue)
 {
-    
+
     using namespace m6502;
     CPU cpuCopy = cpu;
     testRegisterTransfer(CPU::INS_TYA, 0x84, &CPU::Y, &CPU::A);

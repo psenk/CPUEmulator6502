@@ -804,6 +804,152 @@ namespace m6502
                 break;
             }
 
+            /**
+             *  INCREMENT AND DECREMENT INSTRUCTIONS
+             */
+
+            /**
+             * INCREMENT INSTRUCTIONS
+             */
+
+            // increment memory at zero page address
+            case INS_INC_ZPG: // testing complete
+            {
+                Byte address = fetchAddressZeroPage(cycles, memory);
+                Byte value = readByteFromAddress(cycles, address, memory);
+                value++;
+                cycles--; // for incrementing
+                writeByte(cycles, value, address, memory);
+                break;
+            }
+
+            // increment memory at zero page + x register address
+            case INS_INC_ZPX: // testing complete
+            {
+                Byte address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
+                Byte value = readByteFromAddress(cycles, address, memory);
+                value++;
+                cycles--; // for incrementing
+                writeByte(cycles, value, address, memory);
+                break;
+            }
+
+            // increment memory at absolute address
+            case INS_INC_ABS: // testing complete
+            {
+                Word address = fetchAddressAbsolute(cycles, memory);
+                Byte value = readByteFromAddress(cycles, address, memory);
+                value++;
+                cycles--; // for incrementing
+                writeByte(cycles, value, address, memory);
+                break;
+            }
+
+            // increment memory at absolute + x register address
+            case INS_INC_ABX:
+            {
+                Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
+                cycles--; // for arithmetic
+                Byte value = readByteFromAddress(cycles, address, memory);
+                value++;
+                cycles--; // for decrementing
+                writeByte(cycles, value, address, memory);
+                break;
+            }
+
+            /**
+             * INCREMENT REGISTERS
+             */
+
+            // increment x register
+            case INS_INX: // testing complete
+            {
+                X++;
+                cycles--;
+                setFlagStatus_NZ(X);
+                break;
+            }
+
+            // increment y register
+            case INS_INY: // testing complete
+            {
+                Y++;
+                cycles--;
+                setFlagStatus_NZ(Y);
+                break;
+            }
+
+            /**
+             * DECREMENT INSTRUCTIONS
+             */
+
+            // decrement memory at zero page address
+            case INS_DEC_ZPG: // testing complete
+            {
+                Byte address = fetchAddressZeroPage(cycles, memory);
+                Byte value = readByteFromAddress(cycles, address, memory);
+                value--;
+                cycles--; // for decrementing
+                writeByte(cycles, value, address, memory);
+                break;
+            }
+
+            // decrement memory at zero page + x register address
+            case INS_DEC_ZPX: // testing complete
+            {
+                Byte address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
+                Byte value = readByteFromAddress(cycles, address, memory);
+                value--;
+                cycles--; // for decrementing
+                writeByte(cycles, value, address, memory);
+                break;
+            }
+
+            // decrement memory at absolute address
+            case INS_DEC_ABS: // testing complete
+            {
+                Word address = fetchAddressAbsolute(cycles, memory);
+                Byte value = readByteFromAddress(cycles, address, memory);
+                value--;
+                cycles--; // for decrementing
+                writeByte(cycles, value, address, memory);
+                break;
+            }
+
+            // decrement memory at absolute + x register address
+            case INS_DEC_ABX:
+            {
+                Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
+                cycles--; // for arithmetic
+                Byte value = readByteFromAddress(cycles, address, memory);
+                value--;
+                cycles--; // for decrementing
+                writeByte(cycles, value, address, memory);
+                break;
+            }
+
+            /**
+             *  DECREMENT REGISTERS
+             */
+
+            // decrement x register
+            case INS_DEX:
+            {
+                X--;
+                cycles--;
+                setFlagStatus_NZ(X);
+                break;
+            }
+
+            // decrement y register
+            case INS_DEY:
+            {
+                Y--;
+                cycles--;
+                setFlagStatus_NZ(Y);
+                break;
+            }
+
             // TODO: fix after other commands implemented?
             case INS_BRK:
             {
