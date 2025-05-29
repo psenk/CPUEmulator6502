@@ -17,7 +17,7 @@ protected:
     }
 
     // load zero page
-    void testStoreZeroPage(m6502::Byte opcode,
+    void testStoreZeroPage(const m6502::Byte opcode,
                            m6502::Byte m6502::CPU::*reg)
     {
         // arrange:
@@ -39,7 +39,7 @@ protected:
     }
 
     // load zero page + register
-    void testStoreZeroPagePlusRegister(m6502::Byte opcode,
+    void testStoreZeroPagePlusRegister(const m6502::Byte opcode,
                                        m6502::Byte m6502::CPU::*addedReg,
                                        m6502::Byte m6502::CPU::*reg)
     {
@@ -61,7 +61,7 @@ protected:
         EXPECT_EQ(cyclesExecuted, 4);
         testAllFlagsUnchanged(cpuCopy, cpu);
     }
-    void testStoreZeroPagePlusRegisterWrapAround(m6502::Byte opcode,
+    void testStoreZeroPagePlusRegisterWrapAround(const m6502::Byte opcode,
                                                  m6502::Byte m6502::CPU::*addedReg,
                                                  m6502::Byte m6502::CPU::*reg)
     {
@@ -85,7 +85,7 @@ protected:
     }
 
     // load absolute
-    void testStoreAbsolute(m6502::Byte opcode,
+    void testStoreAbsolute(const m6502::Byte opcode,
                            m6502::Byte m6502::CPU::*reg)
     {
         // arrange
@@ -108,7 +108,7 @@ protected:
     }
 
     // load absolute + register
-    void testStoreAbsolutePlusRegister(m6502::Byte opcode,
+    void testStoreAbsolutePlusRegister(const m6502::Byte opcode,
                                        m6502::Byte m6502::CPU::*addedReg,
                                        m6502::Byte m6502::CPU::*reg)
     {

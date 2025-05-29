@@ -16,7 +16,7 @@ protected:
     {
     }
 
-    void testRegisterTransfer(m6502::Byte opcode,
+    void testRegisterTransfer(const m6502::Byte opcode,
                               m6502::Byte value,
                               m6502::Byte m6502::CPU::*inputRegister,
                               m6502::Byte m6502::CPU::*outputRegister)

@@ -16,7 +16,7 @@ protected:
     {
     }
 
-    void testIncDecZeroPageAddressing(m6502::Byte opcode,
+    void testIncDecZeroPageAddressing(const m6502::Byte opcode,
                                       bool increment)
     {
         // arrange:
@@ -44,7 +44,7 @@ protected:
         testAllFlagsUnchanged(cpuCopy, cpu);
     }
 
-    void testIncDecZeroPageXAddressing(m6502::Byte opcode,
+    void testIncDecZeroPageXAddressing(const m6502::Byte opcode,
                                        bool increment)
     {
         // arrange:
@@ -73,7 +73,7 @@ protected:
         testAllFlagsUnchanged(cpuCopy, cpu);
     }
 
-    void testIncDecAbsoluteAddressing(m6502::Byte opcode,
+    void testIncDecAbsoluteAddressing(const m6502::Byte opcode,
                                       bool increment)
     {
         // arrange:
@@ -102,7 +102,7 @@ protected:
         testAllFlagsUnchanged(cpuCopy, cpu);
     }
 
-    void testIncDecAbsoluteXAddressing(m6502::Byte opcode,
+    void testIncDecAbsoluteXAddressing(const m6502::Byte opcode,
                                        bool increment)
     {
         // arrange:
@@ -132,7 +132,7 @@ protected:
         testAllFlagsUnchanged(cpuCopy, cpu);
     }
 
-    void testIncrement(m6502::Byte opcode,
+    void testIncrement(const m6502::Byte opcode,
                        m6502::Byte value,
                        m6502::Byte m6502::CPU::*reg)
     {
@@ -152,7 +152,7 @@ protected:
         EXPECT_EQ(cyclesExecuted, 2);
     }
 
-    void testDecrement(m6502::Byte opcode,
+    void testDecrement(const m6502::Byte opcode,
                        m6502::Byte value,
                        m6502::Byte m6502::CPU::*reg)
     {

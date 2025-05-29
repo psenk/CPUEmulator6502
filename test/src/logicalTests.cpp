@@ -17,7 +17,7 @@ protected:
     }
 
     // logical immediate
-    void testLogicalImmediate(m6502::Byte opcode)
+    void testLogicalImmediate(const m6502::Byte opcode)
     {
         // arrange:
         using namespace m6502;
@@ -47,7 +47,7 @@ protected:
         EXPECT_EQ(cyclesExecuted, 2);
         testAllFlagsUnchanged(cpuCopy, cpu);
     }
-    void testLogicalImmediateNegativeValue(m6502::Byte opcode)
+    void testLogicalImmediateNegativeValue(const m6502::Byte opcode)
     {
         // arrange:
         using namespace m6502;
@@ -89,7 +89,7 @@ protected:
         EXPECT_FALSE(cpu.P.bits.Z);
         EXPECT_TRUE(cpu.P.bits.N);
     }
-    void testLogicalImmediateZeroValue(m6502::Byte opcode)
+    void testLogicalImmediateZeroValue(const m6502::Byte opcode)
     {
         // arrange:
         using namespace m6502;
@@ -125,7 +125,7 @@ protected:
     }
 
     // logical zero page
-    void testLogicalZeroPage(m6502::Byte opcode)
+    void testLogicalZeroPage(const m6502::Byte opcode)
     {
         // arrange:
         using namespace m6502;
@@ -158,7 +158,7 @@ protected:
     }
 
     // logical zero page + register
-    void testLogicalZeroPagePlusRegister(m6502::Byte opcode,
+    void testLogicalZeroPagePlusRegister(const m6502::Byte opcode,
                                          m6502::Byte m6502::CPU::*addedReg)
     {
         // arrange:
@@ -191,7 +191,7 @@ protected:
         EXPECT_EQ(cyclesExecuted, 4);
         testAllFlagsUnchanged(cpuCopy, cpu);
     }
-    void testLogicalZeroPagePlusRegisterWrapAround(m6502::Byte opcode,
+    void testLogicalZeroPagePlusRegisterWrapAround(const m6502::Byte opcode,
                                                    m6502::Byte m6502::CPU::*addedReg)
     {
         // arrange:
@@ -226,7 +226,7 @@ protected:
     }
 
     // logical absolute
-    void testLogicalAbsolute(m6502::Byte opcode)
+    void testLogicalAbsolute(const m6502::Byte opcode)
     {
         // arrange
         using namespace m6502;
@@ -260,7 +260,7 @@ protected:
     }
 
     // logical absolute + register
-    void testLogicalAbsolutePlusRegister(m6502::Byte opcode,
+    void testLogicalAbsolutePlusRegister(const m6502::Byte opcode,
                                          m6502::Byte m6502::CPU::*addedReg)
     {
         // arrange
@@ -297,7 +297,7 @@ protected:
         EXPECT_EQ(cyclesExecuted, 4);
         testAllFlagsUnchanged(cpuCopy, cpu);
     }
-    void testLogicalAbsolutePlusRegisterPageCrossed(m6502::Byte opcode,
+    void testLogicalAbsolutePlusRegisterPageCrossed(const m6502::Byte opcode,
                                                     m6502::Byte m6502::CPU::*addedReg)
     {
         // arrange
@@ -336,7 +336,7 @@ protected:
     }
 
     // test logical indirect indexed
-    void testLogicalIndexedIndirect(m6502::Byte opcode)
+    void testLogicalIndexedIndirect(const m6502::Byte opcode)
     {
         // arrange
         using namespace m6502;
@@ -372,7 +372,7 @@ protected:
     }
 
     // test logical indexed indirect
-    void testLogicalIndirectIndexed(m6502::Byte opcode)
+    void testLogicalIndirectIndexed(const m6502::Byte opcode)
     {
         // arrange
         using namespace m6502;
@@ -407,7 +407,7 @@ protected:
         testAllFlagsUnchanged(cpuCopy, cpu);
     }
 
-    void testLogicalIndirectIndexedPageCrossed(m6502::Byte opcode)
+    void testLogicalIndirectIndexedPageCrossed(const m6502::Byte opcode)
     { // arrange
         using namespace m6502;
         CPU cpuCopy = cpu;

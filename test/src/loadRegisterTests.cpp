@@ -21,7 +21,7 @@ protected:
     }
 
     // load immediate
-    void testLoadImmediate(m6502::Byte opcode,
+    void testLoadImmediate(const m6502::Byte opcode,
                            m6502::Byte m6502::CPU::*reg)
     {
         // arrange:
@@ -40,7 +40,7 @@ protected:
         EXPECT_EQ(cyclesExecuted, 2);
         testAllFlagsUnchanged(cpuCopy, cpu);
     }
-    void testLoadImmediateNegativeValue(m6502::Byte opcode,
+    void testLoadImmediateNegativeValue(const m6502::Byte opcode,
                                         m6502::Byte m6502::CPU::*reg)
     {
         // arrange:
@@ -61,7 +61,7 @@ protected:
         EXPECT_FALSE(cpu.P.bits.Z);
         EXPECT_TRUE(cpu.P.bits.N);
     }
-    void testLoadImmediateZeroValue(m6502::Byte opcode,
+    void testLoadImmediateZeroValue(const m6502::Byte opcode,
                                     m6502::Byte m6502::CPU::*reg)
     {
         // arrange:
@@ -84,7 +84,7 @@ protected:
     }
 
     // load zero page
-    void testLoadZeroPage(m6502::Byte opcode,
+    void testLoadZeroPage(const m6502::Byte opcode,
                           m6502::Byte m6502::CPU::*reg)
     {
         // arrange:
@@ -106,7 +106,7 @@ protected:
     }
 
     // load zero page + register
-    void testLoadZeroPagePlusRegister(m6502::Byte opcode,
+    void testLoadZeroPagePlusRegister(const m6502::Byte opcode,
                                       m6502::Byte m6502::CPU::*addedReg,
                                       m6502::Byte m6502::CPU::*reg)
     {
@@ -128,7 +128,7 @@ protected:
         EXPECT_EQ(cyclesExecuted, 4);
         testAllFlagsUnchanged(cpuCopy, cpu);
     }
-    void testLoadZeroPagePlusRegisterWrapAround(m6502::Byte opcode,
+    void testLoadZeroPagePlusRegisterWrapAround(const m6502::Byte opcode,
                                                 m6502::Byte m6502::CPU::*addedReg,
                                                 m6502::Byte m6502::CPU::*reg)
     {
@@ -152,7 +152,7 @@ protected:
     }
 
     // load absolute
-    void testLoadAbsolute(m6502::Byte opcode,
+    void testLoadAbsolute(const m6502::Byte opcode,
                           m6502::Byte m6502::CPU::*reg)
     {
         // arrange
@@ -175,7 +175,7 @@ protected:
     }
 
     // load absolute + register
-    void testLoadAbsolutePlusRegister(m6502::Byte opcode,
+    void testLoadAbsolutePlusRegister(const m6502::Byte opcode,
                                       m6502::Byte m6502::CPU::*addedReg,
                                       m6502::Byte m6502::CPU::*reg)
     {
@@ -198,7 +198,7 @@ protected:
         EXPECT_EQ(cyclesExecuted, 4);
         testAllFlagsUnchanged(cpuCopy, cpu);
     }
-    void testLoadAbsolutePlusRegisterPageCrossed(m6502::Byte opcode,
+    void testLoadAbsolutePlusRegisterPageCrossed(const m6502::Byte opcode,
                                                  m6502::Byte m6502::CPU::*addedReg,
                                                  m6502::Byte m6502::CPU::*reg)
     {
