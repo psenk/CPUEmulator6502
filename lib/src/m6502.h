@@ -14,6 +14,7 @@ namespace m6502
 
     using u32 = unsigned int;
     using s32 = signed int;
+    using s8 = signed char;
 
     struct Mem;
     union StatusFlags;
@@ -353,6 +354,16 @@ struct m6502::CPU
                           INS_DEC_ABX = 0xDE,
                           INS_DEX = 0xCA,
                           INS_DEY = 0x88;
+
+    // branch instructions
+    static constexpr Byte INS_BCC = 0x90,
+                          INS_BCS = 0xB0,
+                          INS_BNE = 0xD0,
+                          INS_BEQ = 0xF0,
+                          INS_BPL = 0x10,
+                          INS_BMI = 0x30,
+                          INS_BVC = 0x50,
+                          INS_BVS = 0x70;
 
     // system functions
     static constexpr Byte INS_BRK = 0x00;

@@ -950,6 +950,162 @@ namespace m6502
                 break;
             }
 
+            /**
+             * BRANCH INSTRUCTIONS
+             */
+
+            // branch if carry flag clear
+            case INS_BCC: // testing complete
+            {
+                Byte operand = readNextByte(cycles, memory);
+                s32 offset = (s8)operand;
+                if (!P.bits.C)
+                {
+                    Word pcCopy = PC;
+                    PC += offset;
+                    cycles--; // for PC arithmetic
+                    bool pageCrossed = (pcCopy & 0xFF00) != (PC & 0xFF00);
+                    if (pageCrossed)
+                    {
+                        cycles--;
+                    }
+                }
+                break;
+            }
+
+            // branch if carry flag set
+            case INS_BCS: // testing complete
+            {
+                Byte operand = readNextByte(cycles, memory);
+                s32 offset = (s8)operand;
+                if (P.bits.C)
+                {
+                    Word pcCopy = PC;
+                    PC += offset;
+                    cycles--; // for PC arithmetic
+                    bool pageCrossed = (pcCopy & 0xFF00) != (PC & 0xFF00);
+                    if (pageCrossed)
+                    {
+                        cycles--;
+                    }
+                }
+                break;
+            }
+
+            // branch if zero flag clear
+            case INS_BNE: // testing complete
+            {
+                Byte operand = readNextByte(cycles, memory);
+                s32 offset = (s8)operand;
+                if (!P.bits.Z)
+                {
+                    Word pcCopy = PC;
+                    PC += offset;
+                    cycles--; // for PC arithmetic
+                    bool pageCrossed = (pcCopy & 0xFF00) != (PC & 0xFF00);
+                    if (pageCrossed)
+                    {
+                        cycles--;
+                    }
+                }
+                break;
+            }
+
+            // branch if zero flag set
+            case INS_BEQ: // testing complete
+            {
+                Byte operand = readNextByte(cycles, memory);
+                s32 offset = (s8)operand;
+                if (P.bits.Z)
+                {
+                    Word pcCopy = PC;
+                    PC += offset;
+                    cycles--; // for PC arithmetic
+                    bool pageCrossed = (pcCopy & 0xFF00) != (PC & 0xFF00);
+                    if (pageCrossed)
+                    {
+                        cycles--;
+                    }
+                }
+                break;
+            }
+
+            // branch if negative flag clear
+            case INS_BPL: // testing complete
+            {
+                Byte operand = readNextByte(cycles, memory);
+                s32 offset = (s8)operand;
+                if (!P.bits.N)
+                {
+                    Word pcCopy = PC;
+                    PC += offset;
+                    cycles--; // for PC arithmetic
+                    bool pageCrossed = (pcCopy & 0xFF00) != (PC & 0xFF00);
+                    if (pageCrossed)
+                    {
+                        cycles--;
+                    }
+                }
+                break;
+            }
+
+            // branch if negative flag set
+            case INS_BMI:
+            {
+                Byte operand = readNextByte(cycles, memory);
+                s32 offset = (s8)operand;
+                if (P.bits.N)
+                {
+                    Word pcCopy = PC;
+                    PC += offset;
+                    cycles--; // for PC arithmetic
+                    bool pageCrossed = (pcCopy & 0xFF00) != (PC & 0xFF00);
+                    if (pageCrossed)
+                    {
+                        cycles--;
+                    }
+                }
+                break;
+            }
+
+            // branch if overflow flag clear
+            case INS_BVC:
+            {
+                Byte operand = readNextByte(cycles, memory);
+                s32 offset = (s8)operand;
+                if (!P.bits.V)
+                {
+                    Word pcCopy = PC;
+                    PC += offset;
+                    cycles--; // for PC arithmetic
+                    bool pageCrossed = (pcCopy & 0xFF00) != (PC & 0xFF00);
+                    if (pageCrossed)
+                    {
+                        cycles--;
+                    }
+                }
+                break;
+            }
+
+            // branch if overflow flag set
+            case INS_BVS:
+            {
+                Byte operand = readNextByte(cycles, memory);
+                s32 offset = (s8)operand;
+                if (P.bits.V)
+                {
+                    Word pcCopy = PC;
+                    PC += offset;
+                    cycles--; // for PC arithmetic
+                    bool pageCrossed = (pcCopy & 0xFF00) != (PC & 0xFF00);
+                    if (pageCrossed)
+                    {
+                        cycles--;
+                    }
+                }
+                break;
+            }
+
             // TODO: fix after other commands implemented?
             case INS_BRK:
             {
