@@ -38,7 +38,7 @@ protected:
         // assert:
         EXPECT_EQ(cpu.*reg, 0x42);
         EXPECT_EQ(cyclesExecuted, 2);
-        testAllLoadFlagsUnchanged(cpuCopy, cpu);
+        testAllFlagsUnchanged(cpuCopy, cpu);
     }
     void testLoadImmediateNegativeValue(m6502::Byte opcode,
                                         m6502::Byte m6502::CPU::*reg)
@@ -102,7 +102,7 @@ protected:
         // assert:
         EXPECT_EQ(cpu.*reg, 0x42);
         EXPECT_EQ(cyclesExecuted, 3);
-        testAllLoadFlagsUnchanged(cpuCopy, cpu);
+        testAllFlagsUnchanged(cpuCopy, cpu);
     }
 
     // load zero page + register
@@ -126,7 +126,7 @@ protected:
         // assert:
         EXPECT_EQ(cpu.*reg, 0x42);
         EXPECT_EQ(cyclesExecuted, 4);
-        testAllLoadFlagsUnchanged(cpuCopy, cpu);
+        testAllFlagsUnchanged(cpuCopy, cpu);
     }
     void testLoadZeroPagePlusRegisterWrapAround(m6502::Byte opcode,
                                                 m6502::Byte m6502::CPU::*addedReg,
@@ -148,7 +148,7 @@ protected:
         // assert:
         EXPECT_EQ(cpu.*reg, 0x73);
         EXPECT_EQ(cyclesExecuted, 4);
-        testAllLoadFlagsUnchanged(cpuCopy, cpu);
+        testAllFlagsUnchanged(cpuCopy, cpu);
     }
 
     // load absolute
@@ -171,7 +171,7 @@ protected:
         // assert
         EXPECT_EQ(cpu.*reg, 0x42);
         EXPECT_EQ(cyclesExecuted, 4);
-        testAllLoadFlagsUnchanged(cpuCopy, cpu);
+        testAllFlagsUnchanged(cpuCopy, cpu);
     }
 
     // load absolute + register
@@ -196,7 +196,7 @@ protected:
         // assert
         EXPECT_EQ(cpu.*reg, 0x42);
         EXPECT_EQ(cyclesExecuted, 4);
-        testAllLoadFlagsUnchanged(cpuCopy, cpu);
+        testAllFlagsUnchanged(cpuCopy, cpu);
     }
     void testLoadAbsolutePlusRegisterPageCrossed(m6502::Byte opcode,
                                                  m6502::Byte m6502::CPU::*addedReg,
@@ -219,11 +219,11 @@ protected:
         // assert
         EXPECT_EQ(cpu.*reg, 0x42);
         EXPECT_EQ(cyclesExecuted, 5);
-        testAllLoadFlagsUnchanged(cpuCopy, cpu);
+        testAllFlagsUnchanged(cpuCopy, cpu);
     }
 
     // test flags
-    static void testAllLoadFlagsUnchanged(const m6502::CPU &cpuCopy,
+    static void testAllFlagsUnchanged(const m6502::CPU &cpuCopy,
                                           const m6502::CPU &cpu)
     {
         EXPECT_EQ(cpuCopy.P.value, cpu.P.value);

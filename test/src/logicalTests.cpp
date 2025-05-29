@@ -45,7 +45,7 @@ protected:
             break;
         }
         EXPECT_EQ(cyclesExecuted, 2);
-        testAllLogicalFlagsUnchanged(cpuCopy, cpu);
+        testAllFlagsUnchanged(cpuCopy, cpu);
     }
     void testLogicalImmediateNegativeValue(m6502::Byte opcode)
     {
@@ -154,7 +154,7 @@ protected:
             break;
         }
         EXPECT_EQ(cyclesExecuted, 3);
-        testAllLogicalFlagsUnchanged(cpuCopy, cpu);
+        testAllFlagsUnchanged(cpuCopy, cpu);
     }
 
     // logical zero page + register
@@ -189,7 +189,7 @@ protected:
             break;
         }
         EXPECT_EQ(cyclesExecuted, 4);
-        testAllLogicalFlagsUnchanged(cpuCopy, cpu);
+        testAllFlagsUnchanged(cpuCopy, cpu);
     }
     void testLogicalZeroPagePlusRegisterWrapAround(m6502::Byte opcode,
                                                    m6502::Byte m6502::CPU::*addedReg)
@@ -222,7 +222,7 @@ protected:
             break;
         }
         EXPECT_EQ(cyclesExecuted, 4);
-        testAllLogicalFlagsUnchanged(cpuCopy, cpu);
+        testAllFlagsUnchanged(cpuCopy, cpu);
     }
 
     // logical absolute
@@ -256,7 +256,7 @@ protected:
             break;
         }
         EXPECT_EQ(cyclesExecuted, 4);
-        testAllLogicalFlagsUnchanged(cpuCopy, cpu);
+        testAllFlagsUnchanged(cpuCopy, cpu);
     }
 
     // logical absolute + register
@@ -295,7 +295,7 @@ protected:
             break;
         }
         EXPECT_EQ(cyclesExecuted, 4);
-        testAllLogicalFlagsUnchanged(cpuCopy, cpu);
+        testAllFlagsUnchanged(cpuCopy, cpu);
     }
     void testLogicalAbsolutePlusRegisterPageCrossed(m6502::Byte opcode,
                                                     m6502::Byte m6502::CPU::*addedReg)
@@ -332,7 +332,7 @@ protected:
             break;
         }
         EXPECT_EQ(cyclesExecuted, 5);
-        testAllLogicalFlagsUnchanged(cpuCopy, cpu);
+        testAllFlagsUnchanged(cpuCopy, cpu);
     }
 
     // test logical indirect indexed
@@ -368,7 +368,7 @@ protected:
             break;
         }
         EXPECT_EQ(cyclesExecuted, 6);
-        testAllLogicalFlagsUnchanged(cpuCopy, cpu);
+        testAllFlagsUnchanged(cpuCopy, cpu);
     }
 
     // test logical indexed indirect
@@ -404,7 +404,7 @@ protected:
             break;
         }
         EXPECT_EQ(cyclesExecuted, 5);
-        testAllLogicalFlagsUnchanged(cpuCopy, cpu);
+        testAllFlagsUnchanged(cpuCopy, cpu);
     }
 
     void testLogicalIndirectIndexedPageCrossed(m6502::Byte opcode)
@@ -438,7 +438,7 @@ protected:
             break;
         }
         EXPECT_EQ(cyclesExecuted, 6);
-        testAllLogicalFlagsUnchanged(cpuCopy, cpu);
+        testAllFlagsUnchanged(cpuCopy, cpu);
     }
 
     // test bit tests
@@ -494,7 +494,7 @@ protected:
     }
 
     // test flags
-    static void testAllLogicalFlagsUnchanged(const m6502::CPU &cpuCopy,
+    static void testAllFlagsUnchanged(const m6502::CPU &cpuCopy,
                                              const m6502::CPU &cpu)
     {
         EXPECT_EQ(cpuCopy.P.value, cpu.P.value);
