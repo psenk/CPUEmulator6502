@@ -44,7 +44,7 @@ protected:
             EXPECT_EQ(cpu.A, 0x52);
             break;
         }
-        EXPECT_EQ(cyclesExecuted, 2);
+        EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
         testAllFlagsUnchanged(cpuCopy, cpu);
     }
     void testLogicalImmediateNegativeValue(const m6502::Byte opcode)
@@ -84,7 +84,7 @@ protected:
             EXPECT_EQ(cpu.A, 0x85);
             break;
         }
-        EXPECT_EQ(cyclesExecuted, 2);
+        EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
         testLogicalFlagsUnchanged(cpuCopy, cpu);
         EXPECT_FALSE(cpu.P.bits.Z);
         EXPECT_TRUE(cpu.P.bits.N);
@@ -118,7 +118,7 @@ protected:
 
         // assert:
         EXPECT_EQ(cpu.A, 0x00);
-        EXPECT_EQ(cyclesExecuted, 2);
+        EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
         testLogicalFlagsUnchanged(cpuCopy, cpu);
         EXPECT_TRUE(cpu.P.bits.Z);
         EXPECT_FALSE(cpu.P.bits.N);
@@ -153,7 +153,7 @@ protected:
             EXPECT_EQ(cpu.A, 0x52);
             break;
         }
-        EXPECT_EQ(cyclesExecuted, 3);
+        EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
         testAllFlagsUnchanged(cpuCopy, cpu);
     }
 
@@ -188,7 +188,7 @@ protected:
             EXPECT_EQ(cpu.A, 0x52);
             break;
         }
-        EXPECT_EQ(cyclesExecuted, 4);
+        EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
         testAllFlagsUnchanged(cpuCopy, cpu);
     }
     void testLogicalZeroPagePlusRegisterWrapAround(const m6502::Byte opcode,
@@ -221,7 +221,7 @@ protected:
             EXPECT_EQ(cpu.A, 0x52);
             break;
         }
-        EXPECT_EQ(cyclesExecuted, 4);
+        EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
         testAllFlagsUnchanged(cpuCopy, cpu);
     }
 
@@ -255,7 +255,7 @@ protected:
             EXPECT_EQ(cpu.A, 0x52);
             break;
         }
-        EXPECT_EQ(cyclesExecuted, 4);
+        EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
         testAllFlagsUnchanged(cpuCopy, cpu);
     }
 
@@ -294,7 +294,7 @@ protected:
             EXPECT_EQ(cpu.A, 0x52);
             break;
         }
-        EXPECT_EQ(cyclesExecuted, 4);
+        EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
         testAllFlagsUnchanged(cpuCopy, cpu);
     }
     void testLogicalAbsolutePlusRegisterPageCrossed(const m6502::Byte opcode,
@@ -331,7 +331,7 @@ protected:
             EXPECT_EQ(cpu.A, 0x52);
             break;
         }
-        EXPECT_EQ(cyclesExecuted, 5);
+        EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
         testAllFlagsUnchanged(cpuCopy, cpu);
     }
 
@@ -367,7 +367,7 @@ protected:
             EXPECT_EQ(cpu.A, 0x52);
             break;
         }
-        EXPECT_EQ(cyclesExecuted, 6);
+        EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
         testAllFlagsUnchanged(cpuCopy, cpu);
     }
 
@@ -403,7 +403,7 @@ protected:
             EXPECT_EQ(cpu.A, 0x52);
             break;
         }
-        EXPECT_EQ(cyclesExecuted, 5);
+        EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
         testAllFlagsUnchanged(cpuCopy, cpu);
     }
 
@@ -437,7 +437,7 @@ protected:
             EXPECT_EQ(cpu.A, 0x52);
             break;
         }
-        EXPECT_EQ(cyclesExecuted, 6);
+        EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
         testAllFlagsUnchanged(cpuCopy, cpu);
     }
 
@@ -464,7 +464,7 @@ protected:
         s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
         // assert:
-        EXPECT_EQ(cyclesExecuted, 3);
+        EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
     }
 
     void testLogicalBITTestAbsolute(m6502::Byte testInput, bool allTest)
@@ -490,7 +490,7 @@ protected:
         s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
         // assert:
-        EXPECT_EQ(cyclesExecuted, 4);
+        EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
     }
 
     // test flags

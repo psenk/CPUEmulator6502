@@ -48,7 +48,7 @@ TEST_F(JumpsAndCallsTests, JSR_JumpToSubroutine)
     EXPECT_EQ(cpu.SP, cpuCopy.SP - 2);
     EXPECT_EQ(mem[0x0100 + cpu.SP + 1], 0x02);
     EXPECT_EQ(mem[0x0100 + cpu.SP + 2], 0xFF);
-    EXPECT_EQ(cyclesExecuted, 6);
+    EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
     testJumpsAndCallsFlagsUnchanged(cpuCopy, cpu);
 }
 
@@ -74,7 +74,7 @@ TEST_F(JumpsAndCallsTests, RTS_ReturnFromAddress)
     // assert
     EXPECT_EQ(cpu.PC, 0x0421);
     EXPECT_EQ(cpu.SP, cpuCopy.SP);
-    EXPECT_EQ(cyclesExecuted, 6);
+    EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
     testJumpsAndCallsFlagsUnchanged(cpuCopy, cpu);
 }
 
@@ -100,7 +100,7 @@ TEST_F(JumpsAndCallsTests, JMP_JumpToAddressAbsolute)
     // assert
     EXPECT_EQ(cpu.PC, 0x0420);
     EXPECT_EQ(cpu.SP, cpuCopy.SP);
-    EXPECT_EQ(cyclesExecuted, 3);
+    EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
     testJumpsAndCallsFlagsUnchanged(cpuCopy, cpu);
 }
 
@@ -122,7 +122,7 @@ TEST_F(JumpsAndCallsTests, JMP_JumpToAddressAbsolute_PageBoundary)
     // assert
     EXPECT_EQ(cpu.PC, 0x0420);
     EXPECT_EQ(cpu.SP, cpuCopy.SP);
-    EXPECT_EQ(cyclesExecuted, 3);
+    EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
     testJumpsAndCallsFlagsUnchanged(cpuCopy, cpu);
 }
 
@@ -145,7 +145,7 @@ TEST_F(JumpsAndCallsTests, JMP_JumpToAddressIndirect)
     // assert
     EXPECT_EQ(cpu.PC, 0x8080);
     EXPECT_EQ(cpu.SP, cpuCopy.SP);
-    EXPECT_EQ(cyclesExecuted, 5);
+    EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
     testJumpsAndCallsFlagsUnchanged(cpuCopy, cpu);
 }
 
@@ -169,6 +169,6 @@ TEST_F(JumpsAndCallsTests, JMP_JumpToAddressIndirect_PageBoundary)
     // assert
     EXPECT_EQ(cpu.PC, 0x8080);
     EXPECT_EQ(cpu.SP, cpuCopy.SP);
-    EXPECT_EQ(cyclesExecuted, 5);
+    EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
     testJumpsAndCallsFlagsUnchanged(cpuCopy, cpu);
 }

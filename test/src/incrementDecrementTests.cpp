@@ -40,7 +40,7 @@ protected:
         {
             EXPECT_EQ(mem[0x0072], 0x41);
         }
-        EXPECT_EQ(cyclesExecuted, 5);
+        EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
         testAllFlagsUnchanged(cpuCopy, cpu);
     }
 
@@ -69,7 +69,7 @@ protected:
         {
             EXPECT_EQ(mem[0x0082], 0x41);
         }
-        EXPECT_EQ(cyclesExecuted, 6);
+        EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
         testAllFlagsUnchanged(cpuCopy, cpu);
     }
 
@@ -98,7 +98,7 @@ protected:
         {
             EXPECT_EQ(mem[0x0420], 0x41);
         }
-        EXPECT_EQ(cyclesExecuted, 6);
+        EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
         testAllFlagsUnchanged(cpuCopy, cpu);
     }
 
@@ -128,7 +128,7 @@ protected:
         {
             EXPECT_EQ(mem[0x0430], 0x41);
         }
-        EXPECT_EQ(cyclesExecuted, 7);
+        EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
         testAllFlagsUnchanged(cpuCopy, cpu);
     }
 
@@ -149,7 +149,7 @@ protected:
 
         // assert:
         EXPECT_EQ(cpu.*reg, newValue);
-        EXPECT_EQ(cyclesExecuted, 2);
+        EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
     }
 
     void testDecrement(const m6502::Byte opcode,
@@ -169,7 +169,7 @@ protected:
 
         // assert:
         EXPECT_EQ(cpu.*reg, newValue);
-        EXPECT_EQ(cyclesExecuted, 2);
+        EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
     }
 
     // test flags

@@ -39,7 +39,7 @@ TEST_F(CPUTests, CPUDoesNothingWithZeroCycles)
     s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
-    EXPECT_EQ(cyclesExecuted, 0);
+    EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
     testFullCPUUnchanged(cpuCopy, cpu);
 }
 

@@ -34,7 +34,7 @@ protected:
 
         // assert:
         EXPECT_EQ(mem[0x0073], 0x42);
-        EXPECT_EQ(cyclesExecuted, 3);
+        EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
         testAllFlagsUnchanged(cpuCopy, cpu);
     }
 
@@ -58,7 +58,7 @@ protected:
 
         // assert:
         EXPECT_EQ(mem[0x0078], 0x42);
-        EXPECT_EQ(cyclesExecuted, 4);
+        EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
         testAllFlagsUnchanged(cpuCopy, cpu);
     }
     void testStoreZeroPagePlusRegisterWrapAround(const m6502::Byte opcode,
@@ -80,7 +80,7 @@ protected:
 
         // assert:
         EXPECT_EQ(mem[0x007F], 0x42);
-        EXPECT_EQ(cyclesExecuted, 4);
+        EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
         testAllFlagsUnchanged(cpuCopy, cpu);
     }
 
@@ -103,7 +103,7 @@ protected:
 
         // assert
         EXPECT_EQ(mem[0x0420], 0x42);
-        EXPECT_EQ(cyclesExecuted, 4);
+        EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
         testAllFlagsUnchanged(cpuCopy, cpu);
     }
 
@@ -128,7 +128,7 @@ protected:
 
         // assert
         EXPECT_EQ(cpu.*reg, 0x42);
-        EXPECT_EQ(cyclesExecuted, 5);
+        EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
         testAllFlagsUnchanged(cpuCopy, cpu);
     }
 
@@ -263,7 +263,7 @@ TEST_F(StoreRegisterTests, STAIndirectX_LoadValue)
 
     // assert
     EXPECT_EQ(mem[0x0420], 0x42);
-    EXPECT_EQ(cyclesExecuted, 6);
+    EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
     testAllFlagsUnchanged(cpuCopy, cpu);
 }
 
@@ -290,6 +290,6 @@ TEST_F(StoreRegisterTests, STAIndirectY_LoadValue)
 
     // assert
     EXPECT_EQ(mem[0x0425], 0x42);
-    EXPECT_EQ(cyclesExecuted, 6);
+    EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
     testAllFlagsUnchanged(cpuCopy, cpu);
 }

@@ -53,7 +53,7 @@ TEST_F(StackOperationsTests, TSX_TransferSPToX)
 
     // assert:
     EXPECT_EQ(cpu.X, 0x42);
-    EXPECT_EQ(cyclesExecuted, 2);
+    EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
     testStackFlagsUnchanged(cpuCopy, cpu);
 }
 
@@ -72,7 +72,7 @@ TEST_F(StackOperationsTests, TSX_TransferSPToX_ZeroValue)
 
     // assert:
     EXPECT_EQ(cpu.X, 0x00);
-    EXPECT_EQ(cyclesExecuted, 2);
+    EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
     EXPECT_TRUE(cpu.P.bits.Z);
     testStackFlagsUnchanged(cpuCopy, cpu);
 }
@@ -92,7 +92,7 @@ TEST_F(StackOperationsTests, TSX_TransferSPToX_NegativeValue)
 
     // assert:
     EXPECT_EQ(cpu.X, 0x84);
-    EXPECT_EQ(cyclesExecuted, 2);
+    EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
     EXPECT_TRUE(cpu.P.bits.N);
     testStackFlagsUnchanged(cpuCopy, cpu);
 }
@@ -116,7 +116,7 @@ TEST_F(StackOperationsTests, TXS_TransferXToSP)
 
     // assert:
     EXPECT_EQ(cpu.SP, 0x42);
-    EXPECT_EQ(cyclesExecuted, 2);
+    EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
     testAllFlagsUnchanged(cpuCopy, cpu);
 }
 
@@ -140,7 +140,7 @@ TEST_F(StackOperationsTests, PHA_PushAToStack)
     // assert:
     EXPECT_EQ(mem[0x0100 + cpu.SP + 1], 0x42);
     EXPECT_EQ(cpu.SP, 0xFE);
-    EXPECT_EQ(cyclesExecuted, 3);
+    EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
     testAllFlagsUnchanged(cpuCopy, cpu);
 }
 
@@ -164,7 +164,7 @@ TEST_F(StackOperationsTests, PHP_PushPStatusToStack)
     // assert:
     EXPECT_EQ(mem[0x0100 + cpu.SP + 1], 0x6B);
     EXPECT_EQ(cpu.SP, 0xFE);
-    EXPECT_EQ(cyclesExecuted, 3);
+    EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
     testAllFlagsUnchanged(cpuCopy, cpu);
 }
 
@@ -189,7 +189,7 @@ TEST_F(StackOperationsTests, PLA_PullFromStackToAccumulator)
     // assert:
     EXPECT_EQ(cpu.A, 0x42);
     EXPECT_EQ(cpu.SP, 0xFF);
-    EXPECT_EQ(cyclesExecuted, 4);
+    EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
     testAllFlagsUnchanged(cpuCopy, cpu);
 }
 
@@ -210,7 +210,7 @@ TEST_F(StackOperationsTests, PLA_PullFromStackToAccumulator_ZeroValue)
     // assert:
     EXPECT_EQ(cpu.A, 0x00);
     EXPECT_EQ(cpu.SP, 0xFF);
-    EXPECT_EQ(cyclesExecuted, 4);
+    EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
     EXPECT_TRUE(cpu.P.bits.Z);
     testStackFlagsUnchanged(cpuCopy, cpu);
 }
@@ -232,7 +232,7 @@ TEST_F(StackOperationsTests, PLA_PullFromStackToAccumulator_NegativeValue)
     // assert:
     EXPECT_EQ(cpu.A, 0x84);
     EXPECT_EQ(cpu.SP, 0xFF);
-    EXPECT_EQ(cyclesExecuted, 4);
+    EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
     EXPECT_TRUE(cpu.P.bits.N);
     testStackFlagsUnchanged(cpuCopy, cpu);
 }
@@ -258,5 +258,5 @@ TEST_F(StackOperationsTests, PLP_PullPStatusFromStack)
     // assert:
     EXPECT_EQ(cpu.P.value, 0x6B);
     EXPECT_EQ(cpu.SP, 0xFD);
-    EXPECT_EQ(cyclesExecuted, 4);
+    EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
 }

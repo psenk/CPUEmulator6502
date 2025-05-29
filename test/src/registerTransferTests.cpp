@@ -33,7 +33,7 @@ protected:
 
         // assert:
         EXPECT_EQ(cpu.*outputRegister, value);
-        EXPECT_EQ(cyclesExecuted, 2);
+        EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
     }
 
     // test flags
