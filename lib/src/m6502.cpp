@@ -25,13 +25,9 @@ namespace m6502
         Byte zeroPageAddress = readNextByte(cycles, memory);
         Byte registerValue;
         if (reg == X_REGISTER)
-        {
             registerValue = readByteFromXRegister();
-        }
         else
-        {
             registerValue = readByteFromYRegister();
-        }
         Byte effectiveAddress = zeroPageAddress + registerValue; // cycle is taken for addition here
         cycles--;
         return effectiveAddress;
@@ -48,20 +44,14 @@ namespace m6502
         Word absoluteAddress = readNextWord(cycles, memory);
         Byte registerValue;
         if (reg == X_REGISTER)
-        {
             registerValue = readByteFromXRegister();
-        }
         else
-        {
             registerValue = readByteFromYRegister();
-        }
         Word newAddress = absoluteAddress + registerValue;
 
         bool pageCrossed = (absoluteAddress & 0xFF00) != (newAddress & 0xFF00);
         if (pageCrossed)
-        {
             cycles--;
-        }
         return newAddress;
     }
 
@@ -146,6 +136,34 @@ namespace m6502
         {
             reg |= readByteFromAddress(cycles, byteAddress, memory);
             setFlagStatus_NZ(reg);
+        };
+
+        // increment
+        auto increment = [&cycles, &memory, this](Word address)
+        {
+            Byte value = readByteFromAddress(cycles, address, memory);
+            value++;
+            cycles--; // for incrementing
+            writeByte(cycles, value, address, memory);
+        };
+
+        auto decrement = [&cycles, &memory, this](Word address)
+        {
+            Byte value = readByteFromAddress(cycles, address, memory);
+            value--;
+            cycles--; // for decrementing
+            writeByte(cycles, value, address, memory);
+        };
+
+        // branch logic
+        auto branch = [&cycles, &memory, this](s8 offset)
+        {
+            Word pcCopy = PC;
+            PC += offset;
+            cycles--; // for PC arithmetic
+            bool pageCrossed = (pcCopy & 0xFF00) != (PC & 0xFF00);
+            if (pageCrossed)
+                cycles--;
         };
 
         const s32 cyclesRequested = cycles;
@@ -816,10 +834,7 @@ namespace m6502
             case INS_INC_ZPG: // testing complete
             {
                 Byte address = fetchAddressZeroPage(cycles, memory);
-                Byte value = readByteFromAddress(cycles, address, memory);
-                value++;
-                cycles--; // for incrementing
-                writeByte(cycles, value, address, memory);
+                increment(address);
                 break;
             }
 
@@ -827,10 +842,7 @@ namespace m6502
             case INS_INC_ZPX: // testing complete
             {
                 Byte address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
-                Byte value = readByteFromAddress(cycles, address, memory);
-                value++;
-                cycles--; // for incrementing
-                writeByte(cycles, value, address, memory);
+                increment(address);
                 break;
             }
 
@@ -838,10 +850,7 @@ namespace m6502
             case INS_INC_ABS: // testing complete
             {
                 Word address = fetchAddressAbsolute(cycles, memory);
-                Byte value = readByteFromAddress(cycles, address, memory);
-                value++;
-                cycles--; // for incrementing
-                writeByte(cycles, value, address, memory);
+                increment(address);
                 break;
             }
 
@@ -850,10 +859,7 @@ namespace m6502
             {
                 Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
                 cycles--; // for arithmetic
-                Byte value = readByteFromAddress(cycles, address, memory);
-                value++;
-                cycles--; // for decrementing
-                writeByte(cycles, value, address, memory);
+                increment(address);
                 break;
             }
 
@@ -887,10 +893,7 @@ namespace m6502
             case INS_DEC_ZPG: // testing complete
             {
                 Byte address = fetchAddressZeroPage(cycles, memory);
-                Byte value = readByteFromAddress(cycles, address, memory);
-                value--;
-                cycles--; // for decrementing
-                writeByte(cycles, value, address, memory);
+                decrement(address);
                 break;
             }
 
@@ -898,10 +901,7 @@ namespace m6502
             case INS_DEC_ZPX: // testing complete
             {
                 Byte address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
-                Byte value = readByteFromAddress(cycles, address, memory);
-                value--;
-                cycles--; // for decrementing
-                writeByte(cycles, value, address, memory);
+                decrement(address);
                 break;
             }
 
@@ -909,10 +909,7 @@ namespace m6502
             case INS_DEC_ABS: // testing complete
             {
                 Word address = fetchAddressAbsolute(cycles, memory);
-                Byte value = readByteFromAddress(cycles, address, memory);
-                value--;
-                cycles--; // for decrementing
-                writeByte(cycles, value, address, memory);
+                decrement(address);
                 break;
             }
 
@@ -921,10 +918,7 @@ namespace m6502
             {
                 Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
                 cycles--; // for arithmetic
-                Byte value = readByteFromAddress(cycles, address, memory);
-                value--;
-                cycles--; // for decrementing
-                writeByte(cycles, value, address, memory);
+                decrement(address);
                 break;
             }
 
@@ -960,16 +954,7 @@ namespace m6502
                 Byte operand = readNextByte(cycles, memory);
                 s32 offset = (s8)operand;
                 if (!P.bits.C)
-                {
-                    Word pcCopy = PC;
-                    PC += offset;
-                    cycles--; // for PC arithmetic
-                    bool pageCrossed = (pcCopy & 0xFF00) != (PC & 0xFF00);
-                    if (pageCrossed)
-                    {
-                        cycles--;
-                    }
-                }
+                    branch(offset);
                 break;
             }
 
@@ -979,16 +964,7 @@ namespace m6502
                 Byte operand = readNextByte(cycles, memory);
                 s32 offset = (s8)operand;
                 if (P.bits.C)
-                {
-                    Word pcCopy = PC;
-                    PC += offset;
-                    cycles--; // for PC arithmetic
-                    bool pageCrossed = (pcCopy & 0xFF00) != (PC & 0xFF00);
-                    if (pageCrossed)
-                    {
-                        cycles--;
-                    }
-                }
+                    branch(offset);
                 break;
             }
 
@@ -998,16 +974,7 @@ namespace m6502
                 Byte operand = readNextByte(cycles, memory);
                 s32 offset = (s8)operand;
                 if (!P.bits.Z)
-                {
-                    Word pcCopy = PC;
-                    PC += offset;
-                    cycles--; // for PC arithmetic
-                    bool pageCrossed = (pcCopy & 0xFF00) != (PC & 0xFF00);
-                    if (pageCrossed)
-                    {
-                        cycles--;
-                    }
-                }
+                    branch(offset);
                 break;
             }
 
@@ -1017,16 +984,7 @@ namespace m6502
                 Byte operand = readNextByte(cycles, memory);
                 s32 offset = (s8)operand;
                 if (P.bits.Z)
-                {
-                    Word pcCopy = PC;
-                    PC += offset;
-                    cycles--; // for PC arithmetic
-                    bool pageCrossed = (pcCopy & 0xFF00) != (PC & 0xFF00);
-                    if (pageCrossed)
-                    {
-                        cycles--;
-                    }
-                }
+                    branch(offset);
                 break;
             }
 
@@ -1036,16 +994,7 @@ namespace m6502
                 Byte operand = readNextByte(cycles, memory);
                 s32 offset = (s8)operand;
                 if (!P.bits.N)
-                {
-                    Word pcCopy = PC;
-                    PC += offset;
-                    cycles--; // for PC arithmetic
-                    bool pageCrossed = (pcCopy & 0xFF00) != (PC & 0xFF00);
-                    if (pageCrossed)
-                    {
-                        cycles--;
-                    }
-                }
+                    branch(offset);
                 break;
             }
 
@@ -1055,16 +1004,7 @@ namespace m6502
                 Byte operand = readNextByte(cycles, memory);
                 s32 offset = (s8)operand;
                 if (P.bits.N)
-                {
-                    Word pcCopy = PC;
-                    PC += offset;
-                    cycles--; // for PC arithmetic
-                    bool pageCrossed = (pcCopy & 0xFF00) != (PC & 0xFF00);
-                    if (pageCrossed)
-                    {
-                        cycles--;
-                    }
-                }
+                    branch(offset);
                 break;
             }
 
@@ -1074,16 +1014,7 @@ namespace m6502
                 Byte operand = readNextByte(cycles, memory);
                 s32 offset = (s8)operand;
                 if (!P.bits.V)
-                {
-                    Word pcCopy = PC;
-                    PC += offset;
-                    cycles--; // for PC arithmetic
-                    bool pageCrossed = (pcCopy & 0xFF00) != (PC & 0xFF00);
-                    if (pageCrossed)
-                    {
-                        cycles--;
-                    }
-                }
+                    branch(offset);
                 break;
             }
 
@@ -1093,16 +1024,7 @@ namespace m6502
                 Byte operand = readNextByte(cycles, memory);
                 s32 offset = (s8)operand;
                 if (P.bits.V)
-                {
-                    Word pcCopy = PC;
-                    PC += offset;
-                    cycles--; // for PC arithmetic
-                    bool pageCrossed = (pcCopy & 0xFF00) != (PC & 0xFF00);
-                    if (pageCrossed)
-                    {
-                        cycles--;
-                    }
-                }
+                    branch(offset);
                 break;
             }
 
