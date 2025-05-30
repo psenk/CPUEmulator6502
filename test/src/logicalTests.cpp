@@ -448,13 +448,9 @@ protected:
         using namespace m6502;
         static constexpr s32 NUM_CYCLES = 3;
         if (allTest)
-        {
             cpu.A = 0xC0;
-        }
         else
-        {
             cpu.A = 0xC2;
-        }
 
         mem[0xFFFC] = CPU::INS_BIT_ZPG;
         mem[0xFFFD] = 0x73;
@@ -473,13 +469,9 @@ protected:
         using namespace m6502;
         static constexpr s32 NUM_CYCLES = 4;
         if (allTest)
-        {
             cpu.A = 0xC0;
-        }
         else
-        {
             cpu.A = 0xC2;
-        }
 
         mem[0xFFFC] = CPU::INS_BIT_ABS;
         mem[0xFFFD] = 0x20;
@@ -495,7 +487,7 @@ protected:
 
     // test flags
     static void testAllFlagsUnchanged(const m6502::CPU &cpuCopy,
-                                             const m6502::CPU &cpu)
+                                      const m6502::CPU &cpu)
     {
         EXPECT_EQ(cpuCopy.P.value, cpu.P.value);
     }

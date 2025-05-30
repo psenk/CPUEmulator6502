@@ -139,9 +139,7 @@ TEST_F(CPUTests, CPURunProgram)
     {
         clock -= cpu.execute(clock, mem);
         if (cpu.A == 0x42 && cpu.Y == 0x42)
-        {
             break;
-        }
     }
 
     // assert:

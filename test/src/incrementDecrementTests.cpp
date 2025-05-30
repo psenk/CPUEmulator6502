@@ -33,13 +33,9 @@ protected:
 
         // assert:
         if (increment)
-        {
             EXPECT_EQ(mem[0x0072], 0x43);
-        }
         else
-        {
             EXPECT_EQ(mem[0x0072], 0x41);
-        }
         EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
         testAllFlagsUnchanged(cpuCopy, cpu);
     }
@@ -62,13 +58,9 @@ protected:
 
         // assert:
         if (increment)
-        {
             EXPECT_EQ(mem[0x0082], 0x43);
-        }
         else
-        {
             EXPECT_EQ(mem[0x0082], 0x41);
-        }
         EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
         testAllFlagsUnchanged(cpuCopy, cpu);
     }
@@ -91,13 +83,9 @@ protected:
 
         // assert:
         if (increment)
-        {
             EXPECT_EQ(mem[0x0420], 0x43);
-        }
         else
-        {
             EXPECT_EQ(mem[0x0420], 0x41);
-        }
         EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
         testAllFlagsUnchanged(cpuCopy, cpu);
     }
@@ -121,13 +109,9 @@ protected:
 
         // assert:
         if (increment)
-        {
             EXPECT_EQ(mem[0x0430], 0x43);
-        }
         else
-        {
             EXPECT_EQ(mem[0x0430], 0x41);
-        }
         EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
         testAllFlagsUnchanged(cpuCopy, cpu);
     }
