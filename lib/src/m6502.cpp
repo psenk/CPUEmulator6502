@@ -1085,6 +1085,12 @@ namespace m6502
                 break;
             }
 
+            case INS_NOP:
+            {
+                cycles--;
+                break;
+            }
+
             // error
             default:
             {

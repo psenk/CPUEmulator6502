@@ -26,6 +26,12 @@ protected:
         EXPECT_EQ(cpuCopy.Y, cpu.Y);
         EXPECT_EQ(cpuCopy.P.value, cpu.P.value);
     }
+    
+    static void testAllFlagsUnchanged(const m6502::CPU &cpuCopy,
+                                     const m6502::CPU &cpu)
+    {
+        EXPECT_EQ(cpuCopy.P.value, cpu.P.value);
+    }
 };
 
 TEST_F(CPUTests, CPUDoesNothingWithZeroCycles)
@@ -145,4 +151,21 @@ TEST_F(CPUTests, CPURunProgram)
     // assert:
     EXPECT_EQ(cpu.A, 0x42);
     EXPECT_EQ(cpu.Y, 0x42);
+}
+
+TEST_F(CPUTests, NOPInstruction)
+{
+    // arrange
+    using namespace m6502;
+    CPU cpuCopy = cpu;
+    static constexpr s32 NUM_CYCLES = 2;
+
+    mem[0xFFFC] = CPU::INS_NOP;
+
+    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+
+    // act/assert:
+    EXPECT_EQ(cpu.PC, 0xFFFD);
+    EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
+    testAllFlagsUnchanged(cpuCopy, cpu);
 }

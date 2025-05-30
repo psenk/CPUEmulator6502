@@ -359,7 +359,8 @@ struct m6502::CPU
                           INS_SEI = 0x78;
 
     // system function instructions
-    static constexpr Byte INS_BRK = 0x00;
+    static constexpr Byte INS_BRK = 0x00,
+                          INS_NOP = 0xEA;
 
     /**
      * ADDRESSING MODES
