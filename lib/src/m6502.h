@@ -219,8 +219,10 @@ struct m6502::CPU
         return (highByte << 8) | lowByte;
     }
 
+    static constexpr Byte CARRY_FLAG_BIT = 0x01;
     static constexpr Byte ZERO_FLAG_BIT = 0x02;
     static constexpr Byte INTERRUPT_FLAG_BIT = 0x04;
+    static constexpr Byte DECIMAL_FLAG_BIT = 0x08;
     static constexpr Byte BREAK_FLAG_BIT = 0x10;
     static constexpr Byte OVERFLOW_FLAG_BIT = 0x40;
     static constexpr Byte NEGATIVE_FLAG_BIT = 0x80;
@@ -347,7 +349,16 @@ struct m6502::CPU
                           INS_BVC = 0x50,
                           INS_BVS = 0x70;
 
-    // system functions
+    // status flag change instructions
+    static constexpr Byte INS_CLC = 0x18,
+                          INS_CLD = 0xD8,
+                          INS_CLI = 0x58,
+                          INS_CLV = 0xB8,
+                          INS_SEC = 0x38,
+                          INS_SED = 0xF8,
+                          INS_SEI = 0x78;
+
+    // system function instructions
     static constexpr Byte INS_BRK = 0x00;
 
     /**

@@ -1009,15 +1009,75 @@ namespace m6502
                 break;
             }
 
+            /**
+             * STATUS FLAG CHANGE INSTRUCTIONS
+             */
+
+            // clear carry flag
+            case INS_CLC: // testing complete
+            {
+                P.bits.C = false;
+                cycles--;
+                break;
+            }
+
+            // clear decimal flag
+            case INS_CLD: // testing complete
+            {
+                P.bits.D = false;
+                cycles--;
+                break;
+            }
+
+            // clear interrupt flag
+            case INS_CLI: // testing complete
+            {
+                P.bits.I = false;
+                cycles--;
+                break;
+            }
+
+            // clear overflow flag
+            case INS_CLV: // testing complete
+            {
+                P.bits.V = false;
+                cycles--;
+                break;
+            }
+
+            // set carry flag
+            case INS_SEC: // testing complete
+            {
+                P.bits.C = true;
+                cycles--;
+                break;
+            }
+
+            // set decimal flag
+            case INS_SED: // testing complete
+            {
+                P.bits.D = true;
+                cycles--;
+                break;
+            }
+
+            // set interrupt flag
+            case INS_SEI: // testing complete
+            {
+                P.bits.I = true;
+                cycles--;
+                break;
+            }
+
             // TODO: fix after other commands implemented?
             case INS_BRK:
             {
                 Byte signatureByte = readNextByte(cycles, memory);
                 pushByteToStack(cycles, PC >> 8, memory);
                 pushByteToStack(cycles, PC & 0xFF, memory);
-                P.value |= BREAK_FLAG_BIT;
+                P.bits.B = true;
                 pushByteToStack(cycles, P.value, memory);
-                P.value |= INTERRUPT_FLAG_BIT;
+                P.bits.I = true;
                 Byte irqVectorLow = readByteFromAddress(cycles, IRQ_VECTOR_LOW, memory);
                 Byte irqVectorHigh = readByteFromAddress(cycles, IRQ_VECTOR_HIGH, memory);
                 Word irqVector = (irqVectorHigh << 8) | irqVectorLow;
