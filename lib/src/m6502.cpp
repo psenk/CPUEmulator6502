@@ -25,9 +25,9 @@ namespace m6502
         Byte zeroPageAddress = readNextByte(cycles, memory);
         Byte registerValue;
         if (reg == X_REGISTER)
-            registerValue = readByteFromXRegister();
+            registerValue = X;
         else
-            registerValue = readByteFromYRegister();
+            registerValue = Y;
         Byte effectiveAddress = zeroPageAddress + registerValue; // cycle is taken for addition here
         cycles--;
         return effectiveAddress;
@@ -44,9 +44,9 @@ namespace m6502
         Word absoluteAddress = readNextWord(cycles, memory);
         Byte registerValue;
         if (reg == X_REGISTER)
-            registerValue = readByteFromXRegister();
+            registerValue = X;
         else
-            registerValue = readByteFromYRegister();
+            registerValue = Y;
         Word newAddress = absoluteAddress + registerValue;
 
         bool pageCrossed = (absoluteAddress & 0xFF00) != (newAddress & 0xFF00);
@@ -58,7 +58,7 @@ namespace m6502
     s32 CPU::fetchAddressIndexedIndirect(s32 &cycles, const Mem &memory)
     {
         Byte zeroPageAddress = readNextByte(cycles, memory);
-        Byte xRegister = readByteFromXRegister();
+        Byte xRegister = X;
         Word indexedAddress = (zeroPageAddress + xRegister) & 0xFF; // cycle is taken for addition here
         cycles--;
         Word effectiveAddress = readWordFromAddress(cycles, indexedAddress, memory);
@@ -68,7 +68,7 @@ namespace m6502
     s32 CPU::fetchAddressIndirectIndexed(s32 &cycles, const Mem &memory, bool notStoreInstruction)
     {
         Byte zeroPageAddress = readNextByte(cycles, memory);
-        Byte yRegister = readByteFromYRegister();
+        Byte yRegister = Y;
         Word address = readWordFromAddress(cycles, zeroPageAddress, memory);
         Word effectiveAddress = address + yRegister; // no cycles taken adding here
 
@@ -156,14 +156,19 @@ namespace m6502
         };
 
         // branch logic
-        auto branch = [&cycles, &memory, this](s8 offset)
+        auto branch = [&cycles, &memory, this](bool flag, bool condition)
         {
-            Word pcCopy = PC;
-            PC += offset;
-            cycles--; // for PC arithmetic
-            bool pageCrossed = (pcCopy & 0xFF00) != (PC & 0xFF00);
-            if (pageCrossed)
-                cycles--;
+            Byte operand = readNextByte(cycles, memory);
+            s32 offset = (s8)operand;
+            if (flag == condition)
+            {
+                Word pcCopy = PC;
+                PC += offset;
+                cycles--; // for PC arithmetic
+                bool pageCrossed = (pcCopy & 0xFF00) != (PC & 0xFF00);
+                if (pageCrossed)
+                    cycles--;
+            }
         };
 
         const s32 cyclesRequested = cycles;
@@ -951,80 +956,56 @@ namespace m6502
             // branch if carry flag clear
             case INS_BCC: // testing complete
             {
-                Byte operand = readNextByte(cycles, memory);
-                s32 offset = (s8)operand;
-                if (!P.bits.C)
-                    branch(offset);
+                branch(P.bits.C, false);
                 break;
             }
 
             // branch if carry flag set
             case INS_BCS: // testing complete
             {
-                Byte operand = readNextByte(cycles, memory);
-                s32 offset = (s8)operand;
-                if (P.bits.C)
-                    branch(offset);
+                branch(P.bits.C, true);
                 break;
             }
 
             // branch if zero flag clear
             case INS_BNE: // testing complete
             {
-                Byte operand = readNextByte(cycles, memory);
-                s32 offset = (s8)operand;
-                if (!P.bits.Z)
-                    branch(offset);
+                branch(P.bits.Z, false);
                 break;
             }
 
             // branch if zero flag set
             case INS_BEQ: // testing complete
             {
-                Byte operand = readNextByte(cycles, memory);
-                s32 offset = (s8)operand;
-                if (P.bits.Z)
-                    branch(offset);
+                branch(P.bits.Z, true);
                 break;
             }
 
             // branch if negative flag clear
             case INS_BPL: // testing complete
             {
-                Byte operand = readNextByte(cycles, memory);
-                s32 offset = (s8)operand;
-                if (!P.bits.N)
-                    branch(offset);
+                branch(P.bits.N, false);
                 break;
             }
 
             // branch if negative flag set
             case INS_BMI: // testing complete
             {
-                Byte operand = readNextByte(cycles, memory);
-                s32 offset = (s8)operand;
-                if (P.bits.N)
-                    branch(offset);
+                branch(P.bits.N, true);
                 break;
             }
 
             // branch if overflow flag clear
             case INS_BVC: // testing complete
             {
-                Byte operand = readNextByte(cycles, memory);
-                s32 offset = (s8)operand;
-                if (!P.bits.V)
-                    branch(offset);
+                branch(P.bits.V, false);
                 break;
             }
 
             // branch if overflow flag set
             case INS_BVS: // testing complete
             {
-                Byte operand = readNextByte(cycles, memory);
-                s32 offset = (s8)operand;
-                if (P.bits.V)
-                    branch(offset);
+                branch(P.bits.V, true);
                 break;
             }
 

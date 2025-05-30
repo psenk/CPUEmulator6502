@@ -157,24 +157,6 @@ struct m6502::CPU
         return data;
     }
 
-    /* read byte from the A register */
-    Byte readByteFromARegister()
-    {
-        return A;
-    }
-
-    /* read byte from the X register */
-    Byte readByteFromXRegister()
-    {
-        return X;
-    }
-
-    /* read byte from the Y register */
-    Byte readByteFromYRegister()
-    {
-        return Y;
-    }
-
     /**
      * WRITE FUNCTIONS
      */
