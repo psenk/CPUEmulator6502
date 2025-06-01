@@ -228,7 +228,7 @@ protected:
     // logical absolute
     void testLogicalAbsolute(const m6502::Byte opcode)
     {
-        // arrange
+        // arrange:
         using namespace m6502;
         CPU cpuCopy = cpu;
         static constexpr s32 NUM_CYCLES = 4;
@@ -263,7 +263,7 @@ protected:
     void testLogicalAbsolutePlusRegister(const m6502::Byte opcode,
                                          m6502::Byte m6502::CPU::*addedReg)
     {
-        // arrange
+        // arrange:
         using namespace m6502;
         CPU cpuCopy = cpu;
         static constexpr s32 NUM_CYCLES = 4;
@@ -300,7 +300,7 @@ protected:
     void testLogicalAbsolutePlusRegisterPageCrossed(const m6502::Byte opcode,
                                                     m6502::Byte m6502::CPU::*addedReg)
     {
-        // arrange
+        // arrange:
         using namespace m6502;
         CPU cpuCopy = cpu;
         static constexpr s32 NUM_CYCLES = 5;
@@ -338,7 +338,7 @@ protected:
     // test logical indirect indexed
     void testLogicalIndexedIndirect(const m6502::Byte opcode)
     {
-        // arrange
+        // arrange:
         using namespace m6502;
         CPU cpuCopy = cpu;
         static constexpr s32 NUM_CYCLES = 6;
@@ -374,7 +374,7 @@ protected:
     // test logical indexed indirect
     void testLogicalIndirectIndexed(const m6502::Byte opcode)
     {
-        // arrange
+        // arrange:
         using namespace m6502;
         CPU cpuCopy = cpu;
         static constexpr s32 NUM_CYCLES = 5;
@@ -408,7 +408,7 @@ protected:
     }
 
     void testLogicalIndirectIndexedPageCrossed(const m6502::Byte opcode)
-    { // arrange
+    { // arrange:
         using namespace m6502;
         CPU cpuCopy = cpu;
         static constexpr s32 NUM_CYCLES = 6;
@@ -833,7 +833,7 @@ TEST_F(LogicalTests, BITTestZeroPage_NegativeNotSet)
 
 TEST_F(LogicalTests, BITTestAbsolute_AllFlagsSet)
 {
-    // arrange
+    // arrange:
     using namespace m6502;
     testLogicalBITTestAbsolute(0xC0, true);
 

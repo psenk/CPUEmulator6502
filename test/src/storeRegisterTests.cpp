@@ -88,7 +88,7 @@ protected:
     void testStoreAbsolute(const m6502::Byte opcode,
                            m6502::Byte m6502::CPU::*reg)
     {
-        // arrange
+        // arrange:
         using namespace m6502;
         CPU cpuCopy = cpu;
         static constexpr s32 NUM_CYCLES = 4;
@@ -112,7 +112,7 @@ protected:
                                        m6502::Byte m6502::CPU::*addedReg,
                                        m6502::Byte m6502::CPU::*reg)
     {
-        // arrange
+        // arrange:
         using namespace m6502;
         CPU cpuCopy = cpu;
         static constexpr s32 NUM_CYCLES = 5;
@@ -246,7 +246,7 @@ TEST_F(StoreRegisterTests, STAAbsoluteY_StoreValue)
 
 TEST_F(StoreRegisterTests, STAIndirectX_LoadValue)
 {
-    // arrange
+    // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
     static constexpr s32 NUM_CYCLES = 6;
@@ -273,7 +273,7 @@ TEST_F(StoreRegisterTests, STAIndirectX_LoadValue)
 
 TEST_F(StoreRegisterTests, STAIndirectY_LoadValue)
 {
-    // arrange
+    // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
     static constexpr s32 NUM_CYCLES = 6;

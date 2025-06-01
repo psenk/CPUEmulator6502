@@ -30,7 +30,7 @@ protected:
 
 TEST_F(JumpsAndCallsTests, JSR_JumpToSubroutine)
 {
-    // arrange
+    // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
     static constexpr s32 NUM_CYCLES = 6;
@@ -58,7 +58,7 @@ TEST_F(JumpsAndCallsTests, JSR_JumpToSubroutine)
 
 TEST_F(JumpsAndCallsTests, RTS_ReturnFromAddress)
 {
-    // arrange
+    // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
     static constexpr s32 NUM_CYCLES = 6;
@@ -85,7 +85,7 @@ TEST_F(JumpsAndCallsTests, RTS_ReturnFromAddress)
 
 TEST_F(JumpsAndCallsTests, JMP_JumpToAddressAbsolute)
 {
-    // arrange
+    // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
     static constexpr s32 NUM_CYCLES = 3;
@@ -106,7 +106,7 @@ TEST_F(JumpsAndCallsTests, JMP_JumpToAddressAbsolute)
 
 TEST_F(JumpsAndCallsTests, JMP_JumpToAddressAbsolute_PageBoundary)
 {
-    // arrange
+    // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
     static constexpr s32 NUM_CYCLES = 3;
@@ -128,7 +128,7 @@ TEST_F(JumpsAndCallsTests, JMP_JumpToAddressAbsolute_PageBoundary)
 
 TEST_F(JumpsAndCallsTests, JMP_JumpToAddressIndirect)
 {
-    // arrange
+    // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
     static constexpr s32 NUM_CYCLES = 5;
@@ -151,7 +151,7 @@ TEST_F(JumpsAndCallsTests, JMP_JumpToAddressIndirect)
 
 TEST_F(JumpsAndCallsTests, JMP_JumpToAddressIndirect_PageBoundary)
 {
-    // arrange
+    // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
     static constexpr s32 NUM_CYCLES = 5;

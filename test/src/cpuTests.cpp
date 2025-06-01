@@ -51,7 +51,7 @@ TEST_F(CPUTests, CPUDoesNothingWithZeroCycles)
 
 TEST_F(CPUTests, CPUNotGivenEnoughCycles)
 {
-    // arrange
+    // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
     static constexpr s32 NUM_CYCLES = 1;
@@ -70,7 +70,7 @@ TEST_F(CPUTests, CPUNotGivenEnoughCycles)
 
 TEST_F(CPUTests, CPUExecutesBadInstruction)
 {
-    // arrange
+    // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
     static constexpr s32 NUM_CYCLES = 1;
@@ -155,7 +155,7 @@ TEST_F(CPUTests, CPURunProgram)
 
 TEST_F(CPUTests, NOPInstruction)
 {
-    // arrange
+    // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
     static constexpr s32 NUM_CYCLES = 2;
