@@ -89,6 +89,8 @@ namespace m6502
      * SET FLAGS
      */
 
+    // TODO: GET/SET flag helper methods
+
     void CPU::setFlagStatus_NZ(Byte value)
     {
         P.bits.Z = (value == 0) ? 1 : 0;
@@ -101,6 +103,24 @@ namespace m6502
         P.bits.Z = ((andResult & ZERO_FLAG_BIT) == 0) ? 1 : 0;
         P.bits.V = (value & OVERFLOW_FLAG_BIT) ? 1 : 0;
         P.bits.N = (value & NEGATIVE_FLAG_BIT) ? 1 : 0;
+    }
+
+    void CPU::setOverflowFlag(Byte regCopy, Byte operand, Byte result)
+    {
+        Byte aXORResult = regCopy ^ result;
+        Byte operXORResult = operand ^ result;
+        Byte signBit = aXORResult & operXORResult & 0x80;
+        P.bits.V = signBit != 0;
+    }
+
+    void CPU::setFlagStatus_ADC(Word value,
+                                Byte regCopy,
+                                Byte operand)
+    {
+        Byte lowByte = value & 0xFF;
+        setFlagStatus_NZ(lowByte);
+        P.bits.C = value > 0xFF;
+        setOverflowFlag(regCopy, operand, lowByte);
     }
 
     /**
@@ -147,6 +167,7 @@ namespace m6502
             writeByte(cycles, value, address, memory);
         };
 
+        // decrement
         auto decrement = [&cycles, &memory, this](Word address)
         {
             Byte value = readByteFromAddress(cycles, address, memory);
@@ -169,6 +190,16 @@ namespace m6502
                 if (pageCrossed)
                     cycles--;
             }
+        };
+
+        // add with carry
+        auto addWithCarry = [&cycles, &memory, this](Word address)
+        {
+            Byte value = readByteFromAddress(cycles, address, memory);
+            Byte aCopy = A;
+            Word result = A + value + (P.bits.C ? 1 : 0);
+            A = result & 0xFF; // only storing low byte of result
+            setFlagStatus_ADC(result, aCopy, value);
         };
 
         const s32 cyclesRequested = cycles;
@@ -1068,6 +1099,217 @@ namespace m6502
                 cycles--;
                 break;
             }
+
+            /**
+             * ARITHMETIC INSTRUCTIONS
+             */
+
+            /**
+             * ADD WITH CARRY
+             */
+
+            // add with carry immediate addressing
+            case INS_ADC_IMM: // testing complete
+            {
+                Byte value = readNextByte(cycles, memory);
+                Byte aCopy = A;
+                Word result = A + value + (P.bits.C ? 1 : 0);
+                A = result & 0xFF; // only storing low byte of result
+                setFlagStatus_ADC(result, aCopy, value);
+                break;
+            }
+
+            // add with carry zero page addressing
+            case INS_ADC_ZPG: // testing complete
+            {
+                Word address = fetchAddressZeroPage(cycles, memory);
+                addWithCarry(address);
+                break;
+            }
+
+            // add with carry zero page + x register addressing
+            case INS_ADC_ZPX: // testing complete
+            {
+                Word address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
+                addWithCarry(address);
+                break;
+            }
+
+            // add with carry absolute addressing
+            case INS_ADC_ABS: // testing complete
+            {
+                Word address = fetchAddressAbsolute(cycles, memory);
+                addWithCarry(address);
+                break;
+            }
+
+            // add with carry absolute + x register addressing
+            case INS_ADC_ABX: // testing complete
+            {
+                Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
+                addWithCarry(address);
+                break;
+            }
+
+            // add with carry absolute + y register addressing
+            case INS_ADC_ABY: // testing complete
+            {
+                Word address = fetchAddressAbsolutePlusRegister(cycles, Y_REGISTER, memory);
+                addWithCarry(address);
+                break;
+            }
+
+            // add with carry indexed indirect addressing
+            case INS_ADC_INX: // testing complete
+            {
+                Word address = fetchAddressIndexedIndirect(cycles, memory);
+                addWithCarry(address);
+                break;
+            }
+
+            // add with carry indirect indexed addressing
+            case INS_ADC_INY: // testing complete
+            {
+                Word address = fetchAddressIndirectIndexed(cycles, memory, true);
+                addWithCarry(address);
+                break;
+            }
+
+            // subtract with carry immediate addressing
+            case INS_SBC_IMM:
+            {
+                break;
+            }
+
+            // subtract with carry zero page addressing
+            case INS_SBC_ZPG:
+            {
+                break;
+            }
+
+            // subtract with carry zero page + x register addressing
+            case INS_SBC_ZPX:
+            {
+                break;
+            }
+
+            // subtract with carry absolute addressing
+            case INS_SBC_ABS:
+            {
+                break;
+            }
+
+            // subtract with carry absolute + x register addressing
+            case INS_SBC_ABX:
+            {
+                break;
+            }
+
+            // subtract with carry absolute + y register addressing
+            case INS_SBC_ABY:
+            {
+                break;
+            }
+
+            // subtract with carry indirect indexed addressing
+            case INS_SBC_INX:
+            {
+                break;
+            }
+
+            // subtract with carry indexed indirect addressing
+            case INS_SBC_INY:
+            {
+                break;
+            }
+
+            // compare accumulator immediate addressing
+            case INS_CMP_IMM:
+            {
+                break;
+            }
+
+            // compare accumulator zero page addressing
+            case INS_CMP_ZPG:
+            {
+                break;
+            }
+
+            // compare accumulator zero page + x register addressing
+            case INS_CMP_ZPX:
+            {
+                break;
+            }
+
+            // compare accumulator absolute addressing
+            case INS_CMP_ABS:
+            {
+                break;
+            }
+
+            // compare accumulator absolute + x register addressing
+            case INS_CMP_ABX:
+            {
+                break;
+            }
+
+            // compare accumulator absolute + y register addressing
+            case INS_CMP_ABY:
+            {
+                break;
+            }
+
+            // compare accumulator indirect indexed addressing
+            case INS_CMP_INX:
+            {
+                break;
+            }
+
+            // compare accumulator indexed indirect addressing
+            case INS_CMP_INY:
+            {
+                break;
+            }
+
+            // compare x register immediate addressing
+            case INS_CPX_IMM:
+            {
+                break;
+            }
+
+            // compare x register zero page addressing
+            case INS_CPX_ZPG:
+            {
+                break;
+            }
+
+            // compare x register absolute addressing
+            case INS_CPX_ABS:
+            {
+                break;
+            }
+
+            // compare y register immediate addressing
+            case INS_CPY_IMM:
+            {
+                break;
+            }
+
+            // compare y register zero page addressing
+            case INS_CPY_ZPG:
+            {
+                break;
+            }
+
+            // compare y register absolute addressing
+            case INS_CPY_ABS:
+            {
+                break;
+            }
+
+            /**
+             * SYSTEM FUNCTION INSTRUCTIONS
+             */
 
             // TODO: fix after other commands implemented?
             case INS_BRK:

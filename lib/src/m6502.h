@@ -181,7 +181,7 @@ struct m6502::CPU
      */
 
     // convert the 8 bit stack pointer to a 16 bit address
-    // the 0x01 high byte is assumed because 
+    // the 0x01 high byte is assumed because
     // the full stack is on the $01 page
     Word spToAddress() const
     {
@@ -300,6 +300,7 @@ struct m6502::CPU
                           INS_AND_ABY = 0x39,
                           INS_AND_INX = 0x21,
                           INS_AND_INY = 0x31,
+
                           INS_EOR_IMM = 0x49,
                           INS_EOR_ZPG = 0x45,
                           INS_EOR_ZPX = 0x55,
@@ -308,6 +309,7 @@ struct m6502::CPU
                           INS_EOR_ABY = 0x59,
                           INS_EOR_INX = 0x41,
                           INS_EOR_INY = 0x51,
+
                           INS_ORA_IMM = 0x09,
                           INS_ORA_ZPG = 0x05,
                           INS_ORA_ZPX = 0x15,
@@ -316,6 +318,7 @@ struct m6502::CPU
                           INS_ORA_ABY = 0x19,
                           INS_ORA_INX = 0x01,
                           INS_ORA_INY = 0x11,
+
                           INS_BIT_ZPG = 0x24,
                           INS_BIT_ABS = 0x2C;
 
@@ -358,6 +361,42 @@ struct m6502::CPU
                           INS_SED = 0xF8,
                           INS_SEI = 0x78;
 
+    // arithmetic instructions
+    static constexpr Byte INS_ADC_IMM = 0x69,
+                          INS_ADC_ZPG = 0x65,
+                          INS_ADC_ZPX = 0x75,
+                          INS_ADC_ABS = 0x6D,
+                          INS_ADC_ABX = 0x7D,
+                          INS_ADC_ABY = 0x79,
+                          INS_ADC_INX = 0x61,
+                          INS_ADC_INY = 0x71,
+
+                          INS_SBC_IMM = 0xE9,
+                          INS_SBC_ZPG = 0xE5,
+                          INS_SBC_ZPX = 0xF5,
+                          INS_SBC_ABS = 0xED,
+                          INS_SBC_ABX = 0xFD,
+                          INS_SBC_ABY = 0xF9,
+                          INS_SBC_INX = 0xE1,
+                          INS_SBC_INY = 0xF1,
+
+                          INS_CMP_IMM = 0xC9,
+                          INS_CMP_ZPG = 0xC5,
+                          INS_CMP_ZPX = 0xD5,
+                          INS_CMP_ABS = 0xCD,
+                          INS_CMP_ABX = 0xDD,
+                          INS_CMP_ABY = 0xD9,
+                          INS_CMP_INX = 0xC1,
+                          INS_CMP_INY = 0xD1,
+
+                          INS_CPX_IMM = 0xE0,
+                          INS_CPX_ZPG = 0xE4,
+                          INS_CPX_ABS = 0xEC,
+
+                          INS_CPY_IMM = 0xC0,
+                          INS_CPY_ZPG = 0xC4,
+                          INS_CPY_ABS = 0xCC;
+
     // system function instructions
     static constexpr Byte INS_BRK = 0x00,
                           INS_NOP = 0xEA;
@@ -379,6 +418,8 @@ struct m6502::CPU
 
     void setFlagStatus_NZ(Byte reg);
     void setFlagStatus_BIT(Byte value);
+    void setOverflowFlag(Byte regCopy, Byte operand, Byte result);
+    void setFlagStatus_ADC(Word value, Byte aCopy, Byte operand);
 
     /**
      * CPU FUNCTIONS
