@@ -426,6 +426,7 @@ struct m6502::CPU
     void setOverflowFlag(Byte regCopy, Byte operand, Byte result);
     void setFlagStatus_ADC(Word value, Byte aCopy, Byte operand);
     void setFlagStatus_SBC(Word value, Byte regCopy, Byte operand);
+    void setFlagStatus_CMP(Byte operand);
 
     /**
      * CPU FUNCTIONS

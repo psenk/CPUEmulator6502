@@ -98,10 +98,6 @@ namespace m6502
         P.bits.N = (value & NEGATIVE_FLAG_BIT) ? 1 : 0;
     }
 
-    void CPU::setOverflowFlag(Byte regCopy, Byte operand, Byte result)
-    {
-    }
-
     void CPU::setFlagStatus_ADC(Word value,
                                 Byte regCopy,
                                 Byte operand)
@@ -132,6 +128,14 @@ namespace m6502
         Byte operXORResult = regCopy ^ lowByte;
         Byte signBit = aXORResult & operXORResult & 0x80;
         P.bits.V = (signBit != 0); // v flag
+    }
+
+    void CPU::setFlagStatus_CMP(Byte operand)
+    {
+        Byte result = A - operand;
+        P.bits.C = (A >= operand);          // c flag
+        P.bits.Z = (A == operand);          // z flag
+        P.bits.N = (result & 0x80) ? 1 : 0; // n flag
     }
 
     /**
@@ -1271,50 +1275,73 @@ namespace m6502
              */
 
             // compare accumulator immediate addressing
-            case INS_CMP_IMM:
+            case INS_CMP_IMM: // testing complete
             {
+                Byte value = readNextByte(cycles, memory);
+                setFlagStatus_CMP(value);
                 break;
             }
 
             // compare accumulator zero page addressing
-            case INS_CMP_ZPG:
+            case INS_CMP_ZPG: // testing complete
             {
+                Word address = fetchAddressZeroPage(cycles, memory);
+                Byte value = readByteFromAddress(cycles, address, memory);
+                setFlagStatus_CMP(value);
                 break;
             }
 
             // compare accumulator zero page + x register addressing
-            case INS_CMP_ZPX:
+            case INS_CMP_ZPX: // testing complete
             {
+                Word address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
+                Byte value = readByteFromAddress(cycles, address, memory);
+                setFlagStatus_CMP(value);
                 break;
             }
 
             // compare accumulator absolute addressing
-            case INS_CMP_ABS:
+            case INS_CMP_ABS: // testing complete
             {
+                Word address = fetchAddressAbsolute(cycles, memory);
+                Byte value = readByteFromAddress(cycles, address, memory);
+                setFlagStatus_CMP(value);
                 break;
             }
 
             // compare accumulator absolute + x register addressing
-            case INS_CMP_ABX:
+            case INS_CMP_ABX: // testing complete
             {
+                Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
+                Byte value = readByteFromAddress(cycles, address, memory);
+                setFlagStatus_CMP(value);
                 break;
             }
 
             // compare accumulator absolute + y register addressing
-            case INS_CMP_ABY:
+            case INS_CMP_ABY: // testing complete
             {
-                break;
-            }
-
-            // compare accumulator indirect indexed addressing
-            case INS_CMP_INX:
-            {
+                Word address = fetchAddressAbsolutePlusRegister(cycles, Y_REGISTER, memory);
+                Byte value = readByteFromAddress(cycles, address, memory);
+                setFlagStatus_CMP(value);
                 break;
             }
 
             // compare accumulator indexed indirect addressing
-            case INS_CMP_INY:
+            case INS_CMP_INX: // testing complete
             {
+                Word address = fetchAddressIndexedIndirect(cycles, memory);
+                Byte value = readByteFromAddress(cycles, address, memory);
+                setFlagStatus_CMP(value);
+                break;
+            }
+
+            // compare accumulator indirect indexed addressing
+            case INS_CMP_INY: // testing complete
+            {
+                Word address = fetchAddressIndirectIndexed(cycles, memory, true);
+                Byte value = readByteFromAddress(cycles, address, memory);
+                setFlagStatus_CMP(value);
                 break;
             }
 
