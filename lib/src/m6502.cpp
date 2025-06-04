@@ -3,13 +3,6 @@
 namespace m6502
 {
 
-    enum CPU::RegisterType
-    {
-        A_REGISTER,
-        X_REGISTER,
-        Y_REGISTER
-    };
-
     /**
      * ADDRESSING MODES
      */
@@ -107,10 +100,6 @@ namespace m6502
 
     void CPU::setOverflowFlag(Byte regCopy, Byte operand, Byte result)
     {
-        Byte aXORResult = regCopy ^ result;
-        Byte operXORResult = operand ^ result;
-        Byte signBit = aXORResult & operXORResult & 0x80;
-        P.bits.V = signBit != 0;
     }
 
     void CPU::setFlagStatus_ADC(Word value,
@@ -118,9 +107,31 @@ namespace m6502
                                 Byte operand)
     {
         Byte lowByte = value & 0xFF;
-        setFlagStatus_NZ(lowByte);
-        P.bits.C = value > 0xFF;
-        setOverflowFlag(regCopy, operand, lowByte);
+
+        setFlagStatus_NZ(lowByte); // n and z flags
+        P.bits.C = value > 0xFF;   // c flag
+        Byte aXORResult = regCopy ^ lowByte;
+        Byte operXORResult = operand ^ lowByte;
+        Byte signBit = aXORResult & operXORResult & 0x80;
+        P.bits.V = (signBit != 0); // v flag
+        if (P.bits.V)
+            P.bits.C = P.bits.V;
+    }
+
+    void CPU::setFlagStatus_SBC(Word value,
+                                Byte regCopy,
+                                Byte operand)
+    {
+        Byte lowByte = value & 0xFF;
+
+        setFlagStatus_NZ(lowByte); // n and z flags
+
+        Word fullValue = operand + (P.bits.C ? 0 : 1);
+        P.bits.C = (regCopy >= fullValue); // c flag
+        Byte aXORResult = regCopy ^ operand;
+        Byte operXORResult = regCopy ^ lowByte;
+        Byte signBit = aXORResult & operXORResult & 0x80;
+        P.bits.V = (signBit != 0); // v flag
     }
 
     /**
@@ -200,6 +211,15 @@ namespace m6502
             Word result = A + value + (P.bits.C ? 1 : 0);
             A = result & 0xFF; // only storing low byte of result
             setFlagStatus_ADC(result, aCopy, value);
+        };
+
+        auto subWithCarry = [&cycles, &memory, this](Word address)
+        {
+            Byte value = readByteFromAddress(cycles, address, memory);
+            Byte aCopy = A;
+            Word result = A - value - (P.bits.C ? 0 : 1);
+            A = result & 0xFF; // only storing low byte of result
+            setFlagStatus_SBC(result, aCopy, value);
         };
 
         const s32 cyclesRequested = cycles;
@@ -1175,53 +1195,80 @@ namespace m6502
                 break;
             }
 
+            /**
+             * SUBTRACT WITH CARRY
+             */
+
             // subtract with carry immediate addressing
-            case INS_SBC_IMM:
+            case INS_SBC_IMM: // testing complete
             {
+                Byte value = readNextByte(cycles, memory);
+                Byte aCopy = A;
+                Word result = A - value - (P.bits.C ? 0 : 1);
+                A = result & 0xFF; // only storing low byte of result
+                setFlagStatus_SBC(result, aCopy, value);
                 break;
             }
 
             // subtract with carry zero page addressing
-            case INS_SBC_ZPG:
+            case INS_SBC_ZPG: // testing complete
             {
+                Word address = fetchAddressZeroPage(cycles, memory);
+                subWithCarry(address);
                 break;
             }
 
             // subtract with carry zero page + x register addressing
-            case INS_SBC_ZPX:
+            case INS_SBC_ZPX: // testing complete
             {
+                Word address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
+                subWithCarry(address);
                 break;
             }
 
             // subtract with carry absolute addressing
-            case INS_SBC_ABS:
+            case INS_SBC_ABS: // testing complete
             {
+                Word address = fetchAddressAbsolute(cycles, memory);
+                subWithCarry(address);
                 break;
             }
 
             // subtract with carry absolute + x register addressing
-            case INS_SBC_ABX:
+            case INS_SBC_ABX: // testing complete
             {
+                Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
+                subWithCarry(address);
                 break;
             }
 
             // subtract with carry absolute + y register addressing
-            case INS_SBC_ABY:
+            case INS_SBC_ABY: // testing complete
             {
-                break;
-            }
-
-            // subtract with carry indirect indexed addressing
-            case INS_SBC_INX:
-            {
+                Word address = fetchAddressAbsolutePlusRegister(cycles, Y_REGISTER, memory);
+                subWithCarry(address);
                 break;
             }
 
             // subtract with carry indexed indirect addressing
-            case INS_SBC_INY:
+            case INS_SBC_INX: // testing complete
             {
+                Word address = fetchAddressIndexedIndirect(cycles, memory);
+                subWithCarry(address);
                 break;
             }
+
+            // subtract with carry indirect indexed addressing
+            case INS_SBC_INY: // testing complete
+            {
+                Word address = fetchAddressIndirectIndexed(cycles, memory, true);
+                subWithCarry(address);
+                break;
+            }
+
+            /**
+             * COMPARE INSTRUCTIONS
+             */
 
             // compare accumulator immediate addressing
             case INS_CMP_IMM:

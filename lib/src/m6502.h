@@ -88,9 +88,14 @@ struct m6502::CPU
     Byte SP; // stack pointer
 
     Byte A, X, Y; // registers
-    enum RegisterType;
-
     StatusFlags P;
+
+    enum RegisterType // for function arguments
+    {
+        A_REGISTER,
+        X_REGISTER,
+        Y_REGISTER
+    };
 
     /**
      * RESET COMMAND
@@ -420,6 +425,7 @@ struct m6502::CPU
     void setFlagStatus_BIT(Byte value);
     void setOverflowFlag(Byte regCopy, Byte operand, Byte result);
     void setFlagStatus_ADC(Word value, Byte aCopy, Byte operand);
+    void setFlagStatus_SBC(Word value, Byte regCopy, Byte operand);
 
     /**
      * CPU FUNCTIONS
