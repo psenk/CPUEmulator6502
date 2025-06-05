@@ -111,6 +111,84 @@ struct m6502::CPU
     }
 
     /**
+     * GET FLAG HELPER METHODS
+     */
+
+    bool getCarryFlag()
+    {
+        return P.bits.C;
+    }
+
+    bool getZeroFlag()
+    {
+        return P.bits.Z;
+    }
+
+    bool getInterruptFlag()
+    {
+        return P.bits.I;
+    }
+
+    bool getDecimalFlag()
+    {
+        return P.bits.D;
+    }
+
+    bool getBreakFlag()
+    {
+        return P.bits.B;
+    }
+
+    bool getOverflowFlag()
+    {
+        return P.bits.V;
+    }
+
+    bool getNegativeFlag()
+    {
+        return P.bits.N;
+    }
+
+    /**
+     * SET FLAG HELPER METHODS
+     */
+
+    void setCarryFlag(bool flag)
+    {
+        P.bits.C = flag;
+    }
+
+    void setZeroFlag(bool flag)
+    {
+        P.bits.Z = flag;
+    }
+
+    void setInterruptFlag(bool flag)
+    {
+        P.bits.I = flag;
+    }
+
+    void setDecimalFlag(bool flag)
+    {
+        P.bits.D = flag;
+    }
+
+    void setBreakFlag(bool flag)
+    {
+        P.bits.B = flag;
+    }
+
+    void setOverflowFlag(bool flag)
+    {
+        P.bits.V = flag;
+    }
+
+    void setNegativeFlag(bool flag)
+    {
+        P.bits.N = flag;
+    }
+
+    /**
      * READ FUNCTIONS
      */
 
@@ -423,7 +501,6 @@ struct m6502::CPU
 
     void setFlagStatus_NZ(Byte reg);
     void setFlagStatus_BIT(Byte value);
-    void setOverflowFlag(Byte regCopy, Byte operand, Byte result);
     void setFlagStatus_ADC(Word value, Byte aCopy, Byte operand);
     void setFlagStatus_SBC(Word value, Byte regCopy, Byte operand);
     void setFlagStatus_CMP(Byte operand);

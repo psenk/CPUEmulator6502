@@ -82,20 +82,26 @@ namespace m6502
      * SET FLAGS
      */
 
-    // TODO: GET/SET flag helper methods
-
     void CPU::setFlagStatus_NZ(Byte value)
     {
-        P.bits.Z = (value == 0) ? 1 : 0;
-        P.bits.N = (value & 0x80) ? 1 : 0;
+        bool zFlag = (value == 0) ? 1 : 0;
+        setZeroFlag(zFlag);
+        bool nFlag = (value & 0x80) ? 1 : 0;
+        setNegativeFlag(nFlag);
     }
 
     void CPU::setFlagStatus_BIT(Byte value)
     {
         Byte andResult = A & value;
-        P.bits.Z = ((andResult & ZERO_FLAG_BIT) == 0) ? 1 : 0;
-        P.bits.V = (value & OVERFLOW_FLAG_BIT) ? 1 : 0;
-        P.bits.N = (value & NEGATIVE_FLAG_BIT) ? 1 : 0;
+
+        bool zFlag = ((andResult & ZERO_FLAG_BIT) == 0) ? 1 : 0;
+        setZeroFlag(zFlag);
+
+        bool vFlag = (value & OVERFLOW_FLAG_BIT) ? 1 : 0;
+        setOverflowFlag(vFlag);
+
+        bool nFlag = (value & NEGATIVE_FLAG_BIT) ? 1 : 0;
+        setNegativeFlag(nFlag);
     }
 
     void CPU::setFlagStatus_ADC(Word value,
@@ -104,14 +110,19 @@ namespace m6502
     {
         Byte lowByte = value & 0xFF;
 
-        setFlagStatus_NZ(lowByte); // n and z flags
-        P.bits.C = value > 0xFF;   // c flag
+        setFlagStatus_NZ(lowByte);
+
+        bool cFlag = value > 0xFF;
+        setCarryFlag(cFlag);
+
         Byte aXORResult = regCopy ^ lowByte;
         Byte operXORResult = operand ^ lowByte;
         Byte signBit = aXORResult & operXORResult & 0x80;
-        P.bits.V = (signBit != 0); // v flag
-        if (P.bits.V)
-            P.bits.C = P.bits.V;
+        bool vFlag = (signBit != 0);
+        setOverflowFlag(vFlag);
+
+        if (vFlag)
+            setCarryFlag(vFlag);
     }
 
     void CPU::setFlagStatus_SBC(Word value,
@@ -120,22 +131,31 @@ namespace m6502
     {
         Byte lowByte = value & 0xFF;
 
-        setFlagStatus_NZ(lowByte); // n and z flags
+        setFlagStatus_NZ(lowByte);
 
-        Word fullValue = operand + (P.bits.C ? 0 : 1);
-        P.bits.C = (regCopy >= fullValue); // c flag
+        bool currentCFlag = getCarryFlag();
+        Word fullValue = operand + (currentCFlag ? 0 : 1);
+        bool cFlag = (regCopy >= fullValue);
+        setCarryFlag(cFlag);
+
         Byte aXORResult = regCopy ^ operand;
         Byte operXORResult = regCopy ^ lowByte;
         Byte signBit = aXORResult & operXORResult & 0x80;
-        P.bits.V = (signBit != 0); // v flag
+        bool vFlag = (signBit != 0);
+        setOverflowFlag(vFlag);
     }
 
     void CPU::setFlagStatus_CMP(Byte operand)
     {
         Byte result = A - operand;
-        P.bits.C = (A >= operand);          // c flag
-        P.bits.Z = (A == operand);          // z flag
-        P.bits.N = (result & 0x80) ? 1 : 0; // n flag
+        bool cFlag = (A >= operand);
+        setCarryFlag(cFlag);
+
+        bool zFlag = (A == operand);
+        setZeroFlag(zFlag);
+
+        bool nFlag = (result & 0x80) ? 1 : 0;
+        setNegativeFlag(nFlag);
     }
 
     /**
@@ -212,7 +232,8 @@ namespace m6502
         {
             Byte value = readByteFromAddress(cycles, address, memory);
             Byte aCopy = A;
-            Word result = A + value + (P.bits.C ? 1 : 0);
+            bool cFlag = getCarryFlag();
+            Word result = A + value + (cFlag ? 1 : 0);
             A = result & 0xFF; // only storing low byte of result
             setFlagStatus_ADC(result, aCopy, value);
         };
@@ -221,7 +242,8 @@ namespace m6502
         {
             Byte value = readByteFromAddress(cycles, address, memory);
             Byte aCopy = A;
-            Word result = A - value - (P.bits.C ? 0 : 1);
+            bool cFlag = getCarryFlag();
+            Word result = A - value - (cFlag ? 0 : 1);
             A = result & 0xFF; // only storing low byte of result
             setFlagStatus_SBC(result, aCopy, value);
         };
@@ -1011,56 +1033,64 @@ namespace m6502
             // branch if carry flag clear
             case INS_BCC: // testing complete
             {
-                branch(P.bits.C, false);
+                bool cFlag = getCarryFlag();
+                branch(cFlag, false);
                 break;
             }
 
             // branch if carry flag set
             case INS_BCS: // testing complete
             {
-                branch(P.bits.C, true);
+                bool cFlag = getCarryFlag();
+                branch(cFlag, true);
                 break;
             }
 
             // branch if zero flag clear
             case INS_BNE: // testing complete
             {
-                branch(P.bits.Z, false);
+                bool zFlag = getZeroFlag();
+                branch(zFlag, false);
                 break;
             }
 
             // branch if zero flag set
             case INS_BEQ: // testing complete
             {
-                branch(P.bits.Z, true);
+                bool zFlag = getZeroFlag();
+                branch(zFlag, true);
                 break;
             }
 
             // branch if negative flag clear
             case INS_BPL: // testing complete
             {
-                branch(P.bits.N, false);
+                bool nFlag = getNegativeFlag();
+                branch(nFlag, false);
                 break;
             }
 
             // branch if negative flag set
             case INS_BMI: // testing complete
             {
-                branch(P.bits.N, true);
+                bool nFlag = getNegativeFlag();
+                branch(nFlag, true);
                 break;
             }
 
             // branch if overflow flag clear
             case INS_BVC: // testing complete
             {
-                branch(P.bits.V, false);
+                bool vFlag = getOverflowFlag();
+                branch(vFlag, false);
                 break;
             }
 
             // branch if overflow flag set
             case INS_BVS: // testing complete
             {
-                branch(P.bits.V, true);
+                bool vFlag = getOverflowFlag();
+                branch(vFlag, true);
                 break;
             }
 
@@ -1071,7 +1101,7 @@ namespace m6502
             // clear carry flag
             case INS_CLC: // testing complete
             {
-                P.bits.C = false;
+                setCarryFlag(false);
                 cycles--;
                 break;
             }
@@ -1079,7 +1109,7 @@ namespace m6502
             // clear decimal flag
             case INS_CLD: // testing complete
             {
-                P.bits.D = false;
+                setDecimalFlag(false);
                 cycles--;
                 break;
             }
@@ -1087,7 +1117,7 @@ namespace m6502
             // clear interrupt flag
             case INS_CLI: // testing complete
             {
-                P.bits.I = false;
+                setInterruptFlag(false);
                 cycles--;
                 break;
             }
@@ -1095,7 +1125,7 @@ namespace m6502
             // clear overflow flag
             case INS_CLV: // testing complete
             {
-                P.bits.V = false;
+                setOverflowFlag(false);
                 cycles--;
                 break;
             }
@@ -1103,7 +1133,7 @@ namespace m6502
             // set carry flag
             case INS_SEC: // testing complete
             {
-                P.bits.C = true;
+                setCarryFlag(true);
                 cycles--;
                 break;
             }
@@ -1111,7 +1141,7 @@ namespace m6502
             // set decimal flag
             case INS_SED: // testing complete
             {
-                P.bits.D = true;
+                setDecimalFlag(true);
                 cycles--;
                 break;
             }
@@ -1119,7 +1149,7 @@ namespace m6502
             // set interrupt flag
             case INS_SEI: // testing complete
             {
-                P.bits.I = true;
+                setInterruptFlag(true);
                 cycles--;
                 break;
             }
@@ -1137,7 +1167,8 @@ namespace m6502
             {
                 Byte value = readNextByte(cycles, memory);
                 Byte aCopy = A;
-                Word result = A + value + (P.bits.C ? 1 : 0);
+                bool cFlag = getCarryFlag();
+                Word result = A + value + (cFlag ? 1 : 0);
                 A = result & 0xFF; // only storing low byte of result
                 setFlagStatus_ADC(result, aCopy, value);
                 break;
@@ -1208,7 +1239,8 @@ namespace m6502
             {
                 Byte value = readNextByte(cycles, memory);
                 Byte aCopy = A;
-                Word result = A - value - (P.bits.C ? 0 : 1);
+                bool cFlag = getCarryFlag();
+                Word result = A - value - (cFlag ? 0 : 1);
                 A = result & 0xFF; // only storing low byte of result
                 setFlagStatus_SBC(result, aCopy, value);
                 break;
@@ -1391,9 +1423,9 @@ namespace m6502
                 Byte signatureByte = readNextByte(cycles, memory);
                 pushByteToStack(cycles, PC >> 8, memory);
                 pushByteToStack(cycles, PC & 0xFF, memory);
-                P.bits.B = true;
+                setBreakFlag(true);
                 pushByteToStack(cycles, P.value, memory);
-                P.bits.I = true;
+                setInterruptFlag(true);
                 Byte irqVectorLow = readByteFromAddress(cycles, IRQ_VECTOR_LOW, memory);
                 Byte irqVectorHigh = readByteFromAddress(cycles, IRQ_VECTOR_HIGH, memory);
                 Word irqVector = (irqVectorHigh << 8) | irqVectorLow;
