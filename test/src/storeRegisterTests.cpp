@@ -23,14 +23,14 @@ protected:
         // arrange:
         using namespace m6502;
         CPU cpuCopy = cpu;
-        static constexpr s32 NUM_CYCLES = 3;
+        static constexpr s_int32 NUM_CYCLES = 3;
 
         cpu.*reg = 0x42;
         mem[0xFFFC] = opcode;
         mem[0xFFFD] = 0x73;
 
         // act:
-        s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+        s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
         // assert:
         EXPECT_EQ(mem[0x0073], 0x42);
@@ -46,7 +46,7 @@ protected:
         // arrange:
         using namespace m6502;
         CPU cpuCopy = cpu;
-        static constexpr s32 NUM_CYCLES = 4;
+        static constexpr s_int32 NUM_CYCLES = 4;
         cpu.*reg = 0x42;
         cpu.*addedReg = 0x05;
 
@@ -54,7 +54,7 @@ protected:
         mem[0xFFFD] = 0x73;
 
         // act:
-        s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+        s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
         // assert:
         EXPECT_EQ(mem[0x0078], 0x42);
@@ -68,7 +68,7 @@ protected:
         // arrange:
         using namespace m6502;
         CPU cpuCopy = cpu;
-        static constexpr s32 NUM_CYCLES = 4;
+        static constexpr s_int32 NUM_CYCLES = 4;
         cpu.*reg = 0x42;
         cpu.*addedReg = 0xFF;
 
@@ -76,7 +76,7 @@ protected:
         mem[0xFFFD] = 0x80;
 
         // act:
-        s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+        s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
         // assert:
         EXPECT_EQ(mem[0x007F], 0x42);
@@ -91,7 +91,7 @@ protected:
         // arrange:
         using namespace m6502;
         CPU cpuCopy = cpu;
-        static constexpr s32 NUM_CYCLES = 4;
+        static constexpr s_int32 NUM_CYCLES = 4;
         cpu.*reg = 0x42;
 
         mem[0xFFFC] = opcode;
@@ -99,7 +99,7 @@ protected:
         mem[0xFFFE] = 0x04;
 
         // act
-        s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+        s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
         // assert
         EXPECT_EQ(mem[0x0420], 0x42);
@@ -115,7 +115,7 @@ protected:
         // arrange:
         using namespace m6502;
         CPU cpuCopy = cpu;
-        static constexpr s32 NUM_CYCLES = 5;
+        static constexpr s_int32 NUM_CYCLES = 5;
         cpu.*reg = 0x42;
         cpu.*addedReg = 0x05;
 
@@ -124,7 +124,7 @@ protected:
         mem[0xFFFE] = 0x04;
 
         // act
-        s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+        s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
         // assert
         EXPECT_EQ(cpu.*reg, 0x42);
@@ -249,7 +249,7 @@ TEST_F(StoreRegisterTests, STAIndirectX_LoadValue)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 6;
+    static constexpr s_int32 NUM_CYCLES = 6;
     cpu.A = 0x42;
     cpu.X = 0x04;
 
@@ -259,7 +259,7 @@ TEST_F(StoreRegisterTests, STAIndirectX_LoadValue)
     mem[0x0078] = 0x04;
 
     // act
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert
     EXPECT_EQ(mem[0x0420], 0x42);
@@ -276,7 +276,7 @@ TEST_F(StoreRegisterTests, STAIndirectY_LoadValue)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 6;
+    static constexpr s_int32 NUM_CYCLES = 6;
     cpu.A = 0x42;
     cpu.Y = 0x05;
 
@@ -286,7 +286,7 @@ TEST_F(StoreRegisterTests, STAIndirectY_LoadValue)
     mem[0x0074] = 0x04;
 
     // act
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert
     EXPECT_EQ(mem[0x0425], 0x42);

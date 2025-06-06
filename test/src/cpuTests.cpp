@@ -39,10 +39,10 @@ TEST_F(CPUTests, CPUDoesNothingWithZeroCycles)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 0;
+    static constexpr s_int32 NUM_CYCLES = 0;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
@@ -54,14 +54,14 @@ TEST_F(CPUTests, CPUNotGivenEnoughCycles)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 1;
+    static constexpr s_int32 NUM_CYCLES = 1;
 
     mem[0xFFFC] = CPU::INS_LDA_IMM;
     mem[0xFFFD] = 0x42;
     mem[0x0042] = 0x00;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cyclesExecuted, 2);
@@ -73,7 +73,7 @@ TEST_F(CPUTests, CPUExecutesBadInstruction)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 1;
+    static constexpr s_int32 NUM_CYCLES = 1;
 
     mem[0xFFFC] = 0x02; // invalid opcode
 
@@ -86,7 +86,7 @@ TEST_F(CPUTests, CPULoadProgram)
 {
     // arrange:
     using namespace m6502;
-    const u32 numBytes = 10;
+    const u_int32 numBytes = 10;
     Byte testProgram[numBytes] = {0x20, 0x04, 0x02, 0x03, 0x04,
                                   0x05, 0x06, 0x07, 0x08, 0x09};
 
@@ -108,7 +108,7 @@ TEST_F(CPUTests, CPULoadProgram_InvalidProgram)
 {
     // arrange:
     using namespace m6502;
-    const u32 numBytes = 2;
+    const u_int32 numBytes = 2;
 
     // act/assert:
     EXPECT_THROW(cpu.loadProgram(NULL, numBytes, mem), std::invalid_argument);
@@ -118,7 +118,7 @@ TEST_F(CPUTests, CPULoadProgram_ProgramTooSmall)
 {
     // arrange:
     using namespace m6502;
-    const u32 numBytes = 2;
+    const u_int32 numBytes = 2;
     Byte testProgram[numBytes] = {0x20, 0x40};
 
     // act/assert:
@@ -129,7 +129,7 @@ TEST_F(CPUTests, CPURunProgram)
 {
     // arrange:
     using namespace m6502;
-    const u32 numBytes = 7;
+    const u_int32 numBytes = 7;
     Byte testProgram[numBytes] = {0x20, 0x04, 0xA9, 0x42, 0xB4,
                                   0x50, 0x00};
     Word address = cpu.loadProgram(testProgram, numBytes, mem);
@@ -141,7 +141,7 @@ TEST_F(CPUTests, CPURunProgram)
     mem[0xFFFF] = brkAddress >> 8;
 
     // act:
-    for (s32 clock = 100; clock > 0;)
+    for (s_int32 clock = 100; clock > 0;)
     {
         clock -= cpu.execute(clock, mem);
         if (cpu.A == 0x42 && cpu.Y == 0x42)
@@ -158,11 +158,11 @@ TEST_F(CPUTests, NOPInstruction)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 2;
+    static constexpr s_int32 NUM_CYCLES = 2;
 
     mem[0xFFFC] = CPU::INS_NOP;
 
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // act/assert:
     EXPECT_EQ(cpu.PC, 0xFFFD);

@@ -43,13 +43,13 @@ TEST_F(StackOperationsTests, TSX_TransferSPToX)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 2;
+    static constexpr s_int32 NUM_CYCLES = 2;
     cpu.SP = 0x42;
 
     mem[0xFFFC] = CPU::INS_TSX;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.X, 0x42);
@@ -62,13 +62,13 @@ TEST_F(StackOperationsTests, TSX_TransferSPToX_ZeroValue)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 2;
+    static constexpr s_int32 NUM_CYCLES = 2;
     cpu.SP = 0x00;
 
     mem[0xFFFC] = CPU::INS_TSX;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.X, 0x00);
@@ -82,13 +82,13 @@ TEST_F(StackOperationsTests, TSX_TransferSPToX_NegativeValue)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 2;
+    static constexpr s_int32 NUM_CYCLES = 2;
     cpu.SP = 0x84;
 
     mem[0xFFFC] = CPU::INS_TSX;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.X, 0x84);
@@ -106,13 +106,13 @@ TEST_F(StackOperationsTests, TXS_TransferXToSP)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 2;
+    static constexpr s_int32 NUM_CYCLES = 2;
     cpu.X = 0x42;
 
     mem[0xFFFC] = CPU::INS_TXS;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.SP, 0x42);
@@ -129,13 +129,13 @@ TEST_F(StackOperationsTests, PHA_PushAToStack)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 3;
+    static constexpr s_int32 NUM_CYCLES = 3;
     cpu.A = 0x42;
 
     mem[0xFFFC] = CPU::INS_PHA;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(mem[0x0100 + cpu.SP + 1], 0x42);
@@ -152,14 +152,14 @@ TEST_F(StackOperationsTests, PHP_PushPStatusToStack)
 {
     // arrange:
     using namespace m6502;
-    static constexpr s32 NUM_CYCLES = 3;
+    static constexpr s_int32 NUM_CYCLES = 3;
     cpu.P.value = 0x6B;
     CPU cpuCopy = cpu;
 
     mem[0xFFFC] = CPU::INS_PHP;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(mem[0x0100 + cpu.SP + 1], 0x6B);
@@ -177,14 +177,14 @@ TEST_F(StackOperationsTests, PLA_PullFromStackToAccumulator)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 4;
+    static constexpr s_int32 NUM_CYCLES = 4;
     cpu.SP = 0xFE;
 
     mem[0xFFFC] = CPU::INS_PLA;
     mem[0x01FF] = 0x42;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x42);
@@ -198,14 +198,14 @@ TEST_F(StackOperationsTests, PLA_PullFromStackToAccumulator_ZeroValue)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 4;
+    static constexpr s_int32 NUM_CYCLES = 4;
     cpu.SP = 0xFE;
 
     mem[0xFFFC] = CPU::INS_PLA;
     mem[0x01FF] = 0x00;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x00);
@@ -220,14 +220,14 @@ TEST_F(StackOperationsTests, PLA_PullFromStackToAccumulator_NegativeValue)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 4;
+    static constexpr s_int32 NUM_CYCLES = 4;
     cpu.SP = 0xFE;
 
     mem[0xFFFC] = CPU::INS_PLA;
     mem[0x01FF] = 0x84;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x84);
@@ -245,7 +245,7 @@ TEST_F(StackOperationsTests, PLP_PullPStatusFromStack)
 {
     // arrange:
     using namespace m6502;
-    static constexpr s32 NUM_CYCLES = 4;
+    static constexpr s_int32 NUM_CYCLES = 4;
     cpu.SP = 0xFC;
     CPU cpuCopy = cpu;
 
@@ -253,7 +253,7 @@ TEST_F(StackOperationsTests, PLP_PullPStatusFromStack)
     mem[0x01FD] = 0x6B;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.P.value, 0x6B);

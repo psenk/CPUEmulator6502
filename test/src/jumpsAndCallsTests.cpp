@@ -33,14 +33,14 @@ TEST_F(JumpsAndCallsTests, JSR_JumpToSubroutine)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 6;
+    static constexpr s_int32 NUM_CYCLES = 6;
 
     mem[0xFF00] = CPU::INS_JSR_ABS;
     mem[0xFF01] = 0x20;
     mem[0xFF02] = 0x04;
 
     // act
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert
     EXPECT_EQ(cpu.PC, 0x0420);
@@ -61,7 +61,7 @@ TEST_F(JumpsAndCallsTests, RTS_ReturnFromAddress)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 6;
+    static constexpr s_int32 NUM_CYCLES = 6;
     cpu.SP -= 2;
     mem[0x01FF] = 0x04;
     mem[0x01FE] = 0x20;
@@ -69,7 +69,7 @@ TEST_F(JumpsAndCallsTests, RTS_ReturnFromAddress)
     mem[0xFF00] = CPU::INS_RTS;
 
     // act
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert
     EXPECT_EQ(cpu.PC, 0x0421);
@@ -88,14 +88,14 @@ TEST_F(JumpsAndCallsTests, JMP_JumpToAddressAbsolute)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 3;
+    static constexpr s_int32 NUM_CYCLES = 3;
 
     mem[0xFF00] = CPU::INS_JMP_ABS;
     mem[0xFF01] = 0x20;
     mem[0xFF02] = 0x04;
 
     // act
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert
     EXPECT_EQ(cpu.PC, 0x0420);
@@ -109,7 +109,7 @@ TEST_F(JumpsAndCallsTests, JMP_JumpToAddressAbsolute_PageBoundary)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 3;
+    static constexpr s_int32 NUM_CYCLES = 3;
     cpu.reset(mem, 0x20FE);
 
     mem[0x20FE] = CPU::INS_JMP_ABS;
@@ -117,7 +117,7 @@ TEST_F(JumpsAndCallsTests, JMP_JumpToAddressAbsolute_PageBoundary)
     mem[0x2100] = 0x04;
 
     // act
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert
     EXPECT_EQ(cpu.PC, 0x0420);
@@ -131,7 +131,7 @@ TEST_F(JumpsAndCallsTests, JMP_JumpToAddressIndirect)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 5;
+    static constexpr s_int32 NUM_CYCLES = 5;
 
     mem[0xFF00] = CPU::INS_JMP_IND;
     mem[0xFF01] = 0x20;
@@ -140,7 +140,7 @@ TEST_F(JumpsAndCallsTests, JMP_JumpToAddressIndirect)
     mem[0x0421] = 0x80;
 
     // act
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert
     EXPECT_EQ(cpu.PC, 0x8080);
@@ -154,7 +154,7 @@ TEST_F(JumpsAndCallsTests, JMP_JumpToAddressIndirect_PageBoundary)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 5;
+    static constexpr s_int32 NUM_CYCLES = 5;
     cpu.reset(mem, 0x20FE);
 
     mem[0x20FE] = CPU::INS_JMP_IND;
@@ -164,7 +164,7 @@ TEST_F(JumpsAndCallsTests, JMP_JumpToAddressIndirect_PageBoundary)
     mem[0x2200] = 0x80;
 
     // act
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert
     EXPECT_EQ(cpu.PC, 0x8080);

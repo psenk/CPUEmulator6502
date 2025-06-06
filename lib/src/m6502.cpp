@@ -7,67 +7,65 @@ namespace m6502
      * ADDRESSING MODES
      */
 
-    s32 CPU::fetchAddressZeroPage(s32 &cycles, const Mem &memory)
+    s_int32 CPU::fetchAddressZeroPage(s_int32 &cycles, const Mem &memory)
     {
-        Word zeroPageAddress = readNextByte(cycles, memory);
+        const Byte zeroPageAddress = readNextByte(cycles, memory);
         return zeroPageAddress;
     }
 
-    s32 CPU::fetchAddressZeroPagePlusRegister(s32 &cycles, RegisterType reg, const Mem &memory)
+    s_int32 CPU::fetchAddressZeroPagePlusRegister(s_int32 &cycles, const RegisterType reg, const Mem &memory)
     {
-        Byte zeroPageAddress = readNextByte(cycles, memory);
+        const Byte zeroPageAddress = readNextByte(cycles, memory);
         Byte registerValue;
         if (reg == X_REGISTER)
             registerValue = X;
         else
             registerValue = Y;
-        Byte effectiveAddress = zeroPageAddress + registerValue; // cycle is taken for addition here
+        const Byte effectiveAddress = zeroPageAddress + registerValue; // cycle is taken for addition here
         cycles--;
         return effectiveAddress;
     }
 
-    s32 CPU::fetchAddressAbsolute(s32 &cycles, const Mem &memory)
+    s_int32 CPU::fetchAddressAbsolute(s_int32 &cycles, const Mem &memory)
     {
-        Word absoluteAddress = readNextWord(cycles, memory);
+        const Word absoluteAddress = readNextWord(cycles, memory);
         return absoluteAddress;
     }
 
-    s32 CPU::fetchAddressAbsolutePlusRegister(s32 &cycles, RegisterType reg, const Mem &memory)
+    s_int32 CPU::fetchAddressAbsolutePlusRegister(s_int32 &cycles, const RegisterType reg, const Mem &memory)
     {
-        Word absoluteAddress = readNextWord(cycles, memory);
+        const Word absoluteAddress = readNextWord(cycles, memory);
         Byte registerValue;
         if (reg == X_REGISTER)
             registerValue = X;
         else
             registerValue = Y;
-        Word newAddress = absoluteAddress + registerValue;
+        const Word newAddress = absoluteAddress + registerValue;
 
-        bool pageCrossed = (absoluteAddress & 0xFF00) != (newAddress & 0xFF00);
+        const bool pageCrossed = (absoluteAddress & 0xFF00) != (newAddress & 0xFF00);
         if (pageCrossed)
             cycles--;
         return newAddress;
     }
 
-    s32 CPU::fetchAddressIndexedIndirect(s32 &cycles, const Mem &memory)
+    s_int32 CPU::fetchAddressIndexedIndirect(s_int32 &cycles, const Mem &memory)
     {
-        Byte zeroPageAddress = readNextByte(cycles, memory);
-        Byte xRegister = X;
-        Word indexedAddress = (zeroPageAddress + xRegister) & 0xFF; // cycle is taken for addition here
+        const Byte zeroPageAddress = readNextByte(cycles, memory);
+        const Word indexedAddress = (zeroPageAddress + X) & 0xFF; // cycle is taken for addition here
         cycles--;
-        Word effectiveAddress = readWordFromAddress(cycles, indexedAddress, memory);
+        const Word effectiveAddress = readWordFromAddress(cycles, indexedAddress, memory);
         return effectiveAddress;
     }
 
-    s32 CPU::fetchAddressIndirectIndexed(s32 &cycles, const Mem &memory, bool notStoreInstruction)
+    s_int32 CPU::fetchAddressIndirectIndexed(s_int32 &cycles, const Mem &memory, bool notStoreInstruction)
     {
-        Byte zeroPageAddress = readNextByte(cycles, memory);
-        Byte yRegister = Y;
-        Word address = readWordFromAddress(cycles, zeroPageAddress, memory);
-        Word effectiveAddress = address + yRegister; // no cycles taken adding here
+        const Byte zeroPageAddress = readNextByte(cycles, memory);
+        const Word address = readWordFromAddress(cycles, zeroPageAddress, memory);
+        const Word effectiveAddress = address + Y; // no cycles taken adding here
 
         if (notStoreInstruction)
         {
-            bool pageCrossed = (address & 0xFF00) != (effectiveAddress & 0xFF00);
+            const bool pageCrossed = (address & 0xFF00) != (effectiveAddress & 0xFF00);
             if (pageCrossed)
             {
                 cycles--;
@@ -84,9 +82,9 @@ namespace m6502
 
     void CPU::setFlagStatus_NZ(Byte value)
     {
-        bool zFlag = (value == 0) ? 1 : 0;
+        const bool zFlag = (value == 0) ? 1 : 0;
         setZeroFlag(zFlag);
-        bool nFlag = (value & 0x80) ? 1 : 0;
+        const bool nFlag = (value & 0x80) ? 1 : 0;
         setNegativeFlag(nFlag);
     }
 
@@ -94,13 +92,13 @@ namespace m6502
     {
         Byte andResult = A & value;
 
-        bool zFlag = ((andResult & ZERO_FLAG_BIT) == 0) ? 1 : 0;
+        const bool zFlag = ((andResult & ZERO_FLAG_BIT) == 0) ? 1 : 0;
         setZeroFlag(zFlag);
 
-        bool vFlag = (value & OVERFLOW_FLAG_BIT) ? 1 : 0;
+        const bool vFlag = (value & OVERFLOW_FLAG_BIT) ? 1 : 0;
         setOverflowFlag(vFlag);
 
-        bool nFlag = (value & NEGATIVE_FLAG_BIT) ? 1 : 0;
+        const bool nFlag = (value & NEGATIVE_FLAG_BIT) ? 1 : 0;
         setNegativeFlag(nFlag);
     }
 
@@ -108,17 +106,17 @@ namespace m6502
                                 Byte regCopy,
                                 Byte operand)
     {
-        Byte lowByte = value & 0xFF;
+        const Byte lowByte = value & 0xFF;
 
         setFlagStatus_NZ(lowByte);
 
-        bool cFlag = value > 0xFF;
+        const bool cFlag = value > 0xFF;
         setCarryFlag(cFlag);
 
-        Byte aXORResult = regCopy ^ lowByte;
-        Byte operXORResult = operand ^ lowByte;
-        Byte signBit = aXORResult & operXORResult & 0x80;
-        bool vFlag = (signBit != 0);
+        const Byte aXORResult = regCopy ^ lowByte;
+        const Byte operXORResult = operand ^ lowByte;
+        const Byte signBit = aXORResult & operXORResult & 0x80;
+        const bool vFlag = (signBit != 0);
         setOverflowFlag(vFlag);
 
         if (vFlag)
@@ -129,32 +127,32 @@ namespace m6502
                                 Byte regCopy,
                                 Byte operand)
     {
-        Byte lowByte = value & 0xFF;
+        const Byte lowByte = value & 0xFF;
 
         setFlagStatus_NZ(lowByte);
 
-        bool currentCFlag = getCarryFlag();
-        Word fullValue = operand + (currentCFlag ? 0 : 1);
-        bool cFlag = (regCopy >= fullValue);
+        const bool currentCFlag = getCarryFlag();
+        const Word fullValue = operand + (currentCFlag ? 0 : 1);
+        const bool cFlag = (regCopy >= fullValue);
         setCarryFlag(cFlag);
 
-        Byte aXORResult = regCopy ^ operand;
-        Byte operXORResult = regCopy ^ lowByte;
-        Byte signBit = aXORResult & operXORResult & 0x80;
-        bool vFlag = (signBit != 0);
+        const Byte aXORResult = regCopy ^ operand;
+        const Byte operXORResult = regCopy ^ lowByte;
+        const Byte signBit = aXORResult & operXORResult & 0x80;
+        const bool vFlag = (signBit != 0);
         setOverflowFlag(vFlag);
     }
 
     void CPU::setFlagStatus_CMP(Byte operand)
     {
-        Byte result = A - operand;
-        bool cFlag = (A >= operand);
+        const Byte result = A - operand;
+        const bool cFlag = (A >= operand);
         setCarryFlag(cFlag);
 
-        bool zFlag = (A == operand);
+        const bool zFlag = (A == operand);
         setZeroFlag(zFlag);
 
-        bool nFlag = (result & 0x80) ? 1 : 0;
+        const bool nFlag = (result & 0x80) ? 1 : 0;
         setNegativeFlag(nFlag);
     }
 
@@ -162,39 +160,39 @@ namespace m6502
      * CPU EXECUTE FUNCTION
      */
 
-    s32 CPU::execute(s32 cycles, Mem &memory)
+    s_int32 CPU::execute(s_int32 cycles, Mem &memory)
     {
 
         // load register from a memory address
-        auto loadRegister = [&cycles, &memory, this](Word address, Byte &reg)
+        auto loadRegister = [&cycles, &memory, this](const Word address, Byte &reg)
         {
             reg = readByteFromAddress(cycles, address, memory);
             setFlagStatus_NZ(reg);
         };
 
         // and byte with a register
-        auto andOperation = [&cycles, &memory, this](Word byteAddress, Byte &reg)
+        auto andOperation = [&cycles, &memory, this](const Word address, Byte &reg)
         {
-            reg &= readByteFromAddress(cycles, byteAddress, memory);
+            reg &= readByteFromAddress(cycles, address, memory);
             setFlagStatus_NZ(reg);
         };
 
         // xor bite with a register
-        auto xorOperation = [&cycles, &memory, this](Word byteAddress, Byte &reg)
+        auto xorOperation = [&cycles, &memory, this](const Word address, Byte &reg)
         {
-            reg ^= readByteFromAddress(cycles, byteAddress, memory);
+            reg ^= readByteFromAddress(cycles, address, memory);
             setFlagStatus_NZ(reg);
         };
 
         // or bite with a register
-        auto orOperation = [&cycles, &memory, this](Word byteAddress, Byte &reg)
+        auto orOperation = [&cycles, &memory, this](const Word address, Byte &reg)
         {
-            reg |= readByteFromAddress(cycles, byteAddress, memory);
+            reg |= readByteFromAddress(cycles, address, memory);
             setFlagStatus_NZ(reg);
         };
 
         // increment
-        auto increment = [&cycles, &memory, this](Word address)
+        auto increment = [&cycles, &memory, this](const Word address)
         {
             Byte value = readByteFromAddress(cycles, address, memory);
             value++;
@@ -203,7 +201,7 @@ namespace m6502
         };
 
         // decrement
-        auto decrement = [&cycles, &memory, this](Word address)
+        auto decrement = [&cycles, &memory, this](const Word address)
         {
             Byte value = readByteFromAddress(cycles, address, memory);
             value--;
@@ -212,46 +210,46 @@ namespace m6502
         };
 
         // branch logic
-        auto branch = [&cycles, &memory, this](bool flag, bool condition)
+        auto branch = [&cycles, &memory, this](const bool flag, const bool condition)
         {
-            Byte operand = readNextByte(cycles, memory);
-            s32 offset = (s8)operand;
+            const Byte operand = readNextByte(cycles, memory);
+            const s_int32 offset = (sByte)operand;
             if (flag == condition)
             {
-                Word pcCopy = PC;
+                const Word pcCopy = PC;
                 PC += offset;
                 cycles--; // for PC arithmetic
-                bool pageCrossed = (pcCopy & 0xFF00) != (PC & 0xFF00);
+                const bool pageCrossed = (pcCopy & 0xFF00) != (PC & 0xFF00);
                 if (pageCrossed)
                     cycles--;
             }
         };
 
         // add with carry
-        auto addWithCarry = [&cycles, &memory, this](Word address)
+        auto addWithCarry = [&cycles, &memory, this](const Word address)
         {
-            Byte value = readByteFromAddress(cycles, address, memory);
-            Byte aCopy = A;
-            bool cFlag = getCarryFlag();
-            Word result = A + value + (cFlag ? 1 : 0);
+            const Byte value = readByteFromAddress(cycles, address, memory);
+            const Byte aCopy = A;
+            const bool cFlag = getCarryFlag();
+            const Word result = A + value + (cFlag ? 1 : 0);
             A = result & 0xFF; // only storing low byte of result
             setFlagStatus_ADC(result, aCopy, value);
         };
 
-        auto subWithCarry = [&cycles, &memory, this](Word address)
+        auto subWithCarry = [&cycles, &memory, this](const Word address)
         {
-            Byte value = readByteFromAddress(cycles, address, memory);
-            Byte aCopy = A;
-            bool cFlag = getCarryFlag();
-            Word result = A - value - (cFlag ? 0 : 1);
+            const Byte value = readByteFromAddress(cycles, address, memory);
+            const Byte aCopy = A;
+            const bool cFlag = getCarryFlag();
+            const Word result = A - value - (cFlag ? 0 : 1);
             A = result & 0xFF; // only storing low byte of result
             setFlagStatus_SBC(result, aCopy, value);
         };
 
-        const s32 cyclesRequested = cycles;
+        const s_int32 cyclesRequested = cycles;
         while (cycles > 0)
         {
-            Byte instruction = readNextByte(cycles, memory);
+            const Byte instruction = readNextByte(cycles, memory);
             std::cout << "Instruction: 0x" << std::hex << (int)instruction << std::endl;
             switch (instruction)
             {
@@ -275,7 +273,7 @@ namespace m6502
             // load accumulator from zero page address
             case INS_LDA_ZPG: // testing complete
             {
-                Word address = fetchAddressZeroPage(cycles, memory);
+                const Byte address = fetchAddressZeroPage(cycles, memory);
                 loadRegister(address, A);
                 break;
             }
@@ -283,7 +281,7 @@ namespace m6502
             // load accumulator from zero page address + x register
             case INS_LDA_ZPX: // testing complete
             {
-                Word address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
+                const Byte address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
                 loadRegister(address, A);
                 break;
             }
@@ -291,7 +289,7 @@ namespace m6502
             // load accumulator from absolute address
             case INS_LDA_ABS: // testing complete
             {
-                Word address = fetchAddressAbsolute(cycles, memory);
+                const Word address = fetchAddressAbsolute(cycles, memory);
                 loadRegister(address, A);
                 break;
             }
@@ -299,7 +297,7 @@ namespace m6502
             // load accumulator from absolute address + x register
             case INS_LDA_ABX: // testing complete
             {
-                Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
+                const Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
                 loadRegister(address, A);
                 break;
             }
@@ -307,7 +305,7 @@ namespace m6502
             // load accumulator from absolute address + y register
             case INS_LDA_ABY: // testing complete
             {
-                Word address = fetchAddressAbsolutePlusRegister(cycles, Y_REGISTER, memory);
+                const Word address = fetchAddressAbsolutePlusRegister(cycles, Y_REGISTER, memory);
                 loadRegister(address, A);
                 break;
             }
@@ -315,7 +313,7 @@ namespace m6502
             // load accumulator with indexed indirect addressing + x register
             case INS_LDA_INX: // testing complete
             {
-                Word address = fetchAddressIndexedIndirect(cycles, memory);
+                const Word address = fetchAddressIndexedIndirect(cycles, memory);
                 loadRegister(address, A);
                 break;
             }
@@ -323,7 +321,7 @@ namespace m6502
             // load accumulator with indirect indexed addressing + y register
             case INS_LDA_INY: // testing complete
             {
-                Word address = fetchAddressIndirectIndexed(cycles, memory, true);
+                const Word address = fetchAddressIndirectIndexed(cycles, memory, true);
                 loadRegister(address, A);
                 break;
             }
@@ -343,7 +341,7 @@ namespace m6502
             // load x register from zero page address
             case INS_LDX_ZPG: // testing complete
             {
-                Word address = fetchAddressZeroPage(cycles, memory);
+                const Byte address = fetchAddressZeroPage(cycles, memory);
                 loadRegister(address, X);
                 break;
             }
@@ -351,7 +349,7 @@ namespace m6502
             // load x register from zero page + y register address
             case INS_LDX_ZPY: // testing complete
             {
-                Word address = fetchAddressZeroPagePlusRegister(cycles, Y_REGISTER, memory);
+                const Byte address = fetchAddressZeroPagePlusRegister(cycles, Y_REGISTER, memory);
                 loadRegister(address, X);
                 break;
             }
@@ -359,7 +357,7 @@ namespace m6502
             // load x register from absolute address
             case INS_LDX_ABS: // testing complete
             {
-                Word address = fetchAddressAbsolute(cycles, memory);
+                const Word address = fetchAddressAbsolute(cycles, memory);
                 loadRegister(address, X);
                 break;
             }
@@ -367,7 +365,7 @@ namespace m6502
             // load x register from absolute + y register address
             case INS_LDX_ABY: // testing complete
             {
-                Word address = fetchAddressAbsolutePlusRegister(cycles, Y_REGISTER, memory);
+                const Word address = fetchAddressAbsolutePlusRegister(cycles, Y_REGISTER, memory);
                 loadRegister(address, X);
                 break;
             }
@@ -387,7 +385,7 @@ namespace m6502
             // load y register from zero page address
             case INS_LDY_ZPG: // testing complete
             {
-                Word address = fetchAddressZeroPage(cycles, memory);
+                const Byte address = fetchAddressZeroPage(cycles, memory);
                 loadRegister(address, Y);
                 break;
             }
@@ -395,7 +393,7 @@ namespace m6502
             // load y register from zero page + x register address
             case INS_LDY_ZPX: // testing complete
             {
-                Word address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
+                const Byte address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
                 loadRegister(address, Y);
                 break;
             }
@@ -403,7 +401,7 @@ namespace m6502
             // load y register from absolute address
             case INS_LDY_ABS: // testing complete
             {
-                Word address = fetchAddressAbsolute(cycles, memory);
+                const Word address = fetchAddressAbsolute(cycles, memory);
                 loadRegister(address, Y);
                 break;
             }
@@ -411,7 +409,7 @@ namespace m6502
             // load y register from absolute + x register address
             case INS_LDY_ABX: // testing complete
             {
-                Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
+                const Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
                 loadRegister(address, Y);
                 break;
             }
@@ -427,7 +425,7 @@ namespace m6502
             // store accumulator value to memory from zero page address
             case INS_STA_ZPG: // testing complete
             {
-                Word address = fetchAddressZeroPage(cycles, memory);
+                const Byte address = fetchAddressZeroPage(cycles, memory);
                 writeByte(cycles, A, address, memory);
                 break;
             }
@@ -435,7 +433,7 @@ namespace m6502
             // store accumulator value to memory from zero page + x register address
             case INS_STA_ZPX: // testing complete
             {
-                Word address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
+                const Byte address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
                 writeByte(cycles, A, address, memory);
                 break;
             }
@@ -443,7 +441,7 @@ namespace m6502
             // store accumulator value to memory from absolute address
             case INS_STA_ABS: // testing complete
             {
-                Word address = fetchAddressAbsolute(cycles, memory);
+                const Word address = fetchAddressAbsolute(cycles, memory);
                 writeByte(cycles, A, address, memory);
                 break;
             }
@@ -451,7 +449,7 @@ namespace m6502
             // store accumulator to memory from absolute + x register address
             case INS_STA_ABX: // testing complete
             {
-                Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
+                const Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
                 cycles--; // for arithmetic
                 writeByte(cycles, A, address, memory);
                 break;
@@ -460,7 +458,7 @@ namespace m6502
             // store accumulator to memory from absolute + y register address
             case INS_STA_ABY: // testing complete
             {
-                Word address = fetchAddressAbsolutePlusRegister(cycles, Y_REGISTER, memory);
+                const Word address = fetchAddressAbsolutePlusRegister(cycles, Y_REGISTER, memory);
                 cycles--; // for arithmetic
                 writeByte(cycles, A, address, memory);
                 break;
@@ -469,7 +467,7 @@ namespace m6502
             // store accumulator to memory from indexed indirect + x register address
             case INS_STA_INX: // testing complete
             {
-                Word address = fetchAddressIndexedIndirect(cycles, memory);
+                const Word address = fetchAddressIndexedIndirect(cycles, memory);
                 writeByte(cycles, A, address, memory);
                 break;
             }
@@ -477,7 +475,7 @@ namespace m6502
             // store accumulator to memeory from indirect indexed + y register address
             case INS_STA_INY: // testing complete
             {
-                Word address = fetchAddressIndirectIndexed(cycles, memory, false);
+                const Word address = fetchAddressIndirectIndexed(cycles, memory, false);
                 writeByte(cycles, A, address, memory);
                 break;
             }
@@ -489,7 +487,7 @@ namespace m6502
             // store x register value to memory from zero page address
             case INS_STX_ZPG: // testing complete
             {
-                Word address = fetchAddressZeroPage(cycles, memory);
+                const Byte address = fetchAddressZeroPage(cycles, memory);
                 writeByte(cycles, X, address, memory);
                 break;
             }
@@ -497,7 +495,7 @@ namespace m6502
             // store x register value to memory from zero page + x register address
             case INS_STX_ZPY: // testing complete
             {
-                Word address = fetchAddressZeroPagePlusRegister(cycles, Y_REGISTER, memory);
+                const Byte address = fetchAddressZeroPagePlusRegister(cycles, Y_REGISTER, memory);
                 writeByte(cycles, X, address, memory);
                 break;
             }
@@ -505,7 +503,7 @@ namespace m6502
             // store x register value to memory from absolute address
             case INS_STX_ABS: // testing complete
             {
-                Word address = fetchAddressAbsolute(cycles, memory);
+                const Word address = fetchAddressAbsolute(cycles, memory);
                 writeByte(cycles, X, address, memory);
                 break;
             }
@@ -517,7 +515,7 @@ namespace m6502
             // store y register to memory from zero page address
             case INS_STY_ZPG: // testing complete
             {
-                Word address = fetchAddressZeroPage(cycles, memory);
+                const Byte address = fetchAddressZeroPage(cycles, memory);
                 writeByte(cycles, Y, address, memory);
                 break;
             }
@@ -525,7 +523,7 @@ namespace m6502
             // store y register to memory from zero page + x register address
             case INS_STY_ZPX: // testing complete
             {
-                Word address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
+                const Byte address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
                 writeByte(cycles, Y, address, memory);
                 break;
             }
@@ -533,7 +531,7 @@ namespace m6502
             // store y register value to memory from absolute address
             case INS_STY_ABS: // testing complete
             {
-                Word address = fetchAddressAbsolute(cycles, memory);
+                const Word address = fetchAddressAbsolute(cycles, memory);
                 writeByte(cycles, Y, address, memory);
                 break;
             }
@@ -545,7 +543,7 @@ namespace m6502
             // jump to location from absolute address
             case INS_JMP_ABS: // testing complete
             {
-                Word address = readNextWord(cycles, memory);
+                const Word address = readNextWord(cycles, memory);
                 PC = address;
                 break;
             }
@@ -553,8 +551,8 @@ namespace m6502
             // jump to location from indirect address
             case INS_JMP_IND: // testing complete
             {
-                Word address = readNextWord(cycles, memory);
-                Word effectiveAddress = readWordFromAddress(cycles, address, memory);
+                const Word address = readNextWord(cycles, memory);
+                const Word effectiveAddress = readWordFromAddress(cycles, address, memory);
                 PC = effectiveAddress;
                 break;
             }
@@ -562,7 +560,7 @@ namespace m6502
             // jump to subroutine from absolute address
             case INS_JSR_ABS: // testing complete
             {
-                Word address = readNextWord(cycles, memory);
+                const Word address = readNextWord(cycles, memory);
                 pushWordToStack(cycles, PC - 1, memory);
                 PC = address;
                 cycles--; // for arithmetic
@@ -572,7 +570,7 @@ namespace m6502
             // return from subroutine
             case INS_RTS: // testing complete
             {
-                Word address = popWordFromStack(cycles, memory);
+                const Word address = popWordFromStack(cycles, memory);
                 PC = address + 1;
                 cycles--; // for arithmetic
                 break;
@@ -618,7 +616,7 @@ namespace m6502
             // pull from stack to accumulator
             case INS_PLA: // testing complete
             {
-                Byte value = popByteFromStack(cycles, memory);
+                const Byte value = popByteFromStack(cycles, memory);
                 A = value;
                 cycles--; // extra cycle
                 setFlagStatus_NZ(A);
@@ -628,7 +626,7 @@ namespace m6502
             // pull processor from stack
             case INS_PLP: // testing complete
             {
-                Byte value = popByteFromStack(cycles, memory);
+                const Byte value = popByteFromStack(cycles, memory);
                 P.value = value;
                 cycles--; // extra cycle
                 break;
@@ -653,7 +651,7 @@ namespace m6502
             // and zero page address
             case INS_AND_ZPG: // testing complete
             {
-                Word address = fetchAddressZeroPage(cycles, memory);
+                const Byte address = fetchAddressZeroPage(cycles, memory);
                 andOperation(address, A);
                 break;
             }
@@ -661,7 +659,7 @@ namespace m6502
             // and zero page + x register address
             case INS_AND_ZPX: // testing complete
             {
-                Word address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
+                const Byte address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
                 andOperation(address, A);
                 break;
             }
@@ -669,7 +667,7 @@ namespace m6502
             // and zero page absolute address
             case INS_AND_ABS: // testing complete
             {
-                Word address = fetchAddressAbsolute(cycles, memory);
+                const Word address = fetchAddressAbsolute(cycles, memory);
                 andOperation(address, A);
                 break;
             }
@@ -677,7 +675,7 @@ namespace m6502
             // and zero page absolute + x register address
             case INS_AND_ABX: // testing complete
             {
-                Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
+                const Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
                 andOperation(address, A);
                 break;
             }
@@ -685,7 +683,7 @@ namespace m6502
             // and zero page absolute + y register address
             case INS_AND_ABY: // testing complete
             {
-                Word address = fetchAddressAbsolutePlusRegister(cycles, Y_REGISTER, memory);
+                const Word address = fetchAddressAbsolutePlusRegister(cycles, Y_REGISTER, memory);
                 andOperation(address, A);
                 break;
             }
@@ -693,7 +691,7 @@ namespace m6502
             // and indexed indirect addressing
             case INS_AND_INX: // testing complete
             {
-                Word address = fetchAddressIndexedIndirect(cycles, memory);
+                const Word address = fetchAddressIndexedIndirect(cycles, memory);
                 andOperation(address, A);
                 break;
             }
@@ -701,7 +699,7 @@ namespace m6502
             // and indirect indexed addressing
             case INS_AND_INY: // testing complete
             {
-                Word address = fetchAddressIndirectIndexed(cycles, memory, true);
+                const Word address = fetchAddressIndirectIndexed(cycles, memory, true);
                 andOperation(address, A);
                 break;
             }
@@ -721,7 +719,7 @@ namespace m6502
             // or zero page address
             case INS_EOR_ZPG: // testing complete
             {
-                Word address = fetchAddressZeroPage(cycles, memory);
+                const Byte address = fetchAddressZeroPage(cycles, memory);
                 xorOperation(address, A);
                 break;
             }
@@ -729,7 +727,7 @@ namespace m6502
             // or zero page + x register address
             case INS_EOR_ZPX: // testing complete
             {
-                Word address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
+                const Byte address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
                 xorOperation(address, A);
                 break;
             }
@@ -737,7 +735,7 @@ namespace m6502
             // or zero page absolute address
             case INS_EOR_ABS: // testing complete
             {
-                Word address = fetchAddressAbsolute(cycles, memory);
+                const Word address = fetchAddressAbsolute(cycles, memory);
                 xorOperation(address, A);
                 break;
             }
@@ -745,7 +743,7 @@ namespace m6502
             // or zero page absolute + x register address
             case INS_EOR_ABX: // testing complete
             {
-                Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
+                const Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
                 xorOperation(address, A);
                 break;
             }
@@ -753,7 +751,7 @@ namespace m6502
             // or zero page absolute + y register address
             case INS_EOR_ABY: // testing complete
             {
-                Word address = fetchAddressAbsolutePlusRegister(cycles, Y_REGISTER, memory);
+                const Word address = fetchAddressAbsolutePlusRegister(cycles, Y_REGISTER, memory);
                 xorOperation(address, A);
                 break;
             }
@@ -761,7 +759,7 @@ namespace m6502
             // or indexed indirect addressing
             case INS_EOR_INX: // testing complete
             {
-                Word address = fetchAddressIndexedIndirect(cycles, memory);
+                const Word address = fetchAddressIndexedIndirect(cycles, memory);
                 xorOperation(address, A);
                 break;
             }
@@ -769,7 +767,7 @@ namespace m6502
             // or indirect indexed addressing
             case INS_EOR_INY: // testing complete
             {
-                Word address = fetchAddressIndirectIndexed(cycles, memory, true);
+                const Word address = fetchAddressIndirectIndexed(cycles, memory, true);
                 xorOperation(address, A);
                 break;
             }
@@ -789,7 +787,7 @@ namespace m6502
             // or zero page address
             case INS_ORA_ZPG: // testing complete
             {
-                Word address = fetchAddressZeroPage(cycles, memory);
+                const Byte address = fetchAddressZeroPage(cycles, memory);
                 orOperation(address, A);
                 break;
             }
@@ -797,7 +795,7 @@ namespace m6502
             // or zero page + x register address
             case INS_ORA_ZPX: // testing complete
             {
-                Word address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
+                const Byte address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
                 orOperation(address, A);
                 break;
             }
@@ -805,7 +803,7 @@ namespace m6502
             // or zero page absolute address
             case INS_ORA_ABS: // testing complete
             {
-                Word address = fetchAddressAbsolute(cycles, memory);
+                const Word address = fetchAddressAbsolute(cycles, memory);
                 orOperation(address, A);
                 break;
             }
@@ -813,7 +811,7 @@ namespace m6502
             // or zero page absolute + x register address
             case INS_ORA_ABX: // testing complete
             {
-                Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
+                const Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
                 orOperation(address, A);
                 break;
             }
@@ -821,7 +819,7 @@ namespace m6502
             // or zero page absolute + y register address
             case INS_ORA_ABY: // testing complete
             {
-                Word address = fetchAddressAbsolutePlusRegister(cycles, Y_REGISTER, memory);
+                const Word address = fetchAddressAbsolutePlusRegister(cycles, Y_REGISTER, memory);
                 orOperation(address, A);
                 break;
             }
@@ -829,7 +827,7 @@ namespace m6502
             // or indexed indirect addressing
             case INS_ORA_INX: // testing complete
             {
-                Word address = fetchAddressIndexedIndirect(cycles, memory);
+                const Word address = fetchAddressIndexedIndirect(cycles, memory);
                 orOperation(address, A);
                 break;
             }
@@ -837,7 +835,7 @@ namespace m6502
             // or indirect indexed addressing
             case INS_ORA_INY: // testing complete
             {
-                Word address = fetchAddressIndirectIndexed(cycles, memory, true);
+                const Word address = fetchAddressIndirectIndexed(cycles, memory, true);
                 orOperation(address, A);
                 break;
             }
@@ -849,8 +847,8 @@ namespace m6502
             // bit test zero page addressing
             case INS_BIT_ZPG: // testing complete
             {
-                Word address = fetchAddressZeroPage(cycles, memory);
-                Byte value = readByteFromAddress(cycles, address, memory);
+                const Byte address = fetchAddressZeroPage(cycles, memory);
+                const Byte value = readByteFromAddress(cycles, address, memory);
                 setFlagStatus_BIT(value);
                 break;
             }
@@ -858,8 +856,8 @@ namespace m6502
             // bit test absolute addressing
             case INS_BIT_ABS: // testing complete
             {
-                Word address = fetchAddressAbsolute(cycles, memory);
-                Byte value = readByteFromAddress(cycles, address, memory);
+                const Word address = fetchAddressAbsolute(cycles, memory);
+                const Byte value = readByteFromAddress(cycles, address, memory);
                 setFlagStatus_BIT(value);
                 break;
             }
@@ -915,7 +913,7 @@ namespace m6502
             // increment memory at zero page address
             case INS_INC_ZPG: // testing complete
             {
-                Byte address = fetchAddressZeroPage(cycles, memory);
+                const Byte address = fetchAddressZeroPage(cycles, memory);
                 increment(address);
                 break;
             }
@@ -923,7 +921,7 @@ namespace m6502
             // increment memory at zero page + x register address
             case INS_INC_ZPX: // testing complete
             {
-                Byte address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
+                const Byte address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
                 increment(address);
                 break;
             }
@@ -931,7 +929,7 @@ namespace m6502
             // increment memory at absolute address
             case INS_INC_ABS: // testing complete
             {
-                Word address = fetchAddressAbsolute(cycles, memory);
+                const Word address = fetchAddressAbsolute(cycles, memory);
                 increment(address);
                 break;
             }
@@ -939,7 +937,7 @@ namespace m6502
             // increment memory at absolute + x register address
             case INS_INC_ABX:
             {
-                Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
+                const Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
                 cycles--; // for arithmetic
                 increment(address);
                 break;
@@ -974,7 +972,7 @@ namespace m6502
             // decrement memory at zero page address
             case INS_DEC_ZPG: // testing complete
             {
-                Byte address = fetchAddressZeroPage(cycles, memory);
+                const Byte address = fetchAddressZeroPage(cycles, memory);
                 decrement(address);
                 break;
             }
@@ -982,7 +980,7 @@ namespace m6502
             // decrement memory at zero page + x register address
             case INS_DEC_ZPX: // testing complete
             {
-                Byte address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
+                const Byte address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
                 decrement(address);
                 break;
             }
@@ -990,7 +988,7 @@ namespace m6502
             // decrement memory at absolute address
             case INS_DEC_ABS: // testing complete
             {
-                Word address = fetchAddressAbsolute(cycles, memory);
+                const Word address = fetchAddressAbsolute(cycles, memory);
                 decrement(address);
                 break;
             }
@@ -998,7 +996,7 @@ namespace m6502
             // decrement memory at absolute + x register address
             case INS_DEC_ABX:
             {
-                Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
+                const Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
                 cycles--; // for arithmetic
                 decrement(address);
                 break;
@@ -1033,7 +1031,7 @@ namespace m6502
             // branch if carry flag clear
             case INS_BCC: // testing complete
             {
-                bool cFlag = getCarryFlag();
+                const bool cFlag = getCarryFlag();
                 branch(cFlag, false);
                 break;
             }
@@ -1041,7 +1039,7 @@ namespace m6502
             // branch if carry flag set
             case INS_BCS: // testing complete
             {
-                bool cFlag = getCarryFlag();
+                const bool cFlag = getCarryFlag();
                 branch(cFlag, true);
                 break;
             }
@@ -1049,7 +1047,7 @@ namespace m6502
             // branch if zero flag clear
             case INS_BNE: // testing complete
             {
-                bool zFlag = getZeroFlag();
+                const bool zFlag = getZeroFlag();
                 branch(zFlag, false);
                 break;
             }
@@ -1057,7 +1055,7 @@ namespace m6502
             // branch if zero flag set
             case INS_BEQ: // testing complete
             {
-                bool zFlag = getZeroFlag();
+                const bool zFlag = getZeroFlag();
                 branch(zFlag, true);
                 break;
             }
@@ -1065,7 +1063,7 @@ namespace m6502
             // branch if negative flag clear
             case INS_BPL: // testing complete
             {
-                bool nFlag = getNegativeFlag();
+                const bool nFlag = getNegativeFlag();
                 branch(nFlag, false);
                 break;
             }
@@ -1073,7 +1071,7 @@ namespace m6502
             // branch if negative flag set
             case INS_BMI: // testing complete
             {
-                bool nFlag = getNegativeFlag();
+                const bool nFlag = getNegativeFlag();
                 branch(nFlag, true);
                 break;
             }
@@ -1081,7 +1079,7 @@ namespace m6502
             // branch if overflow flag clear
             case INS_BVC: // testing complete
             {
-                bool vFlag = getOverflowFlag();
+                const bool vFlag = getOverflowFlag();
                 branch(vFlag, false);
                 break;
             }
@@ -1089,7 +1087,7 @@ namespace m6502
             // branch if overflow flag set
             case INS_BVS: // testing complete
             {
-                bool vFlag = getOverflowFlag();
+                const bool vFlag = getOverflowFlag();
                 branch(vFlag, true);
                 break;
             }
@@ -1165,10 +1163,10 @@ namespace m6502
             // add with carry immediate addressing
             case INS_ADC_IMM: // testing complete
             {
-                Byte value = readNextByte(cycles, memory);
-                Byte aCopy = A;
-                bool cFlag = getCarryFlag();
-                Word result = A + value + (cFlag ? 1 : 0);
+                const Byte value = readNextByte(cycles, memory);
+                const Byte aCopy = A;
+                const bool cFlag = getCarryFlag();
+                const Word result = A + value + (cFlag ? 1 : 0);
                 A = result & 0xFF; // only storing low byte of result
                 setFlagStatus_ADC(result, aCopy, value);
                 break;
@@ -1177,7 +1175,7 @@ namespace m6502
             // add with carry zero page addressing
             case INS_ADC_ZPG: // testing complete
             {
-                Word address = fetchAddressZeroPage(cycles, memory);
+                const Byte address = fetchAddressZeroPage(cycles, memory);
                 addWithCarry(address);
                 break;
             }
@@ -1185,7 +1183,7 @@ namespace m6502
             // add with carry zero page + x register addressing
             case INS_ADC_ZPX: // testing complete
             {
-                Word address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
+                const Byte address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
                 addWithCarry(address);
                 break;
             }
@@ -1193,7 +1191,7 @@ namespace m6502
             // add with carry absolute addressing
             case INS_ADC_ABS: // testing complete
             {
-                Word address = fetchAddressAbsolute(cycles, memory);
+                const Word address = fetchAddressAbsolute(cycles, memory);
                 addWithCarry(address);
                 break;
             }
@@ -1201,7 +1199,7 @@ namespace m6502
             // add with carry absolute + x register addressing
             case INS_ADC_ABX: // testing complete
             {
-                Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
+                const Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
                 addWithCarry(address);
                 break;
             }
@@ -1209,7 +1207,7 @@ namespace m6502
             // add with carry absolute + y register addressing
             case INS_ADC_ABY: // testing complete
             {
-                Word address = fetchAddressAbsolutePlusRegister(cycles, Y_REGISTER, memory);
+                const Word address = fetchAddressAbsolutePlusRegister(cycles, Y_REGISTER, memory);
                 addWithCarry(address);
                 break;
             }
@@ -1217,7 +1215,7 @@ namespace m6502
             // add with carry indexed indirect addressing
             case INS_ADC_INX: // testing complete
             {
-                Word address = fetchAddressIndexedIndirect(cycles, memory);
+                const Word address = fetchAddressIndexedIndirect(cycles, memory);
                 addWithCarry(address);
                 break;
             }
@@ -1225,7 +1223,7 @@ namespace m6502
             // add with carry indirect indexed addressing
             case INS_ADC_INY: // testing complete
             {
-                Word address = fetchAddressIndirectIndexed(cycles, memory, true);
+                const Word address = fetchAddressIndirectIndexed(cycles, memory, true);
                 addWithCarry(address);
                 break;
             }
@@ -1237,10 +1235,10 @@ namespace m6502
             // subtract with carry immediate addressing
             case INS_SBC_IMM: // testing complete
             {
-                Byte value = readNextByte(cycles, memory);
-                Byte aCopy = A;
-                bool cFlag = getCarryFlag();
-                Word result = A - value - (cFlag ? 0 : 1);
+                const Byte value = readNextByte(cycles, memory);
+                const Byte aCopy = A;
+                const bool cFlag = getCarryFlag();
+                const Word result = A - value - (cFlag ? 0 : 1);
                 A = result & 0xFF; // only storing low byte of result
                 setFlagStatus_SBC(result, aCopy, value);
                 break;
@@ -1249,7 +1247,7 @@ namespace m6502
             // subtract with carry zero page addressing
             case INS_SBC_ZPG: // testing complete
             {
-                Word address = fetchAddressZeroPage(cycles, memory);
+                const Byte address = fetchAddressZeroPage(cycles, memory);
                 subWithCarry(address);
                 break;
             }
@@ -1257,7 +1255,7 @@ namespace m6502
             // subtract with carry zero page + x register addressing
             case INS_SBC_ZPX: // testing complete
             {
-                Word address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
+                const Byte address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
                 subWithCarry(address);
                 break;
             }
@@ -1265,7 +1263,7 @@ namespace m6502
             // subtract with carry absolute addressing
             case INS_SBC_ABS: // testing complete
             {
-                Word address = fetchAddressAbsolute(cycles, memory);
+                const Word address = fetchAddressAbsolute(cycles, memory);
                 subWithCarry(address);
                 break;
             }
@@ -1273,7 +1271,7 @@ namespace m6502
             // subtract with carry absolute + x register addressing
             case INS_SBC_ABX: // testing complete
             {
-                Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
+                const Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
                 subWithCarry(address);
                 break;
             }
@@ -1281,7 +1279,7 @@ namespace m6502
             // subtract with carry absolute + y register addressing
             case INS_SBC_ABY: // testing complete
             {
-                Word address = fetchAddressAbsolutePlusRegister(cycles, Y_REGISTER, memory);
+                const Word address = fetchAddressAbsolutePlusRegister(cycles, Y_REGISTER, memory);
                 subWithCarry(address);
                 break;
             }
@@ -1289,7 +1287,7 @@ namespace m6502
             // subtract with carry indexed indirect addressing
             case INS_SBC_INX: // testing complete
             {
-                Word address = fetchAddressIndexedIndirect(cycles, memory);
+                const Word address = fetchAddressIndexedIndirect(cycles, memory);
                 subWithCarry(address);
                 break;
             }
@@ -1297,7 +1295,7 @@ namespace m6502
             // subtract with carry indirect indexed addressing
             case INS_SBC_INY: // testing complete
             {
-                Word address = fetchAddressIndirectIndexed(cycles, memory, true);
+                const Word address = fetchAddressIndirectIndexed(cycles, memory, true);
                 subWithCarry(address);
                 break;
             }
@@ -1309,7 +1307,7 @@ namespace m6502
             // compare accumulator immediate addressing
             case INS_CMP_IMM: // testing complete
             {
-                Byte value = readNextByte(cycles, memory);
+                const Byte value = readNextByte(cycles, memory);
                 setFlagStatus_CMP(value);
                 break;
             }
@@ -1317,8 +1315,8 @@ namespace m6502
             // compare accumulator zero page addressing
             case INS_CMP_ZPG: // testing complete
             {
-                Word address = fetchAddressZeroPage(cycles, memory);
-                Byte value = readByteFromAddress(cycles, address, memory);
+                const Byte address = fetchAddressZeroPage(cycles, memory);
+                const Byte value = readByteFromAddress(cycles, address, memory);
                 setFlagStatus_CMP(value);
                 break;
             }
@@ -1326,8 +1324,8 @@ namespace m6502
             // compare accumulator zero page + x register addressing
             case INS_CMP_ZPX: // testing complete
             {
-                Word address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
-                Byte value = readByteFromAddress(cycles, address, memory);
+                const Byte address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
+                const Byte value = readByteFromAddress(cycles, address, memory);
                 setFlagStatus_CMP(value);
                 break;
             }
@@ -1335,8 +1333,8 @@ namespace m6502
             // compare accumulator absolute addressing
             case INS_CMP_ABS: // testing complete
             {
-                Word address = fetchAddressAbsolute(cycles, memory);
-                Byte value = readByteFromAddress(cycles, address, memory);
+                const Word address = fetchAddressAbsolute(cycles, memory);
+                const Byte value = readByteFromAddress(cycles, address, memory);
                 setFlagStatus_CMP(value);
                 break;
             }
@@ -1344,8 +1342,8 @@ namespace m6502
             // compare accumulator absolute + x register addressing
             case INS_CMP_ABX: // testing complete
             {
-                Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
-                Byte value = readByteFromAddress(cycles, address, memory);
+                const Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
+                const Byte value = readByteFromAddress(cycles, address, memory);
                 setFlagStatus_CMP(value);
                 break;
             }
@@ -1353,8 +1351,8 @@ namespace m6502
             // compare accumulator absolute + y register addressing
             case INS_CMP_ABY: // testing complete
             {
-                Word address = fetchAddressAbsolutePlusRegister(cycles, Y_REGISTER, memory);
-                Byte value = readByteFromAddress(cycles, address, memory);
+                const Word address = fetchAddressAbsolutePlusRegister(cycles, Y_REGISTER, memory);
+                const Byte value = readByteFromAddress(cycles, address, memory);
                 setFlagStatus_CMP(value);
                 break;
             }
@@ -1362,8 +1360,8 @@ namespace m6502
             // compare accumulator indexed indirect addressing
             case INS_CMP_INX: // testing complete
             {
-                Word address = fetchAddressIndexedIndirect(cycles, memory);
-                Byte value = readByteFromAddress(cycles, address, memory);
+                const Word address = fetchAddressIndexedIndirect(cycles, memory);
+                const Byte value = readByteFromAddress(cycles, address, memory);
                 setFlagStatus_CMP(value);
                 break;
             }
@@ -1371,8 +1369,8 @@ namespace m6502
             // compare accumulator indirect indexed addressing
             case INS_CMP_INY: // testing complete
             {
-                Word address = fetchAddressIndirectIndexed(cycles, memory, true);
-                Byte value = readByteFromAddress(cycles, address, memory);
+                const Word address = fetchAddressIndirectIndexed(cycles, memory, true);
+                const Byte value = readByteFromAddress(cycles, address, memory);
                 setFlagStatus_CMP(value);
                 break;
             }
@@ -1420,15 +1418,15 @@ namespace m6502
             // TODO: fix after other commands implemented?
             case INS_BRK:
             {
-                Byte signatureByte = readNextByte(cycles, memory);
+                const Byte signatureByte = readNextByte(cycles, memory);
                 pushByteToStack(cycles, PC >> 8, memory);
                 pushByteToStack(cycles, PC & 0xFF, memory);
                 setBreakFlag(true);
                 pushByteToStack(cycles, P.value, memory);
                 setInterruptFlag(true);
-                Byte irqVectorLow = readByteFromAddress(cycles, IRQ_VECTOR_LOW, memory);
-                Byte irqVectorHigh = readByteFromAddress(cycles, IRQ_VECTOR_HIGH, memory);
-                Word irqVector = (irqVectorHigh << 8) | irqVectorLow;
+                const Byte irqVectorLow = readByteFromAddress(cycles, IRQ_VECTOR_LOW, memory);
+                const Byte irqVectorHigh = readByteFromAddress(cycles, IRQ_VECTOR_HIGH, memory);
+                const Word irqVector = (irqVectorHigh << 8) | irqVectorLow;
                 PC = irqVector;
                 break;
             }
@@ -1450,24 +1448,24 @@ namespace m6502
             }
         }
 
-        const s32 cyclesUsed = cyclesRequested - cycles;
+        const s_int32 cyclesUsed = cyclesRequested - cycles;
         return cyclesUsed;
     }
 
-    Word CPU::loadProgram(Byte *program, u32 numBytes, Mem &memory)
+    Word CPU::loadProgram(Byte *program, u_int32 numBytes, Mem &memory)
     {
         if (!program || numBytes <= 2)
         {
             throw std::invalid_argument("Invalid program or size too small.");
         }
 
-        u32 programPtr = 0;
+        u_int32 programPtr = 0;
         // first word is always address where program is stored (e.g '00 80' @ '$8000')
         const Word loadAddress = program[programPtr] | (program[programPtr + 1] << 8);
         programPtr += 2;
 
-        const u32 programSize = numBytes - 2;
-        for (u32 i = 0; i < programSize; i++)
+        const u_int32 programSize = numBytes - 2;
+        for (u_int32 i = 0; i < programSize; i++)
         {
             memory[loadAddress + i] = program[programPtr++];
         }

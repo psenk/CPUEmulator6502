@@ -10,11 +10,11 @@ namespace m6502
 {
     // custom types
     using Byte = unsigned char;  // 8-bit
+    using sByte = signed char;
     using Word = unsigned short; // 16-bit
 
-    using u32 = unsigned int;
-    using s32 = signed int;
-    using s8 = signed char;
+    using u_int32 = unsigned int;
+    using s_int32 = signed int;
 
     struct Mem;
     union StatusFlags;
@@ -27,13 +27,13 @@ namespace m6502
 
 struct m6502::Mem
 {
-    static constexpr u32 MAX_MEM = 1024 * 64;
+    static constexpr u_int32 MAX_MEM = 1024 * 64;
     Byte data[MAX_MEM];
 
     /* initialize memory */
     void initialize()
     {
-        for (u32 i = 0; i < MAX_MEM; i++)
+        for (u_int32 i = 0; i < MAX_MEM; i++)
         {
             data[i] = 0;
         }
@@ -41,14 +41,14 @@ struct m6502::Mem
 
     /* read one byte from memory
        defining custom [] operator */
-    Byte operator[](u32 address) const
+    Byte operator[](u_int32 address) const
     {
         return data[address];
     }
 
     /* write one byte to memory
        defining custom [] operator */
-    Byte &operator[](u32 address)
+    Byte &operator[](u_int32 address)
     {
         return data[address];
     }
@@ -119,32 +119,32 @@ struct m6502::CPU
         return P.bits.C;
     }
 
-    bool getZeroFlag()
+    const bool getZeroFlag()
     {
         return P.bits.Z;
     }
 
-    bool getInterruptFlag()
+    const bool getInterruptFlag()
     {
         return P.bits.I;
     }
 
-    bool getDecimalFlag()
+    const bool getDecimalFlag()
     {
         return P.bits.D;
     }
 
-    bool getBreakFlag()
+    const bool getBreakFlag()
     {
         return P.bits.B;
     }
 
-    bool getOverflowFlag()
+    const bool getOverflowFlag()
     {
         return P.bits.V;
     }
 
-    bool getNegativeFlag()
+    const bool getNegativeFlag()
     {
         return P.bits.N;
     }
@@ -193,9 +193,9 @@ struct m6502::CPU
      */
 
     /* read next byte from memory */
-    Byte readNextByte(s32 &cycles, const Mem &memory)
+    Byte readNextByte(s_int32 &cycles, const Mem &memory)
     {
-        Byte data = memory[PC];
+        const Byte data = memory[PC];
         PC++;
         cycles--;
         return data;
@@ -203,7 +203,7 @@ struct m6502::CPU
 
     /* read next word from memory
        little endian */
-    Word readNextWord(s32 &cycles, const Mem &memory)
+    Word readNextWord(s_int32 &cycles, const Mem &memory)
     {
         Word data = memory[PC];
         PC++;
@@ -218,7 +218,7 @@ struct m6502::CPU
     }
 
     /* read byte from memory */
-    Byte readByteFromAddress(s32 &cycles, Word address, const Mem &memory)
+    Byte readByteFromAddress(s_int32 &cycles, Word address, const Mem &memory)
     {
         cycles--;
         return memory[address];
@@ -226,7 +226,7 @@ struct m6502::CPU
 
     /* read one word from address
        little endian */
-    Word readWordFromAddress(s32 &cycles, Word address, const Mem &memory)
+    Word readWordFromAddress(s_int32 &cycles, Word address, const Mem &memory)
     {
 
         Word data = memory[address];
@@ -245,14 +245,14 @@ struct m6502::CPU
      */
 
     /* write one byte to memory */
-    void writeByte(s32 &cycles, Byte value, Word address, Mem &memory)
+    void writeByte(s_int32 &cycles, Byte value, Word address, Mem &memory)
     {
         memory[address] = value;
         cycles -= 1;
     }
 
     /* write one word to memory */
-    void writeWord(s32 &cycles, Word value, Word address, Mem &memory)
+    void writeWord(s_int32 &cycles, Word value, Word address, Mem &memory)
     {
         memory[address] = value & 0xFF;
         memory[address + 1] = value >> 8;
@@ -272,7 +272,7 @@ struct m6502::CPU
     }
 
     // push byte to the stack
-    void pushByteToStack(s32 &cycles, Byte value, Mem &memory)
+    void pushByteToStack(s_int32 &cycles, Byte value, Mem &memory)
     {
         writeByte(cycles, value, spToAddress(), memory);
         SP--;
@@ -280,14 +280,14 @@ struct m6502::CPU
 
     // push word to the stack
     // little endian
-    void pushWordToStack(s32 &cycles, Word value, Mem &memory)
+    void pushWordToStack(s_int32 &cycles, Word value, Mem &memory)
     {
         pushByteToStack(cycles, (value >> 8) & 0xFF, memory);
         pushByteToStack(cycles, value & 0xFF, memory);
     }
 
     // pop byte off the stack
-    Byte popByteFromStack(s32 &cycles, Mem &memory)
+    Byte popByteFromStack(s_int32 &cycles, Mem &memory)
     {
         SP++;
         cycles--; // for SP incrementing
@@ -295,7 +295,7 @@ struct m6502::CPU
     }
 
     // pop word off the stack
-    Word popWordFromStack(s32 &cycles, Mem &memory)
+    Word popWordFromStack(s_int32 &cycles, Mem &memory)
     {
         Byte lowByte = popByteFromStack(cycles, memory);
         Byte highByte = popByteFromStack(cycles, memory);
@@ -488,12 +488,12 @@ struct m6502::CPU
      * ADDRESSING MODES
      */
 
-    s32 fetchAddressZeroPage(s32 &cycles, const Mem &memory);
-    s32 fetchAddressZeroPagePlusRegister(s32 &cycles, RegisterType reg, const Mem &memory);
-    s32 fetchAddressAbsolute(s32 &cycles, const Mem &memory);
-    s32 fetchAddressAbsolutePlusRegister(s32 &cycles, RegisterType reg, const Mem &memory);
-    s32 fetchAddressIndexedIndirect(s32 &cycles, const Mem &memory);
-    s32 fetchAddressIndirectIndexed(s32 &cycles, const Mem &memory, bool extraCycle);
+    s_int32 fetchAddressZeroPage(s_int32 &cycles, const Mem &memory);
+    s_int32 fetchAddressZeroPagePlusRegister(s_int32 &cycles, RegisterType reg, const Mem &memory);
+    s_int32 fetchAddressAbsolute(s_int32 &cycles, const Mem &memory);
+    s_int32 fetchAddressAbsolutePlusRegister(s_int32 &cycles, RegisterType reg, const Mem &memory);
+    s_int32 fetchAddressIndexedIndirect(s_int32 &cycles, const Mem &memory);
+    s_int32 fetchAddressIndirectIndexed(s_int32 &cycles, const Mem &memory, bool extraCycle);
 
     /**
      * SET FLAGS
@@ -509,6 +509,6 @@ struct m6502::CPU
      * CPU FUNCTIONS
      */
 
-    s32 execute(s32 cycles, Mem &memory);
-    Word loadProgram(Byte *program, u32 numBytes, Mem &memory);
+    s_int32 execute(s_int32 cycles, Mem &memory);
+    Word loadProgram(Byte *program, u_int32 numBytes, Mem &memory);
 };

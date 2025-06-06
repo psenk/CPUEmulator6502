@@ -23,13 +23,13 @@ protected:
     {
         // arrange:
         using namespace m6502;
-        static constexpr s32 NUM_CYCLES = 2;
+        static constexpr s_int32 NUM_CYCLES = 2;
         cpu.*inputRegister = value;
 
         mem[0xFFFC] = opcode;
 
         // act:
-        s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+        s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
         // assert:
         EXPECT_EQ(cpu.*outputRegister, value);

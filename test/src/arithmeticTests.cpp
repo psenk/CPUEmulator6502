@@ -41,7 +41,7 @@ TEST_F(ArithmeticTests, ADC_ZeroValues)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 2;
+    static constexpr s_int32 NUM_CYCLES = 2;
     cpu.A = 0x00;
     cpu.P.bits.C = false;
 
@@ -49,7 +49,7 @@ TEST_F(ArithmeticTests, ADC_ZeroValues)
     mem[0xFFFD] = 0x00;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x00);
@@ -63,7 +63,7 @@ TEST_F(ArithmeticTests, ADC_ZeroResult)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 2;
+    static constexpr s_int32 NUM_CYCLES = 2;
     cpu.A = 0x10;
     cpu.P.bits.C = false;
 
@@ -71,7 +71,7 @@ TEST_F(ArithmeticTests, ADC_ZeroResult)
     mem[0xFFFD] = 0xF0;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x00);
@@ -85,7 +85,7 @@ TEST_F(ArithmeticTests, ADC_NegativeResult)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 2;
+    static constexpr s_int32 NUM_CYCLES = 2;
     cpu.A = 0x10;
     cpu.P.bits.C = false;
 
@@ -93,7 +93,7 @@ TEST_F(ArithmeticTests, ADC_NegativeResult)
     mem[0xFFFD] = 0x84;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x94);
@@ -107,7 +107,7 @@ TEST_F(ArithmeticTests, ADC_CarryFlagBecomesSet)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 2;
+    static constexpr s_int32 NUM_CYCLES = 2;
     cpu.A = 0xFE;
     cpu.P.bits.C = false;
 
@@ -115,7 +115,7 @@ TEST_F(ArithmeticTests, ADC_CarryFlagBecomesSet)
     mem[0xFFFD] = 0x03;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x01);
@@ -129,7 +129,7 @@ TEST_F(ArithmeticTests, ADC_CarryFlagRemainsSet)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 2;
+    static constexpr s_int32 NUM_CYCLES = 2;
     cpu.A = 0xFE;
     cpu.P.bits.C = true;
 
@@ -137,7 +137,7 @@ TEST_F(ArithmeticTests, ADC_CarryFlagRemainsSet)
     mem[0xFFFD] = 0x02;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x01);
@@ -151,14 +151,14 @@ TEST_F(ArithmeticTests, ADC_OverflowFlagSet)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 2;
+    static constexpr s_int32 NUM_CYCLES = 2;
     cpu.A = 0x7F;
 
     mem[0xFFFC] = CPU::INS_ADC_IMM;
     mem[0xFFFD] = 0x02;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x81);
@@ -173,7 +173,7 @@ TEST_F(ArithmeticTests, ADC_FlagsSetTest)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 2;
+    static constexpr s_int32 NUM_CYCLES = 2;
     cpu.A = 0x00;
     cpu.P.bits.C = false;
     cpu.P.bits.Z = false;
@@ -184,7 +184,7 @@ TEST_F(ArithmeticTests, ADC_FlagsSetTest)
     mem[0xFFFD] = 0x00;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x00);
@@ -205,14 +205,14 @@ TEST_F(ArithmeticTests, ADC_Immediate)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 2;
+    static constexpr s_int32 NUM_CYCLES = 2;
     cpu.A = 0x12;
 
     mem[0xFFFC] = CPU::INS_ADC_IMM;
     mem[0xFFFD] = 0x13;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x25);
@@ -225,7 +225,7 @@ TEST_F(ArithmeticTests, ADC_ZeroPage)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 3;
+    static constexpr s_int32 NUM_CYCLES = 3;
     cpu.A = 0x12;
 
     mem[0xFFFC] = CPU::INS_ADC_ZPG;
@@ -233,7 +233,7 @@ TEST_F(ArithmeticTests, ADC_ZeroPage)
     mem[0x0042] = 0x13;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x25);
@@ -246,7 +246,7 @@ TEST_F(ArithmeticTests, ADC_ZeroPageX)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 4;
+    static constexpr s_int32 NUM_CYCLES = 4;
     cpu.A = 0x12;
     cpu.X = 0x10;
 
@@ -255,7 +255,7 @@ TEST_F(ArithmeticTests, ADC_ZeroPageX)
     mem[0x0052] = 0x13;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x25);
@@ -268,7 +268,7 @@ TEST_F(ArithmeticTests, ADC_Absolute)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 4;
+    static constexpr s_int32 NUM_CYCLES = 4;
     cpu.A = 0x12;
 
     mem[0xFFFC] = CPU::INS_ADC_ABS;
@@ -277,7 +277,7 @@ TEST_F(ArithmeticTests, ADC_Absolute)
     mem[0x0420] = 0x13;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x25);
@@ -290,7 +290,7 @@ TEST_F(ArithmeticTests, ADC_AbsoluteX)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 4;
+    static constexpr s_int32 NUM_CYCLES = 4;
     cpu.A = 0x12;
     cpu.X = 0x10;
 
@@ -300,7 +300,7 @@ TEST_F(ArithmeticTests, ADC_AbsoluteX)
     mem[0x0430] = 0x13;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x25);
@@ -313,7 +313,7 @@ TEST_F(ArithmeticTests, ADC_AbsoluteX_PageCrossed)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 5;
+    static constexpr s_int32 NUM_CYCLES = 5;
     cpu.A = 0x12;
     cpu.X = 0xFF;
 
@@ -323,7 +323,7 @@ TEST_F(ArithmeticTests, ADC_AbsoluteX_PageCrossed)
     mem[0x051F] = 0x13;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x25);
@@ -336,7 +336,7 @@ TEST_F(ArithmeticTests, ADC_AbsoluteY)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 4;
+    static constexpr s_int32 NUM_CYCLES = 4;
     cpu.A = 0x12;
     cpu.Y = 0x10;
 
@@ -346,7 +346,7 @@ TEST_F(ArithmeticTests, ADC_AbsoluteY)
     mem[0x0430] = 0x13;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x25);
@@ -359,7 +359,7 @@ TEST_F(ArithmeticTests, ADC_IndexedIndirect)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 6;
+    static constexpr s_int32 NUM_CYCLES = 6;
     cpu.A = 0x12;
     cpu.X = 0x04;
 
@@ -370,7 +370,7 @@ TEST_F(ArithmeticTests, ADC_IndexedIndirect)
     mem[0x0420] = 0x13;
 
     // act
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert
     EXPECT_EQ(cpu.A, 0x25);
@@ -383,7 +383,7 @@ TEST_F(ArithmeticTests, ADC_IndirectIndexed)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 5;
+    static constexpr s_int32 NUM_CYCLES = 5;
     cpu.A = 0x12;
     cpu.Y = 0x05;
 
@@ -394,7 +394,7 @@ TEST_F(ArithmeticTests, ADC_IndirectIndexed)
     mem[0x0425] = 0x13;
 
     // act
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert
     EXPECT_EQ(cpu.A, 0x25);
@@ -407,7 +407,7 @@ TEST_F(ArithmeticTests, ADC_IndirectIndexed_PageCrossed)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 6;
+    static constexpr s_int32 NUM_CYCLES = 6;
     cpu.A = 0x12;
     cpu.Y = 0xFF;
 
@@ -418,7 +418,7 @@ TEST_F(ArithmeticTests, ADC_IndirectIndexed_PageCrossed)
     mem[0x051F] = 0x13;
 
     // act
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert
     EXPECT_EQ(cpu.A, 0x25);
@@ -438,7 +438,7 @@ TEST_F(ArithmeticTests, SBC_ZeroValues)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 2;
+    static constexpr s_int32 NUM_CYCLES = 2;
     cpu.A = 0x00;
     cpu.P.bits.C = true;
 
@@ -446,7 +446,7 @@ TEST_F(ArithmeticTests, SBC_ZeroValues)
     mem[0xFFFD] = 0x00;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x00);
@@ -460,7 +460,7 @@ TEST_F(ArithmeticTests, SBC_ZeroResult)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 2;
+    static constexpr s_int32 NUM_CYCLES = 2;
     cpu.A = 0x10;
     cpu.P.bits.C = true;
 
@@ -468,7 +468,7 @@ TEST_F(ArithmeticTests, SBC_ZeroResult)
     mem[0xFFFD] = 0x10;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x00);
@@ -482,7 +482,7 @@ TEST_F(ArithmeticTests, SBC_NegativeResult)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 2;
+    static constexpr s_int32 NUM_CYCLES = 2;
     cpu.A = 0x10;
     cpu.P.bits.C = true;
 
@@ -490,7 +490,7 @@ TEST_F(ArithmeticTests, SBC_NegativeResult)
     mem[0xFFFD] = 0x84;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x8C);
@@ -504,7 +504,7 @@ TEST_F(ArithmeticTests, SBC_CarryFlagUnset_BecomesSet)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 2;
+    static constexpr s_int32 NUM_CYCLES = 2;
     cpu.A = 0x64;
     cpu.P.bits.C = false;
 
@@ -512,7 +512,7 @@ TEST_F(ArithmeticTests, SBC_CarryFlagUnset_BecomesSet)
     mem[0xFFFD] = 0x1E;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x45);
@@ -526,7 +526,7 @@ TEST_F(ArithmeticTests, SBC_CarryFlagSet_RemainsSet)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 2;
+    static constexpr s_int32 NUM_CYCLES = 2;
     cpu.A = 0x1E;
     cpu.P.bits.C = true;
 
@@ -534,7 +534,7 @@ TEST_F(ArithmeticTests, SBC_CarryFlagSet_RemainsSet)
     mem[0xFFFD] = 0x14;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x0A);
@@ -548,7 +548,7 @@ TEST_F(ArithmeticTests, SBC_CarryFlagSet_BecomesUnset)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 2;
+    static constexpr s_int32 NUM_CYCLES = 2;
     cpu.A = 0x1E;
     cpu.P.bits.C = true;
 
@@ -556,7 +556,7 @@ TEST_F(ArithmeticTests, SBC_CarryFlagSet_BecomesUnset)
     mem[0xFFFD] = 0x32;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0xEC);
@@ -570,7 +570,7 @@ TEST_F(ArithmeticTests, SBC_CarryFlagUnset_RemainsUnset)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 2;
+    static constexpr s_int32 NUM_CYCLES = 2;
     cpu.A = 0x1E;
     cpu.P.bits.C = false;
 
@@ -578,7 +578,7 @@ TEST_F(ArithmeticTests, SBC_CarryFlagUnset_RemainsUnset)
     mem[0xFFFD] = 0x32;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0xEB);
@@ -592,7 +592,7 @@ TEST_F(ArithmeticTests, SBC_OverflowFlagSet)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 2;
+    static constexpr s_int32 NUM_CYCLES = 2;
     cpu.A = 0x80;
     cpu.P.bits.C = true;
 
@@ -600,7 +600,7 @@ TEST_F(ArithmeticTests, SBC_OverflowFlagSet)
     mem[0xFFFD] = 0x01;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x7F);
@@ -614,7 +614,7 @@ TEST_F(ArithmeticTests, SBC_FlagsSetTest)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 2;
+    static constexpr s_int32 NUM_CYCLES = 2;
     cpu.A = 0x00;
     cpu.P.bits.C = true;
     cpu.P.bits.Z = false;
@@ -625,7 +625,7 @@ TEST_F(ArithmeticTests, SBC_FlagsSetTest)
     mem[0xFFFD] = 0x00;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x00);
@@ -647,14 +647,14 @@ TEST_F(ArithmeticTests, SBC_Immediate)
     using namespace m6502;
     cpu.P.bits.C = true;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 2;
+    static constexpr s_int32 NUM_CYCLES = 2;
     cpu.A = 0x13;
 
     mem[0xFFFC] = CPU::INS_SBC_IMM;
     mem[0xFFFD] = 0x12;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x01);
@@ -668,7 +668,7 @@ TEST_F(ArithmeticTests, SBC_ZeroPage)
     using namespace m6502;
     cpu.P.bits.C = true;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 3;
+    static constexpr s_int32 NUM_CYCLES = 3;
     cpu.A = 0x13;
 
     mem[0xFFFC] = CPU::INS_SBC_ZPG;
@@ -676,7 +676,7 @@ TEST_F(ArithmeticTests, SBC_ZeroPage)
     mem[0x0042] = 0x12;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x01);
@@ -690,7 +690,7 @@ TEST_F(ArithmeticTests, SBC_ZeroPageX)
     using namespace m6502;
     cpu.P.bits.C = true;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 4;
+    static constexpr s_int32 NUM_CYCLES = 4;
     cpu.A = 0x13;
     cpu.X = 0x10;
 
@@ -699,7 +699,7 @@ TEST_F(ArithmeticTests, SBC_ZeroPageX)
     mem[0x0052] = 0x12;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x01);
@@ -713,7 +713,7 @@ TEST_F(ArithmeticTests, SBC_Absolute)
     using namespace m6502;
     cpu.P.bits.C = true;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 4;
+    static constexpr s_int32 NUM_CYCLES = 4;
     cpu.A = 0x13;
 
     mem[0xFFFC] = CPU::INS_SBC_ABS;
@@ -722,7 +722,7 @@ TEST_F(ArithmeticTests, SBC_Absolute)
     mem[0x0420] = 0x12;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x01);
@@ -736,7 +736,7 @@ TEST_F(ArithmeticTests, SBC_AbsoluteX)
     using namespace m6502;
     cpu.P.bits.C = true;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 4;
+    static constexpr s_int32 NUM_CYCLES = 4;
     cpu.A = 0x13;
     cpu.X = 0x10;
 
@@ -746,7 +746,7 @@ TEST_F(ArithmeticTests, SBC_AbsoluteX)
     mem[0x0430] = 0x12;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x01);
@@ -760,7 +760,7 @@ TEST_F(ArithmeticTests, SBC_AbsoluteX_PageCrossed)
     using namespace m6502;
     cpu.P.bits.C = true;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 5;
+    static constexpr s_int32 NUM_CYCLES = 5;
     cpu.A = 0x13;
     cpu.X = 0xFF;
 
@@ -770,7 +770,7 @@ TEST_F(ArithmeticTests, SBC_AbsoluteX_PageCrossed)
     mem[0x051F] = 0x12;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x01);
@@ -784,7 +784,7 @@ TEST_F(ArithmeticTests, SBC_AbsoluteY)
     using namespace m6502;
     cpu.P.bits.C = true;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 4;
+    static constexpr s_int32 NUM_CYCLES = 4;
     cpu.A = 0x13;
     cpu.Y = 0x10;
 
@@ -794,7 +794,7 @@ TEST_F(ArithmeticTests, SBC_AbsoluteY)
     mem[0x0430] = 0x12;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x01);
@@ -808,7 +808,7 @@ TEST_F(ArithmeticTests, SBC_IndexedIndirect)
     using namespace m6502;
     cpu.P.bits.C = true;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 6;
+    static constexpr s_int32 NUM_CYCLES = 6;
     cpu.A = 0x13;
     cpu.X = 0x04;
 
@@ -819,7 +819,7 @@ TEST_F(ArithmeticTests, SBC_IndexedIndirect)
     mem[0x0420] = 0x12;
 
     // act
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert
     EXPECT_EQ(cpu.A, 0x01);
@@ -833,7 +833,7 @@ TEST_F(ArithmeticTests, SBC_IndirectIndexed)
     using namespace m6502;
     cpu.P.bits.C = true;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 5;
+    static constexpr s_int32 NUM_CYCLES = 5;
     cpu.A = 0x13;
     cpu.Y = 0x05;
 
@@ -844,7 +844,7 @@ TEST_F(ArithmeticTests, SBC_IndirectIndexed)
     mem[0x0425] = 0x12;
 
     // act
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert
     EXPECT_EQ(cpu.A, 0x01);
@@ -858,7 +858,7 @@ TEST_F(ArithmeticTests, SBC_IndirectIndexed_PageCrossed)
     using namespace m6502;
     cpu.P.bits.C = true;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 6;
+    static constexpr s_int32 NUM_CYCLES = 6;
     cpu.A = 0x13;
     cpu.Y = 0xFF;
 
@@ -869,7 +869,7 @@ TEST_F(ArithmeticTests, SBC_IndirectIndexed_PageCrossed)
     mem[0x051F] = 0x12;
 
     // act
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert
     EXPECT_EQ(cpu.A, 0x01);
@@ -886,7 +886,7 @@ TEST_F(ArithmeticTests, CMP_ZeroValues)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 2;
+    static constexpr s_int32 NUM_CYCLES = 2;
     cpu.A = 0x00;
     cpu.P.bits.C = false;
 
@@ -894,7 +894,7 @@ TEST_F(ArithmeticTests, CMP_ZeroValues)
     mem[0xFFFD] = 0x00;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x00);
@@ -909,7 +909,7 @@ TEST_F(ArithmeticTests, CMP_ZeroResult)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 2;
+    static constexpr s_int32 NUM_CYCLES = 2;
     cpu.A = 0x10;
     cpu.P.bits.C = false;
 
@@ -917,7 +917,7 @@ TEST_F(ArithmeticTests, CMP_ZeroResult)
     mem[0xFFFD] = 0x10;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x10);
@@ -932,7 +932,7 @@ TEST_F(ArithmeticTests, CMP_NegativeResult)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 2;
+    static constexpr s_int32 NUM_CYCLES = 2;
     cpu.A = 0x10;
     cpu.P.bits.C = false;
 
@@ -940,7 +940,7 @@ TEST_F(ArithmeticTests, CMP_NegativeResult)
     mem[0xFFFD] = 0x84;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x10);
@@ -955,7 +955,7 @@ TEST_F(ArithmeticTests, CMP_CarryFlagBecomesSet)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 2;
+    static constexpr s_int32 NUM_CYCLES = 2;
     cpu.A = 0x10;
     cpu.P.bits.C = false;
 
@@ -963,7 +963,7 @@ TEST_F(ArithmeticTests, CMP_CarryFlagBecomesSet)
     mem[0xFFFD] = 0x00;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x10);
@@ -977,7 +977,7 @@ TEST_F(ArithmeticTests, CMP_CarryFlagBecomesUnset)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 2;
+    static constexpr s_int32 NUM_CYCLES = 2;
     cpu.A = 0x00;
     cpu.P.bits.C = true;
 
@@ -985,7 +985,7 @@ TEST_F(ArithmeticTests, CMP_CarryFlagBecomesUnset)
     mem[0xFFFD] = 0x10;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x00);
@@ -999,7 +999,7 @@ TEST_F(ArithmeticTests, CMP_FlagsSetTest)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 2;
+    static constexpr s_int32 NUM_CYCLES = 2;
     cpu.A = 0x00;
     cpu.P.bits.C = false;
     cpu.P.bits.Z = false;
@@ -1009,7 +1009,7 @@ TEST_F(ArithmeticTests, CMP_FlagsSetTest)
     mem[0xFFFD] = 0x00;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x00);
@@ -1029,7 +1029,7 @@ TEST_F(ArithmeticTests, CMP_Immediate)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 2;
+    static constexpr s_int32 NUM_CYCLES = 2;
     cpu.P.bits.C = false;
     cpu.A = 0x10;
 
@@ -1037,7 +1037,7 @@ TEST_F(ArithmeticTests, CMP_Immediate)
     mem[0xFFFD] = 0x00;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x10);
@@ -1050,7 +1050,7 @@ TEST_F(ArithmeticTests, CMP_ZeroPage)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 3;
+    static constexpr s_int32 NUM_CYCLES = 3;
     cpu.P.bits.C = false;
     cpu.A = 0x10;
 
@@ -1059,7 +1059,7 @@ TEST_F(ArithmeticTests, CMP_ZeroPage)
     mem[0x0042] = 0x00;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x10);
@@ -1072,7 +1072,7 @@ TEST_F(ArithmeticTests, CMP_ZeroPageX)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 4;
+    static constexpr s_int32 NUM_CYCLES = 4;
     cpu.P.bits.C = false;
     cpu.A = 0x10;
     cpu.X = 0x10;
@@ -1082,7 +1082,7 @@ TEST_F(ArithmeticTests, CMP_ZeroPageX)
     mem[0x0052] = 0x00;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x10);
@@ -1095,7 +1095,7 @@ TEST_F(ArithmeticTests, CMP_Absolute)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 4;
+    static constexpr s_int32 NUM_CYCLES = 4;
     cpu.P.bits.C = false;
     cpu.A = 0x10;
 
@@ -1105,7 +1105,7 @@ TEST_F(ArithmeticTests, CMP_Absolute)
     mem[0x0420] = 0x00;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x10);
@@ -1118,7 +1118,7 @@ TEST_F(ArithmeticTests, CMP_AbsoluteX)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 4;
+    static constexpr s_int32 NUM_CYCLES = 4;
     cpu.P.bits.C = false;
     cpu.A = 0x10;
     cpu.X = 0x10;
@@ -1129,7 +1129,7 @@ TEST_F(ArithmeticTests, CMP_AbsoluteX)
     mem[0x0430] = 0x00;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x10);
@@ -1142,7 +1142,7 @@ TEST_F(ArithmeticTests, CMP_AbsoluteX_PageCrossed)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 5;
+    static constexpr s_int32 NUM_CYCLES = 5;
     cpu.P.bits.C = false;
     cpu.A = 0x10;
     cpu.X = 0xFF;
@@ -1153,7 +1153,7 @@ TEST_F(ArithmeticTests, CMP_AbsoluteX_PageCrossed)
     mem[0x051F] = 0x00;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x10);
@@ -1166,7 +1166,7 @@ TEST_F(ArithmeticTests, CMP_AbsoluteY)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 4;
+    static constexpr s_int32 NUM_CYCLES = 4;
     cpu.P.bits.C = false;
     cpu.A = 0x10;
     cpu.Y = 0x10;
@@ -1177,7 +1177,7 @@ TEST_F(ArithmeticTests, CMP_AbsoluteY)
     mem[0x0430] = 0x00;
 
     // act:
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert:
     EXPECT_EQ(cpu.A, 0x10);
@@ -1190,7 +1190,7 @@ TEST_F(ArithmeticTests, CMP_IndexedIndirect)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 6;
+    static constexpr s_int32 NUM_CYCLES = 6;
     cpu.P.bits.C = false;
     cpu.A = 0x10;
     cpu.X = 0x04;
@@ -1202,7 +1202,7 @@ TEST_F(ArithmeticTests, CMP_IndexedIndirect)
     mem[0x0420] = 0x00;
 
     // act
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert
     EXPECT_EQ(cpu.A, 0x10);
@@ -1215,7 +1215,7 @@ TEST_F(ArithmeticTests, CMP_IndirectIndexed)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 5;
+    static constexpr s_int32 NUM_CYCLES = 5;
     cpu.P.bits.C = false;
     cpu.A = 0x10;
     cpu.Y = 0x05;
@@ -1227,7 +1227,7 @@ TEST_F(ArithmeticTests, CMP_IndirectIndexed)
     mem[0x0425] = 0x00;
 
     // act
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert
     EXPECT_EQ(cpu.A, 0x10);
@@ -1240,7 +1240,7 @@ TEST_F(ArithmeticTests, CMP_IndirectIndexed_PageCrossed)
     // arrange:
     using namespace m6502;
     CPU cpuCopy = cpu;
-    static constexpr s32 NUM_CYCLES = 6;
+    static constexpr s_int32 NUM_CYCLES = 6;
     cpu.P.bits.C = false;
     cpu.A = 0x10;
     cpu.Y = 0xFF;
@@ -1252,7 +1252,7 @@ TEST_F(ArithmeticTests, CMP_IndirectIndexed_PageCrossed)
     mem[0x051F] = 0x00;
 
     // act
-    s32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
 
     // assert
     EXPECT_EQ(cpu.A, 0x10);
