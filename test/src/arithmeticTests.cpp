@@ -1024,6 +1024,10 @@ TEST_F(ArithmeticTests, CMP_FlagsSetTest)
  * COMPARE INSTRUCTIONS
  */
 
+/**
+ * COMPARE ACCUMULATOR
+ */
+
 TEST_F(ArithmeticTests, CMP_Immediate)
 {
     // arrange:
@@ -1259,3 +1263,152 @@ TEST_F(ArithmeticTests, CMP_IndirectIndexed_PageCrossed)
     EXPECT_TRUE(cpu.P.bits.C);
     EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
 }
+
+/**
+ * COMPARE X REGISTER
+ */
+
+TEST_F(ArithmeticTests, CPX_Immediate)
+{
+    // arrange:
+    using namespace m6502;
+    CPU cpuCopy = cpu;
+    static constexpr s_int32 NUM_CYCLES = 2;
+    cpu.P.bits.C = false;
+    cpu.X = 0x00;
+
+    mem[0xFFFC] = CPU::INS_CPX_IMM;
+    mem[0xFFFD] = 0x00;
+
+    // act:
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+
+    // assert:
+    EXPECT_EQ(cpu.X, 0x00);
+    EXPECT_TRUE(cpu.P.bits.C);
+    EXPECT_TRUE(cpu.P.bits.Z);
+    EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
+}
+
+TEST_F(ArithmeticTests, CPX_ZeroPage)
+{
+    // arrange:
+    using namespace m6502;
+    CPU cpuCopy = cpu;
+    static constexpr s_int32 NUM_CYCLES = 3;
+    cpu.P.bits.C = false;
+    cpu.X = 0x00;
+
+    mem[0xFFFC] = CPU::INS_CPX_ZPG;
+    mem[0xFFFD] = 0x42;
+    mem[0x0042] = 0x00;
+
+    // act:
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+
+    // assert:
+    EXPECT_EQ(cpu.X, 0x00);
+    EXPECT_TRUE(cpu.P.bits.C);
+    EXPECT_TRUE(cpu.P.bits.Z);
+    EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
+}
+
+TEST_F(ArithmeticTests, CPX_Absolute)
+{
+    // arrange:
+    using namespace m6502;
+    CPU cpuCopy = cpu;
+    static constexpr s_int32 NUM_CYCLES = 4;
+    cpu.P.bits.C = false;
+    cpu.X = 0x00;
+
+    mem[0xFFFC] = CPU::INS_CPX_ABS;
+    mem[0xFFFD] = 0x20;
+    mem[0xFFFE] = 0x04;
+    mem[0x0420] = 0x00;
+
+    // act:
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+
+    // assert:
+    EXPECT_EQ(cpu.X, 0x00);
+    EXPECT_TRUE(cpu.P.bits.C);
+    EXPECT_TRUE(cpu.P.bits.Z);
+    EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
+}
+
+/**
+ * COMPARE Y REGISTER
+ */
+
+TEST_F(ArithmeticTests, CPY_Immediate)
+{
+    // arrange:
+    using namespace m6502;
+    CPU cpuCopy = cpu;
+    static constexpr s_int32 NUM_CYCLES = 2;
+    cpu.P.bits.C = false;
+    cpu.Y = 0x00;
+
+    mem[0xFFFC] = CPU::INS_CPY_IMM;
+    mem[0xFFFD] = 0x00;
+
+    // act:
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+
+    // assert:
+    EXPECT_EQ(cpu.Y, 0x00);
+    EXPECT_TRUE(cpu.P.bits.C);
+    EXPECT_TRUE(cpu.P.bits.Z);
+    EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
+}
+
+TEST_F(ArithmeticTests, CPY_ZeroPage)
+{
+    // arrange:
+    using namespace m6502;
+    CPU cpuCopy = cpu;
+    static constexpr s_int32 NUM_CYCLES = 3;
+    cpu.P.bits.C = false;
+    cpu.Y = 0x00;
+
+    mem[0xFFFC] = CPU::INS_CPY_ZPG;
+    mem[0xFFFD] = 0x42;
+    mem[0x0042] = 0x00;
+
+    // act:
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+
+    // assert:
+    EXPECT_EQ(cpu.Y, 0x00);
+    EXPECT_TRUE(cpu.P.bits.C);
+    EXPECT_TRUE(cpu.P.bits.Z);
+    EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
+}
+
+TEST_F(ArithmeticTests, CPY_Absolute)
+{
+    // arrange:
+    using namespace m6502;
+    CPU cpuCopy = cpu;
+    static constexpr s_int32 NUM_CYCLES = 4;
+    cpu.P.bits.C = false;
+    cpu.Y = 0x00;
+
+    mem[0xFFFC] = CPU::INS_CPY_ABS;
+    mem[0xFFFD] = 0x20;
+    mem[0xFFFE] = 0x04;
+    mem[0x0420] = 0x00;
+
+    // act:
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+
+    // assert:
+    EXPECT_EQ(cpu.Y, 0x00);
+    EXPECT_TRUE(cpu.P.bits.C);
+    EXPECT_TRUE(cpu.P.bits.Z);
+    EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
+}
+
+// todo: copy for cpy
+// todo: write instruction code

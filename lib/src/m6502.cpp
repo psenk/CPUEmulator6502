@@ -143,13 +143,13 @@ namespace m6502
         setOverflowFlag(vFlag);
     }
 
-    void CPU::setFlagStatus_CMP(Byte operand)
+    void CPU::setFlagStatus_CMP(Byte operand, Byte &reg)
     {
-        const Byte result = A - operand;
-        const bool cFlag = (A >= operand);
+        const Byte result = reg - operand;
+        const bool cFlag = (reg >= operand);
         setCarryFlag(cFlag);
 
-        const bool zFlag = (A == operand);
+        const bool zFlag = (reg == operand);
         setZeroFlag(zFlag);
 
         const bool nFlag = (result & 0x80) ? 1 : 0;
@@ -1304,11 +1304,15 @@ namespace m6502
              * COMPARE INSTRUCTIONS
              */
 
+            /**
+             * COMPARE ACCUMULATOR
+             */
+
             // compare accumulator immediate addressing
             case INS_CMP_IMM: // testing complete
             {
                 const Byte value = readNextByte(cycles, memory);
-                setFlagStatus_CMP(value);
+                setFlagStatus_CMP(value, A);
                 break;
             }
 
@@ -1317,7 +1321,7 @@ namespace m6502
             {
                 const Byte address = fetchAddressZeroPage(cycles, memory);
                 const Byte value = readByteFromAddress(cycles, address, memory);
-                setFlagStatus_CMP(value);
+                setFlagStatus_CMP(value, A);
                 break;
             }
 
@@ -1326,7 +1330,7 @@ namespace m6502
             {
                 const Byte address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
                 const Byte value = readByteFromAddress(cycles, address, memory);
-                setFlagStatus_CMP(value);
+                setFlagStatus_CMP(value, A);
                 break;
             }
 
@@ -1335,7 +1339,7 @@ namespace m6502
             {
                 const Word address = fetchAddressAbsolute(cycles, memory);
                 const Byte value = readByteFromAddress(cycles, address, memory);
-                setFlagStatus_CMP(value);
+                setFlagStatus_CMP(value, A);
                 break;
             }
 
@@ -1344,7 +1348,7 @@ namespace m6502
             {
                 const Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
                 const Byte value = readByteFromAddress(cycles, address, memory);
-                setFlagStatus_CMP(value);
+                setFlagStatus_CMP(value, A);
                 break;
             }
 
@@ -1353,7 +1357,7 @@ namespace m6502
             {
                 const Word address = fetchAddressAbsolutePlusRegister(cycles, Y_REGISTER, memory);
                 const Byte value = readByteFromAddress(cycles, address, memory);
-                setFlagStatus_CMP(value);
+                setFlagStatus_CMP(value, A);
                 break;
             }
 
@@ -1362,7 +1366,7 @@ namespace m6502
             {
                 const Word address = fetchAddressIndexedIndirect(cycles, memory);
                 const Byte value = readByteFromAddress(cycles, address, memory);
-                setFlagStatus_CMP(value);
+                setFlagStatus_CMP(value, A);
                 break;
             }
 
@@ -1371,43 +1375,63 @@ namespace m6502
             {
                 const Word address = fetchAddressIndirectIndexed(cycles, memory, true);
                 const Byte value = readByteFromAddress(cycles, address, memory);
-                setFlagStatus_CMP(value);
+                setFlagStatus_CMP(value, A);
                 break;
             }
+
+            /**
+             * COMPARE X REGISTER
+             */
 
             // compare x register immediate addressing
             case INS_CPX_IMM:
             {
+                const Byte value = readNextByte(cycles, memory);
+                setFlagStatus_CMP(value, X);
                 break;
             }
 
             // compare x register zero page addressing
             case INS_CPX_ZPG:
             {
+                const Byte address = fetchAddressZeroPage(cycles, memory);
+                const Byte value = readByteFromAddress(cycles, address, memory);
+                setFlagStatus_CMP(value, X);
                 break;
             }
 
             // compare x register absolute addressing
             case INS_CPX_ABS:
             {
+                const Word address = fetchAddressAbsolute(cycles, memory);
+                const Byte value = readByteFromAddress(cycles, address, memory);
+                setFlagStatus_CMP(value, X);
                 break;
             }
 
             // compare y register immediate addressing
             case INS_CPY_IMM:
             {
+                const Byte value = readNextByte(cycles, memory);
+                setFlagStatus_CMP(value, Y);
                 break;
             }
 
             // compare y register zero page addressing
             case INS_CPY_ZPG:
             {
+                const Byte address = fetchAddressZeroPage(cycles, memory);
+                const Byte value = readByteFromAddress(cycles, address, memory);
+                setFlagStatus_CMP(value, Y);
                 break;
             }
 
             // compare y register absolute addressing
             case INS_CPY_ABS:
             {
+                const Word address = fetchAddressAbsolute(cycles, memory);
+                const Byte value = readByteFromAddress(cycles, address, memory);
+                setFlagStatus_CMP(value, Y);
                 break;
             }
 

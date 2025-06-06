@@ -503,7 +503,7 @@ struct m6502::CPU
     void setFlagStatus_BIT(Byte value);
     void setFlagStatus_ADC(Word value, Byte aCopy, Byte operand);
     void setFlagStatus_SBC(Word value, Byte regCopy, Byte operand);
-    void setFlagStatus_CMP(Byte operand);
+    void setFlagStatus_CMP(Byte operand, Byte &reg);
 
     /**
      * CPU FUNCTIONS
