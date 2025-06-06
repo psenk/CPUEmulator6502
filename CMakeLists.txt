@@ -1,3 +1,7 @@
+if(WIN32 AND NOT DEFINED CMAKE_GENERATOR)
+  set(CMAKE_GENERATOR "Visual Studio 17 2022" CACHE STRING "Generator" FORCE)
+endif()
+
 cmake_minimum_required(VERSION 3.14)
 project(CPUEmulator6502)
 
