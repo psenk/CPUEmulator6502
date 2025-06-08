@@ -156,6 +156,16 @@ namespace m6502
         setNegativeFlag(nFlag);
     }
 
+    void CPU::setFlagStatus_Shift(Byte oldValue, Byte newValue, bool left = false)
+    {
+        const bool cFlag = oldValue & (left ? 0x80 : 0x01);
+        setCarryFlag(cFlag);
+        const bool zFlag = A == 0 ? 1 : 0;
+        setZeroFlag(zFlag);
+        const bool nFlag = newValue & 0x80;
+        setNegativeFlag(nFlag);
+    }
+
     /**
      * CPU EXECUTE FUNCTION
      */
@@ -236,6 +246,7 @@ namespace m6502
             setFlagStatus_ADC(result, aCopy, value);
         };
 
+        // subtract with carry
         auto subWithCarry = [&cycles, &memory, this](const Word address)
         {
             const Byte value = readByteFromAddress(cycles, address, memory);
@@ -244,6 +255,23 @@ namespace m6502
             const Word result = A - value - (cFlag ? 0 : 1);
             A = result & 0xFF; // only storing low byte of result
             setFlagStatus_SBC(result, aCopy, value);
+        };
+
+        // bit
+        auto bitShift = [&cycles, &memory, this](const Word address, const bool left = false)
+        {
+            const Byte oldValue = readByteFromAddress(cycles, address, memory);
+            Byte newValue;
+            if (left)
+                newValue = oldValue << 1;
+            else
+                newValue = oldValue >> 1;
+            cycles--;
+            writeByte(cycles, newValue, address, memory);
+            if (left)
+                setFlagStatus_Shift(oldValue, newValue, true);
+            else
+                setFlagStatus_Shift(oldValue, newValue);
         };
 
         const s_int32 cyclesRequested = cycles;
@@ -1432,6 +1460,162 @@ namespace m6502
                 const Word address = fetchAddressAbsolute(cycles, memory);
                 const Byte value = readByteFromAddress(cycles, address, memory);
                 setFlagStatus_CMP(value, Y);
+                break;
+            }
+
+            /**
+             * BIT SHIFT INSTRUCTIONS
+             */
+
+            /**
+             * ARITHMETIC SHIFT LEFT
+             */
+
+            // shift accumulator value left
+            case INS_ASL_ACC: // testing complete
+            {
+                const Byte aCopy = A;
+                A <<= 1;
+                cycles--;
+                setFlagStatus_Shift(aCopy, A, true);
+                break;
+            }
+
+            // shift value at zero page address left
+            case INS_ASL_ZPG: // testing complete
+            {
+                Byte address = fetchAddressZeroPage(cycles, memory);
+                bitShift(address, true);
+                break;
+            }
+
+            // shift value at zero page address + x register left
+            case INS_ASL_ZPX: // testing complete
+            {
+                Byte address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
+                bitShift(address, true);
+                break;
+            }
+
+            // shift value at absolute address left
+            case INS_ASL_ABS: // testing complete
+            {
+                Word address = fetchAddressAbsolute(cycles, memory);
+                bitShift(address, true);
+                break;
+            }
+
+            // shift value at absolute address + x register left
+            case INS_ASL_ABX: // testing complete
+            {
+                Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
+                bitShift(address, true);
+                cycles--; // extra cycle
+                break;
+            }
+
+            /**
+             * LOGICAL SHIFT RIGHT
+             */
+
+            // shift accumulator right
+            case INS_LSR_ACC: // testing complete
+            {
+                const Byte aCopy = A;
+                A >>= 1;
+                cycles--;
+                setFlagStatus_Shift(aCopy, A);
+                break;
+            }
+
+            // shift value at zero page address right
+            case INS_LSR_ZPG: // testing complete
+            {
+                Byte address = fetchAddressZeroPage(cycles, memory);
+                bitShift(address);
+                break;
+            }
+
+            // shift value at zero page address + x register right
+            case INS_LSR_ZPX: // testing complete
+            {
+                Byte address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
+                bitShift(address);
+                break;
+            }
+
+            // shift value at absolute address + x register right
+            case INS_LSR_ABS: // testing complete
+            {
+                Word address = fetchAddressAbsolute(cycles, memory);
+                bitShift(address);
+                break;
+            }
+
+            // shift value at absolute address + x register right
+            case INS_LSR_ABX: // testing complete
+            {
+                Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
+                bitShift(address);
+                cycles--; // extra cycle
+                break;
+            }
+
+                /**
+                 * ROTATE LEFT
+                 */
+
+            case INS_ROL_ACC:
+            {
+                break;
+            }
+
+            case INS_ROL_ZPG:
+            {
+                break;
+            }
+
+            case INS_ROL_ZPX:
+            {
+                break;
+            }
+
+            case INS_ROL_ABS:
+            {
+                break;
+            }
+
+            case INS_ROL_ABX:
+            {
+                break;
+            }
+
+                /**
+                 * ROTATE RIGHT
+                 */
+
+            case INS_ROR_ACC:
+            {
+                break;
+            }
+
+            case INS_ROR_ZPG:
+            {
+                break;
+            }
+
+            case INS_ROR_ZPX:
+            {
+                break;
+            }
+
+            case INS_ROR_ABS:
+            {
+                break;
+            }
+
+            case INS_ROR_ABX:
+            {
                 break;
             }
 

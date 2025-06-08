@@ -46,7 +46,8 @@ set(TEST_SOURCES "test/src/cpuTests.cpp"
                  "test/src/incrementDecrementTests.cpp"
                  "test/src/branchTests.cpp"
                  "test/src/statusFlagChangeTests.cpp"
-                 "test/src/arithmeticTests.cpp")
+                 "test/src/arithmeticTests.cpp"
+                 "test/src/bitShiftTests.cpp")
 
 add_executable(m6502_tests ${TEST_SOURCES})
 
