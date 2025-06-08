@@ -84,7 +84,7 @@ namespace m6502
     {
         const bool zFlag = (value == 0) ? 1 : 0;
         setZeroFlag(zFlag);
-        const bool nFlag = (value & 0x80) ? 1 : 0;
+        const bool nFlag = (value & NEGATIVE_FLAG_BIT) ? 1 : 0;
         setNegativeFlag(nFlag);
     }
 
@@ -152,7 +152,7 @@ namespace m6502
         const bool zFlag = (reg == operand);
         setZeroFlag(zFlag);
 
-        const bool nFlag = (result & 0x80) ? 1 : 0;
+        const bool nFlag = (result & NEGATIVE_FLAG_BIT) ? 1 : 0;
         setNegativeFlag(nFlag);
     }
 

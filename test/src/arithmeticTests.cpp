@@ -1035,10 +1035,11 @@ TEST_F(ArithmeticTests, CMP_Immediate)
     CPU cpuCopy = cpu;
     static constexpr s_int32 NUM_CYCLES = 2;
     cpu.P.bits.C = false;
+    cpu.P.bits.N = true;
     cpu.A = 0x10;
 
     mem[0xFFFC] = CPU::INS_CMP_IMM;
-    mem[0xFFFD] = 0x00;
+    mem[0xFFFD] = 0x10;
 
     // act:
     s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
@@ -1046,6 +1047,8 @@ TEST_F(ArithmeticTests, CMP_Immediate)
     // assert:
     EXPECT_EQ(cpu.A, 0x10);
     EXPECT_TRUE(cpu.P.bits.C);
+    EXPECT_TRUE(cpu.P.bits.Z);
+    EXPECT_FALSE(cpu.P.bits.N);
     EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
 }
 
@@ -1409,6 +1412,3 @@ TEST_F(ArithmeticTests, CPY_Absolute)
     EXPECT_TRUE(cpu.P.bits.Z);
     EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
 }
-
-// todo: copy for cpy
-// todo: write instruction code
