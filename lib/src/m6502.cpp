@@ -156,7 +156,7 @@ namespace m6502
         setNegativeFlag(nFlag);
     }
 
-    void CPU::setFlagStatus_Shift(Byte oldValue, Byte newValue, bool left = false)
+    void CPU::setFlagStatus_Arithmetic(Byte oldValue, Byte newValue, bool left = false)
     {
         const bool cFlag = oldValue & (left ? 0x80 : 0x01);
         setCarryFlag(cFlag);
@@ -257,21 +257,31 @@ namespace m6502
             setFlagStatus_SBC(result, aCopy, value);
         };
 
-        // bit
+        // bit shift left/right
         auto bitShift = [&cycles, &memory, this](const Word address, const bool left = false)
         {
             const Byte oldValue = readByteFromAddress(cycles, address, memory);
-            Byte newValue;
-            if (left)
-                newValue = oldValue << 1;
-            else
-                newValue = oldValue >> 1;
+            const Byte newValue = left ? oldValue << 1 : oldValue >> 1;
             cycles--;
             writeByte(cycles, newValue, address, memory);
             if (left)
-                setFlagStatus_Shift(oldValue, newValue, true);
+                setFlagStatus_Arithmetic(oldValue, newValue, true);
             else
-                setFlagStatus_Shift(oldValue, newValue);
+                setFlagStatus_Arithmetic(oldValue, newValue);
+        };
+
+        // bit rotate left/right
+        auto bitRotate = [&cycles, &memory, this](const Word address, const bool left = false)
+        {
+            const Byte oldValue = readByteFromAddress(cycles, address, memory);
+            Byte newValue = left ? oldValue << 1 : oldValue >> 1;
+            newValue |= (P.bits.C << 7);
+            cycles--;
+            writeByte(cycles, newValue, address, memory);
+            if (left)
+                setFlagStatus_Arithmetic(oldValue, newValue, true);
+            else
+                setFlagStatus_Arithmetic(oldValue, newValue);
         };
 
         const s_int32 cyclesRequested = cycles;
@@ -1477,14 +1487,14 @@ namespace m6502
                 const Byte aCopy = A;
                 A <<= 1;
                 cycles--;
-                setFlagStatus_Shift(aCopy, A, true);
+                setFlagStatus_Arithmetic(aCopy, A, true);
                 break;
             }
 
             // shift value at zero page address left
             case INS_ASL_ZPG: // testing complete
             {
-                Byte address = fetchAddressZeroPage(cycles, memory);
+                const Byte address = fetchAddressZeroPage(cycles, memory);
                 bitShift(address, true);
                 break;
             }
@@ -1492,7 +1502,7 @@ namespace m6502
             // shift value at zero page address + x register left
             case INS_ASL_ZPX: // testing complete
             {
-                Byte address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
+                const Byte address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
                 bitShift(address, true);
                 break;
             }
@@ -1500,7 +1510,7 @@ namespace m6502
             // shift value at absolute address left
             case INS_ASL_ABS: // testing complete
             {
-                Word address = fetchAddressAbsolute(cycles, memory);
+                const Word address = fetchAddressAbsolute(cycles, memory);
                 bitShift(address, true);
                 break;
             }
@@ -1508,7 +1518,7 @@ namespace m6502
             // shift value at absolute address + x register left
             case INS_ASL_ABX: // testing complete
             {
-                Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
+                const Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
                 bitShift(address, true);
                 cycles--; // extra cycle
                 break;
@@ -1518,20 +1528,20 @@ namespace m6502
              * LOGICAL SHIFT RIGHT
              */
 
-            // shift accumulator right
+            // shift accumulator value right
             case INS_LSR_ACC: // testing complete
             {
                 const Byte aCopy = A;
                 A >>= 1;
                 cycles--;
-                setFlagStatus_Shift(aCopy, A);
+                setFlagStatus_Arithmetic(aCopy, A);
                 break;
             }
 
             // shift value at zero page address right
             case INS_LSR_ZPG: // testing complete
             {
-                Byte address = fetchAddressZeroPage(cycles, memory);
+                const Byte address = fetchAddressZeroPage(cycles, memory);
                 bitShift(address);
                 break;
             }
@@ -1539,7 +1549,7 @@ namespace m6502
             // shift value at zero page address + x register right
             case INS_LSR_ZPX: // testing complete
             {
-                Byte address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
+                const Byte address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
                 bitShift(address);
                 break;
             }
@@ -1547,7 +1557,7 @@ namespace m6502
             // shift value at absolute address + x register right
             case INS_LSR_ABS: // testing complete
             {
-                Word address = fetchAddressAbsolute(cycles, memory);
+                const Word address = fetchAddressAbsolute(cycles, memory);
                 bitShift(address);
                 break;
             }
@@ -1555,67 +1565,105 @@ namespace m6502
             // shift value at absolute address + x register right
             case INS_LSR_ABX: // testing complete
             {
-                Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
+                const Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
                 bitShift(address);
                 cycles--; // extra cycle
                 break;
             }
 
-                /**
-                 * ROTATE LEFT
-                 */
+            /**
+             * ROTATE LEFT
+             */
 
-            case INS_ROL_ACC:
+            // rotate accumulator value left
+            case INS_ROL_ACC: // testing complete
             {
+                const Byte aCopy = A;
+                A <<= 1;
+                A |= P.bits.C;
+                cycles--;
+                setFlagStatus_Arithmetic(aCopy, A, true);
                 break;
             }
 
-            case INS_ROL_ZPG:
+            // rotate value at zero page address left
+            case INS_ROL_ZPG: // testing complete
             {
+                const Byte address = fetchAddressZeroPage(cycles, memory);
+                bitRotate(address, true);
                 break;
             }
 
-            case INS_ROL_ZPX:
+            // rotate value at zero page address + x register left
+            case INS_ROL_ZPX: // testing complete
             {
+                const Byte address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
+                bitRotate(address, true);
                 break;
             }
 
-            case INS_ROL_ABS:
+            // rotate value at absolute address left
+            case INS_ROL_ABS: // testing complete
             {
+                const Word address = fetchAddressAbsolute(cycles, memory);
+                bitRotate(address, true);
                 break;
             }
 
-            case INS_ROL_ABX:
+            // rotate value at absolute address + x register left
+            case INS_ROL_ABX: // testing complete
             {
+                const Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
+                bitRotate(address, true);
+                cycles--; // extra cycle
                 break;
             }
 
-                /**
-                 * ROTATE RIGHT
-                 */
+            /**
+             * ROTATE RIGHT
+             */
 
-            case INS_ROR_ACC:
+            // rotate accumulator value right
+            case INS_ROR_ACC: // testing complete
             {
+                const Byte aCopy = A;
+                A >>= 1;
+                A |= (P.bits.C << 7);
+                cycles--;
+                setFlagStatus_Arithmetic(aCopy, A);
                 break;
             }
 
-            case INS_ROR_ZPG:
+            // rotate value at zero page address right
+            case INS_ROR_ZPG: // testing complete
             {
+                const Byte address = fetchAddressZeroPage(cycles, memory);
+                bitRotate(address);
                 break;
             }
 
-            case INS_ROR_ZPX:
+            // rotate value at zero page address + x register right
+            case INS_ROR_ZPX: // testing complete
             {
+                const Byte address = fetchAddressZeroPagePlusRegister(cycles, X_REGISTER, memory);
+                bitRotate(address);
                 break;
             }
 
-            case INS_ROR_ABS:
+            // rotate value at absolute address right
+            case INS_ROR_ABS: // testing complete
             {
+                const Word address = fetchAddressAbsolute(cycles, memory);
+                bitRotate(address);
                 break;
             }
 
-            case INS_ROR_ABX:
+            // rotate value at absolute address + x register right
+            case INS_ROR_ABX: // testing complete
             {
+                const Word address = fetchAddressAbsolutePlusRegister(cycles, X_REGISTER, memory);
+                bitRotate(address);
+                cycles--; // extra cycle
                 break;
             }
 
