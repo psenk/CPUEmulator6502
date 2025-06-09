@@ -13,7 +13,7 @@ namespace m6502
         return zeroPageAddress;
     }
 
-    s_int32 CPU::fetchAddressZeroPagePlusRegister(s_int32 &cycles, const RegisterType reg, const Mem &memory)
+    s_int32 CPU::fetchAddressZeroPagePlusRegister(s_int32 &cycles, RegisterType reg, const Mem &memory)
     {
         const Byte zeroPageAddress = readNextByte(cycles, memory);
         Byte registerValue;
@@ -32,7 +32,7 @@ namespace m6502
         return absoluteAddress;
     }
 
-    s_int32 CPU::fetchAddressAbsolutePlusRegister(s_int32 &cycles, const RegisterType reg, const Mem &memory)
+    s_int32 CPU::fetchAddressAbsolutePlusRegister(s_int32 &cycles, RegisterType reg, const Mem &memory)
     {
         const Word absoluteAddress = readNextWord(cycles, memory);
         Byte registerValue;
@@ -80,7 +80,7 @@ namespace m6502
      * SET FLAGS
      */
 
-    void CPU::setFlagStatus_NZ(const Byte value)
+    void CPU::setFlagStatus_NZ(Byte value)
     {
         const bool zFlag = (value == 0) ? 1 : 0;
         setZeroFlag(zFlag);
@@ -89,7 +89,7 @@ namespace m6502
         setNegativeFlag(nFlag);
     }
 
-    void CPU::setFlagStatus_BIT(const Byte value)
+    void CPU::setFlagStatus_BIT(Byte value)
     {
         Byte andResult = A & value;
 
@@ -103,9 +103,9 @@ namespace m6502
         setNegativeFlag(nFlag);
     }
 
-    void CPU::setFlagStatus_ADC(const Word value,
-                                const Byte regCopy,
-                                const Byte operand)
+    void CPU::setFlagStatus_ADC(Word value,
+                                Byte regCopy,
+                                Byte operand)
     {
         const Byte lowByte = value & 0xFF;
 
@@ -124,9 +124,9 @@ namespace m6502
             setCarryFlag(vFlag);
     }
 
-    void CPU::setFlagStatus_SBC(const Word value,
-                                const Byte regCopy,
-                                const Byte operand)
+    void CPU::setFlagStatus_SBC(Word value,
+                                Byte regCopy,
+                                Byte operand)
     {
         const Byte lowByte = value & 0xFF;
 
@@ -144,7 +144,7 @@ namespace m6502
         setOverflowFlag(vFlag);
     }
 
-    void CPU::setFlagStatus_CMP(const Byte operand,
+    void CPU::setFlagStatus_CMP(Byte operand,
                                 const Byte &reg)
     {
         const Byte result = reg - operand;
@@ -158,9 +158,9 @@ namespace m6502
         setNegativeFlag(nFlag);
     }
 
-    void CPU::setFlagStatus_Arithmetic(const Byte oldValue,
-                                       const Byte newValue,
-                                       const bool left = false)
+    void CPU::setFlagStatus_Arithmetic(Byte oldValue,
+                                       Byte newValue,
+                                       bool left = false)
     {
         const bool cFlag = oldValue & (left ? 0x80 : 0x01);
         setCarryFlag(cFlag);
@@ -180,35 +180,35 @@ namespace m6502
     {
 
         // load register from a memory address
-        auto loadRegister = [&cycles, &memory, this](const Word address, Byte &reg)
+        auto loadRegister = [&cycles, &memory, this](Word address, Byte &reg)
         {
             reg = readByteFromAddress(cycles, address, memory);
             setFlagStatus_NZ(reg);
         };
 
         // and byte with a register
-        auto andOperation = [&cycles, &memory, this](const Word address, Byte &reg)
+        auto andOperation = [&cycles, &memory, this](Word address, Byte &reg)
         {
             reg &= readByteFromAddress(cycles, address, memory);
             setFlagStatus_NZ(reg);
         };
 
         // xor bite with a register
-        auto xorOperation = [&cycles, &memory, this](const Word address, Byte &reg)
+        auto xorOperation = [&cycles, &memory, this](Word address, Byte &reg)
         {
             reg ^= readByteFromAddress(cycles, address, memory);
             setFlagStatus_NZ(reg);
         };
 
         // or bite with a register
-        auto orOperation = [&cycles, &memory, this](const Word address, Byte &reg)
+        auto orOperation = [&cycles, &memory, this](Word address, Byte &reg)
         {
             reg |= readByteFromAddress(cycles, address, memory);
             setFlagStatus_NZ(reg);
         };
 
         // increment
-        auto increment = [&cycles, &memory, this](const Word address)
+        auto increment = [&cycles, &memory, this](Word address)
         {
             Byte value = readByteFromAddress(cycles, address, memory);
             value++;
@@ -217,7 +217,7 @@ namespace m6502
         };
 
         // decrement
-        auto decrement = [&cycles, &memory, this](const Word address)
+        auto decrement = [&cycles, &memory, this](Word address)
         {
             Byte value = readByteFromAddress(cycles, address, memory);
             value--;
@@ -226,7 +226,7 @@ namespace m6502
         };
 
         // branch logic
-        auto branch = [&cycles, &memory, this](const bool flag, const bool flagSet)
+        auto branch = [&cycles, &memory, this](bool flag, bool flagSet)
         {
             const Byte operand = readNextByte(cycles, memory);
             const s_int32 offset = (sByte)operand;
@@ -242,7 +242,7 @@ namespace m6502
         };
 
         // add with carry
-        auto addWithCarry = [&cycles, &memory, this](const Word address)
+        auto addWithCarry = [&cycles, &memory, this](Word address)
         {
             const Byte value = readByteFromAddress(cycles, address, memory);
             const Byte aCopy = A;
@@ -253,7 +253,7 @@ namespace m6502
         };
 
         // subtract with carry
-        auto subWithCarry = [&cycles, &memory, this](const Word address)
+        auto subWithCarry = [&cycles, &memory, this](Word address)
         {
             const Byte value = readByteFromAddress(cycles, address, memory);
             const Byte aCopy = A;
@@ -264,7 +264,7 @@ namespace m6502
         };
 
         // bit shift left/right
-        auto bitShift = [&cycles, &memory, this](const Word address, const bool left = false)
+        auto bitShift = [&cycles, &memory, this](Word address, bool left = false)
         {
             const Byte oldValue = readByteFromAddress(cycles, address, memory);
             const Byte newValue = left ? oldValue << 1 : oldValue >> 1;
@@ -277,7 +277,7 @@ namespace m6502
         };
 
         // bit rotate left/right
-        auto bitRotate = [&cycles, &memory, this](const Word address, const bool left = false)
+        auto bitRotate = [&cycles, &memory, this](Word address, bool left = false)
         {
             const Byte oldValue = readByteFromAddress(cycles, address, memory);
             Byte newValue = left ? oldValue << 1 : oldValue >> 1;
@@ -1699,6 +1699,17 @@ namespace m6502
                 break;
             }
 
+            case INS_RTI:
+            {
+                const Byte statusFlags = popByteFromStack(cycles, memory);
+                std::cout << "Status Flags: 0x" << std::hex << (int)statusFlags << std::endl;
+                setStatusFlags(statusFlags);
+                const Byte programCounter = popByteFromStack(cycles, memory);
+                PC = programCounter;
+                cycles--; // extra cycle
+                break;
+            }
+
             // error
             default:
             {
@@ -1714,7 +1725,7 @@ namespace m6502
         return cyclesUsed;
     }
 
-    Word CPU::loadProgram(const Byte *program, const u_int32 numBytes, Mem &memory)
+    Word CPU::loadProgram(const Byte *program, u_int32 numBytes, Mem &memory)
     {
         if (!program || numBytes <= 2)
         {

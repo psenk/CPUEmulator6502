@@ -148,6 +148,11 @@ struct m6502::CPU
         return P.bits.N;
     }
 
+    const Byte getStatusFlags()
+    {
+        return P.value;
+    }
+
     /**
      * SET FLAG HELPER METHODS
      */
@@ -185,6 +190,11 @@ struct m6502::CPU
     void setNegativeFlag(bool flag)
     {
         P.bits.N = flag;
+    }
+
+    void setStatusFlags(Byte status)
+    {
+        P.value = status;
     }
 
     /**
@@ -513,7 +523,8 @@ struct m6502::CPU
 
     // system function instructions
     static constexpr Byte INS_BRK = 0x00,
-                          INS_NOP = 0xEA;
+                          INS_NOP = 0xEA,
+                          INS_RTI = 0x40;
 
     /**
      * ADDRESSING MODES
@@ -530,17 +541,17 @@ struct m6502::CPU
      * SET FLAG HELPER METHODS
      */
 
-    void setFlagStatus_NZ(const Byte reg);
-    void setFlagStatus_BIT(const Byte value);
-    void setFlagStatus_ADC(const Word value, const Byte aCopy, const Byte operand);
-    void setFlagStatus_SBC(const Word value, const Byte regCopy, const Byte operand);
-    void setFlagStatus_CMP(const Byte operand, const Byte &reg);
-    void setFlagStatus_Arithmetic(const Byte oldValue, const Byte newValue, const bool left);
-    
+    void setFlagStatus_NZ(Byte reg);
+    void setFlagStatus_BIT(Byte value);
+    void setFlagStatus_ADC(Word value, Byte aCopy, Byte operand);
+    void setFlagStatus_SBC(Word value, Byte regCopy, Byte operand);
+    void setFlagStatus_CMP(Byte operand, const Byte &reg);
+    void setFlagStatus_Arithmetic(Byte oldValue, Byte newValue, bool left);
+
     /**
      * CPU FUNCTIONS
      */
 
     s_int32 execute(s_int32 cycles, Mem &memory);
-    Word loadProgram(const Byte *program, const u_int32 numBytes, Mem &memory);
+    Word loadProgram(const Byte *program, u_int32 numBytes, Mem &memory);
 };

@@ -169,3 +169,31 @@ TEST_F(CPUTests, NOPInstruction)
     EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
     testAllFlagsUnchanged(cpuCopy, cpu);
 }
+
+TEST_F(CPUTests, RTIInstruction)
+{
+    // arrange:
+    using namespace m6502;
+    CPU cpuCopy = cpu;
+    static constexpr s_int32 NUM_CYCLES = 6;
+    cpu.SP = 0xFD;
+
+    mem[0xFFFC] = CPU::INS_RTI;
+    mem[0x01FF] = 0x42;
+    mem[0x01FE] = 0x67;
+
+    s_int32 cyclesExecuted = cpu.execute(NUM_CYCLES, mem);
+
+    // act/assert:
+    EXPECT_EQ(cpu.SP, 0xFF);
+    EXPECT_EQ(cpu.PC, 0x42);
+    EXPECT_FALSE(cpu.P.bits.N); // 01100111
+    EXPECT_TRUE(cpu.P.bits.V);
+    EXPECT_TRUE(cpu.P.bits.U);
+    EXPECT_FALSE(cpu.P.bits.B);
+    EXPECT_FALSE(cpu.P.bits.D);
+    EXPECT_TRUE(cpu.P.bits.I);
+    EXPECT_TRUE(cpu.P.bits.Z);
+    EXPECT_TRUE(cpu.P.bits.C);
+    EXPECT_EQ(cyclesExecuted, NUM_CYCLES);
+}
