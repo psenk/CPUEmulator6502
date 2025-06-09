@@ -80,15 +80,16 @@ namespace m6502
      * SET FLAGS
      */
 
-    void CPU::setFlagStatus_NZ(Byte value)
+    void CPU::setFlagStatus_NZ(const Byte value)
     {
         const bool zFlag = (value == 0) ? 1 : 0;
         setZeroFlag(zFlag);
+
         const bool nFlag = (value & NEGATIVE_FLAG_BIT) ? 1 : 0;
         setNegativeFlag(nFlag);
     }
 
-    void CPU::setFlagStatus_BIT(Byte value)
+    void CPU::setFlagStatus_BIT(const Byte value)
     {
         Byte andResult = A & value;
 
@@ -102,9 +103,9 @@ namespace m6502
         setNegativeFlag(nFlag);
     }
 
-    void CPU::setFlagStatus_ADC(Word value,
-                                Byte regCopy,
-                                Byte operand)
+    void CPU::setFlagStatus_ADC(const Word value,
+                                const Byte regCopy,
+                                const Byte operand)
     {
         const Byte lowByte = value & 0xFF;
 
@@ -123,9 +124,9 @@ namespace m6502
             setCarryFlag(vFlag);
     }
 
-    void CPU::setFlagStatus_SBC(Word value,
-                                Byte regCopy,
-                                Byte operand)
+    void CPU::setFlagStatus_SBC(const Word value,
+                                const Byte regCopy,
+                                const Byte operand)
     {
         const Byte lowByte = value & 0xFF;
 
@@ -143,7 +144,8 @@ namespace m6502
         setOverflowFlag(vFlag);
     }
 
-    void CPU::setFlagStatus_CMP(Byte operand, Byte &reg)
+    void CPU::setFlagStatus_CMP(const Byte operand,
+                                const Byte &reg)
     {
         const Byte result = reg - operand;
         const bool cFlag = (reg >= operand);
@@ -156,12 +158,16 @@ namespace m6502
         setNegativeFlag(nFlag);
     }
 
-    void CPU::setFlagStatus_Arithmetic(Byte oldValue, Byte newValue, bool left = false)
+    void CPU::setFlagStatus_Arithmetic(const Byte oldValue,
+                                       const Byte newValue,
+                                       const bool left = false)
     {
         const bool cFlag = oldValue & (left ? 0x80 : 0x01);
         setCarryFlag(cFlag);
+
         const bool zFlag = A == 0 ? 1 : 0;
         setZeroFlag(zFlag);
+
         const bool nFlag = newValue & 0x80;
         setNegativeFlag(nFlag);
     }
@@ -220,11 +226,11 @@ namespace m6502
         };
 
         // branch logic
-        auto branch = [&cycles, &memory, this](const bool flag, const bool condition)
+        auto branch = [&cycles, &memory, this](const bool flag, const bool flagSet)
         {
             const Byte operand = readNextByte(cycles, memory);
             const s_int32 offset = (sByte)operand;
-            if (flag == condition)
+            if (flag == flagSet)
             {
                 const Word pcCopy = PC;
                 PC += offset;
@@ -1708,7 +1714,7 @@ namespace m6502
         return cyclesUsed;
     }
 
-    Word CPU::loadProgram(Byte *program, u_int32 numBytes, Mem &memory)
+    Word CPU::loadProgram(const Byte *program, const u_int32 numBytes, Mem &memory)
     {
         if (!program || numBytes <= 2)
         {

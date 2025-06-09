@@ -4,7 +4,6 @@
 // http://6502.org/users/obelisk/
 
 // register = small area of memory for computer to access
-// - 16 bit addresses
 
 namespace m6502
 {
@@ -35,7 +34,7 @@ struct m6502::Mem
     {
         for (u_int32 i = 0; i < MAX_MEM; i++)
         {
-            data[i] = 0;
+            data[i] = 0x00;
         }
     }
 
@@ -87,8 +86,8 @@ struct m6502::CPU
     Word PC; // program counter
     Byte SP; // stack pointer
 
-    Byte A, X, Y; // registers
-    StatusFlags P;
+    Byte A, X, Y;  // registers
+    StatusFlags P; // processor status flags
 
     enum RegisterType // for function arguments
     {
@@ -114,7 +113,7 @@ struct m6502::CPU
      * GET FLAG HELPER METHODS
      */
 
-    bool getCarryFlag()
+    const bool getCarryFlag()
     {
         return P.bits.C;
     }
@@ -230,9 +229,8 @@ struct m6502::CPU
     {
 
         Word data = memory[address];
-        address++;
 
-        data |= (memory[address] << 8);
+        data |= memory[address + 1] << 8;
 
         // handle endianness?
 
@@ -302,6 +300,10 @@ struct m6502::CPU
         return (highByte << 8) | lowByte;
     }
 
+    /**
+     * PROCESSOR FLAG MASKS
+     */
+
     static constexpr Byte CARRY_FLAG_BIT = 0x01;
     static constexpr Byte ZERO_FLAG_BIT = 0x02;
     static constexpr Byte INTERRUPT_FLAG_BIT = 0x04;
@@ -310,6 +312,10 @@ struct m6502::CPU
     static constexpr Byte OVERFLOW_FLAG_BIT = 0x40;
     static constexpr Byte NEGATIVE_FLAG_BIT = 0x80;
 
+    /**
+     * MEMORY ADDRESS MASKS
+     */
+
     static constexpr Word IRQ_VECTOR_LOW = 0xFFFE;
     static constexpr Word IRQ_VECTOR_HIGH = 0xFFFF;
 
@@ -317,7 +323,7 @@ struct m6502::CPU
      * INSTRUCTION OPCODES
      */
 
-    // LDA instructions
+    // load accumulator instructions
     static constexpr Byte INS_LDA_IMM = 0xA9,
                           INS_LDA_ZPG = 0xA5,
                           INS_LDA_ZPX = 0xB5,
@@ -327,21 +333,21 @@ struct m6502::CPU
                           INS_LDA_INX = 0xA1,
                           INS_LDA_INY = 0xB1;
 
-    // LDX instructions
+    // load x register instructions
     static constexpr Byte INS_LDX_IMM = 0xA2,
                           INS_LDX_ZPG = 0xA6,
                           INS_LDX_ZPY = 0xB6,
                           INS_LDX_ABS = 0xAE,
                           INS_LDX_ABY = 0xBE;
 
-    // LDY instructions
+    // load y register instructions
     static constexpr Byte INS_LDY_IMM = 0xA0,
                           INS_LDY_ZPG = 0xA4,
                           INS_LDY_ZPX = 0xB4,
                           INS_LDY_ABS = 0xAC,
                           INS_LDY_ABX = 0xBC;
 
-    // STA instructions
+    // store accumulator instructions
     static constexpr Byte INS_STA_ZPG = 0x85,
                           INS_STA_ZPX = 0x95,
                           INS_STA_ABS = 0x8D,
@@ -350,12 +356,12 @@ struct m6502::CPU
                           INS_STA_INX = 0x81,
                           INS_STA_INY = 0x91;
 
-    // STX instructions
+    // store x register instructions
     static constexpr Byte INS_STX_ZPG = 0x86,
                           INS_STX_ZPY = 0x96,
                           INS_STX_ABS = 0x8E;
 
-    // STY instructions
+    // store y register instructions
     static constexpr Byte INS_STY_ZPG = 0x84,
                           INS_STY_ZPX = 0x94,
                           INS_STY_ABS = 0x8C;
@@ -486,16 +492,19 @@ struct m6502::CPU
                           INS_ASL_ZPX = 0x16,
                           INS_ASL_ABS = 0x0E,
                           INS_ASL_ABX = 0x1E,
+
                           INS_LSR_ACC = 0x4A,
                           INS_LSR_ZPG = 0x46,
                           INS_LSR_ZPX = 0x56,
                           INS_LSR_ABS = 0x4E,
                           INS_LSR_ABX = 0x5E,
+
                           INS_ROL_ACC = 0x2A,
                           INS_ROL_ZPG = 0x26,
                           INS_ROL_ZPX = 0x36,
                           INS_ROL_ABS = 0x2E,
                           INS_ROL_ABX = 0x3E,
+
                           INS_ROR_ACC = 0x6A,
                           INS_ROR_ZPG = 0x66,
                           INS_ROR_ZPX = 0x76,
@@ -518,19 +527,20 @@ struct m6502::CPU
     s_int32 fetchAddressIndirectIndexed(s_int32 &cycles, const Mem &memory, bool extraCycle);
 
     /**
-     * SET FLAGS
+     * SET FLAG HELPER METHODS
      */
 
-    void setFlagStatus_NZ(Byte reg);
-    void setFlagStatus_BIT(Byte value);
-    void setFlagStatus_ADC(Word value, Byte aCopy, Byte operand);
-    void setFlagStatus_SBC(Word value, Byte regCopy, Byte operand);
-    void setFlagStatus_CMP(Byte operand, Byte &reg);
-    void setFlagStatus_Arithmetic(Byte oldValue, Byte newValue, bool left);
+    void setFlagStatus_NZ(const Byte reg);
+    void setFlagStatus_BIT(const Byte value);
+    void setFlagStatus_ADC(const Word value, const Byte aCopy, const Byte operand);
+    void setFlagStatus_SBC(const Word value, const Byte regCopy, const Byte operand);
+    void setFlagStatus_CMP(const Byte operand, const Byte &reg);
+    void setFlagStatus_Arithmetic(const Byte oldValue, const Byte newValue, const bool left);
+    
     /**
      * CPU FUNCTIONS
      */
 
     s_int32 execute(s_int32 cycles, Mem &memory);
-    Word loadProgram(Byte *program, u_int32 numBytes, Mem &memory);
+    Word loadProgram(const Byte *program, const u_int32 numBytes, Mem &memory);
 };
